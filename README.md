@@ -9,18 +9,25 @@
 # django-treenode
 Probably the best abstract model for your tree based stuff.
 
+## Features
+- **Fast:** query model `root`, `parents`, `children`, `siblings` with **just 1 query**
+- **Zero configuration:** just extend the abstract model
+- **Admin integration**
+- **No dependencies**
+
 ## Requirements
 - Python 2.7, 3.4, 3.5, 3.6
 - Django 1.8, 1.9, 1.10, 1.11, 2.0
 
 ## Installation
-- Run ``pip install django-treenode``
+- Run `pip install django-treenode`
+- Make your model inherit from `treenode.models.TreeNodeModel` *(described below)*
+- Make your model-admin inherit from `treenode.admin.TreeNodeModelAdmin` *(described below)*
+- Run `python manage.py makemigrations` and `python manage.py migrate`
 
-## Usage
-
-#### Models
+## Configuration
+#### `models.py`
 Make your model class inherit from `TreeNodeModel`:
-
 
 ```python
 from django.db import models
@@ -40,7 +47,7 @@ class Category(TreeNodeModel):
         return self.get_display(self.name)
 ```
 
-#### Admin
+#### `admin.py`
 Make your model-admin class inherit from `TreeNodeModelAdmin`:
 
 ```python
@@ -62,6 +69,65 @@ class CategoryAdmin(TreeNodeModelAdmin):
     name_display.allow_tags = True
 
 admin.site.register(Category, CategoryAdmin)
+```
+
+## Usage
+Now your models have some extra fields used by `django-treenode` to speed-up tree operations.
+The following properties will be accessible on your model instances:
+
+```python
+# return all the root nodes (1 query)
+instance.roots
+```
+
+```python
+# return the root node (1 query)
+instance.root
+```
+
+```python
+# return the parent node (1 query)
+instance.parent
+```
+
+```python
+# return a list with all the parents ordered from root to parent (1 query)
+instance.parents
+```
+
+```python
+# return the parents count (0 queries)
+instance.parents_count
+```
+
+```python
+# return a list with all the children (1 query)
+instance.children
+```
+
+```python
+# return the children count (0 queries)
+instance.children_count
+```
+
+```python
+# return a list with all the siblings (1 query)
+instance.siblings
+```
+
+```python
+# return the siblings count (0 queries)
+instance.siblings_count
+```
+
+```python
+# return the node level starting from 1 for root nodes (0 queries)
+instance.level
+```
+
+```python
+# return the node depth (levels of children) starting from 0 (0 queries)
+instance.depth
 ```
 
 ## License
