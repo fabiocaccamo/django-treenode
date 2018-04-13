@@ -10,7 +10,7 @@
 Probably the best abstract model for your tree based stuff.
 
 ## Features
-- **Fast:** query model `root`, `parents`, `children`, `siblings` with **just 1 query**
+- **Fast:** get model `root`, `parent`, `parents`, `children`, `siblings`, `level`, `depth` with **max 1 query**
 - **Zero configuration:** just extend the abstract model
 - **Admin integration**
 - **No dependencies**
@@ -121,12 +121,12 @@ instance.siblings_count
 ```
 
 ```python
-# return the node level starting from 1 for root nodes (0 queries)
+# return the node level (0 queries)
 instance.level
 ```
 
 ```python
-# return the node depth (levels of children) starting from 0 (0 queries)
+# return the node depth (0 queries)
 instance.depth
 ```
 
