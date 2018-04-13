@@ -7,11 +7,12 @@ from django.utils.safestring import mark_safe
 
 class TreeNodeModelAdmin(admin.ModelAdmin):
 
-    def get_treenode_display(self, obj, text, style='', accordion=False):
-        parents_count = obj.get_parents_count()
+    def get_treenode_display(self, obj, text, style='', accordion=True):
+        parents_count = obj.parents_count
         parent_pk = ''
         if parents_count:
-            parent_pk = obj.get_parents_pks()[-1]
+            parents_pks_list = obj.split_pks(obj.parents_pks)
+            parent_pk = parents_pks_list[-1]
         tabs = ('&mdash; ' * parents_count)
         tabs_class = 'treenode-tabs' if tabs else ''
         return mark_safe(''\
