@@ -1,12 +1,10 @@
 language: python
 python: 3.5
 env:
-  - TOX_ENV=py27-17
   - TOX_ENV=py27-18
   - TOX_ENV=py27-19
   - TOX_ENV=py27-110
   - TOX_ENV=py27-111
-  - TOX_ENV=py34-17
   - TOX_ENV=py34-18
   - TOX_ENV=py34-19
   - TOX_ENV=py34-110
