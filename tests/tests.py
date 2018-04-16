@@ -14,7 +14,7 @@ class TreeNodeTestCase(TestCase):
         pass
 
     def __create_cat(self, name, parent=None):
-        return Category.objects.create(name=name, parent=parent)
+        return Category.objects.create(name=name, tn_parent=parent)
 
     def __create_cat_tree(self):
         """
@@ -84,6 +84,9 @@ class TreeNodeTestCase(TestCase):
 
     def test_update_on_delete(self):
         self.__create_cat_tree()
+
+    def test_tree(self):
+        pass
 
     def test_roots(self):
         self.__create_cat_tree()
@@ -191,6 +194,37 @@ class TreeNodeTestCase(TestCase):
         self.assertEqual(aaa.level, 3)
         self.assertEqual(aaaa.level, 4)
 
+    def test_index(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        ab = self.__get_cat(name='ab')
+        ac = self.__get_cat(name='ac')
+        ad = self.__get_cat(name='ad')
+        ae = self.__get_cat(name='ae')
+        af = self.__get_cat(name='af')
+        b = self.__get_cat(name='b')
+        c = self.__get_cat(name='c')
+        d = self.__get_cat(name='d')
+        e = self.__get_cat(name='e')
+        f = self.__get_cat(name='f')
+        self.assertEqual(a.index, 0)
+        self.assertEqual(aa.index, 0)
+        self.assertEqual(aaa.index, 0)
+        self.assertEqual(aaaa.index, 0)
+        self.assertEqual(ab.index, 1)
+        self.assertEqual(ac.index, 2)
+        self.assertEqual(ad.index, 3)
+        self.assertEqual(ae.index, 4)
+        self.assertEqual(af.index, 5)
+        self.assertEqual(b.index, 1)
+        self.assertEqual(c.index, 2)
+        self.assertEqual(d.index, 3)
+        self.assertEqual(e.index, 4)
+        self.assertEqual(f.index, 5)
+
     def test_depth(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
@@ -206,4 +240,48 @@ class TreeNodeTestCase(TestCase):
         pass
 
     def test_order(self):
-        pass
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        ab = self.__get_cat(name='ab')
+        ac = self.__get_cat(name='ac')
+        aca = self.__get_cat(name='aca')
+        acaa = self.__get_cat(name='acaa')
+        acab = self.__get_cat(name='acab')
+        acb = self.__get_cat(name='acb')
+        acc = self.__get_cat(name='acc')
+        ad = self.__get_cat(name='ad')
+        ae = self.__get_cat(name='ae')
+        af = self.__get_cat(name='af')
+        b = self.__get_cat(name='b')
+        ba = self.__get_cat(name='ba')
+        bb = self.__get_cat(name='bb')
+        bc = self.__get_cat(name='bc')
+        c = self.__get_cat(name='c')
+        d = self.__get_cat(name='d')
+        e = self.__get_cat(name='e')
+        f = self.__get_cat(name='f')
+        self.assertEqual(a.order, 0)
+        self.assertEqual(aa.order, 1)
+        self.assertEqual(aaa.order, 2)
+        self.assertEqual(aaaa.order, 3)
+        self.assertEqual(ab.order, 4)
+        self.assertEqual(ac.order, 5)
+        self.assertEqual(aca.order, 6)
+        self.assertEqual(acaa.order, 7)
+        self.assertEqual(acab.order, 8)
+        self.assertEqual(acb.order, 9)
+        self.assertEqual(acc.order, 10)
+        self.assertEqual(ad.order, 11)
+        self.assertEqual(ae.order, 12)
+        self.assertEqual(af.order, 13)
+        self.assertEqual(b.order, 14)
+        self.assertEqual(ba.order, 15)
+        self.assertEqual(bb.order, 16)
+        self.assertEqual(bc.order, 17)
+        self.assertEqual(c.order, 18)
+        self.assertEqual(d.order, 19)
+        self.assertEqual(e.order, 20)
+        self.assertEqual(f.order, 21)
