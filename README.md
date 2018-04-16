@@ -10,7 +10,7 @@
 Probably the best abstract model for your tree based stuff.
 
 ## Features
-- **Fast:** get model `root`, `parent`, `parents`, `children`, `siblings`, `level`, `depth` with **max 1 query**
+- **Fast:** get model `tree`, `root`, `parent`, `parents`, `children`, `children_tree`, `siblings`, `level`, `index`, `depth` with **max 1 query**
 - **Zero configuration:** just extend the abstract model
 - **Admin integration**
 - **No dependencies**
