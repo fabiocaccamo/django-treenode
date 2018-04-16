@@ -76,6 +76,11 @@ Now your models have some extra fields used by `django-treenode` to speed-up tre
 The following properties will be accessible on your model instances:
 
 ```python
+# return a n-dimensional dict representing the model tree (1 query)
+instance.tree
+```
+
+```python
 # return all the root nodes (1 query)
 instance.roots
 ```
@@ -111,6 +116,11 @@ instance.children_count
 ```
 
 ```python
+# return a n-dimensional dict representing the model tree starting from the current node (1 query)
+instance.children_tree
+```
+
+```python
 # return a list with all the siblings (1 query)
 instance.siblings
 ```
@@ -126,8 +136,18 @@ instance.level
 ```
 
 ```python
+# return the node index in parent.children list (0 queries)
+instance.index
+```
+
+```python
 # return the node depth (0 queries)
 instance.depth
+```
+
+```python
+# return the order value used for sorting nodes (0 queries)
+instance.order
 ```
 
 ## License
