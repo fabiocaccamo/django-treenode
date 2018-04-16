@@ -2,6 +2,10 @@
     white-space: nowrap;
 }
 
+.treenode-row {
+    white-space: nowrap;
+}
+
 .treenode-tabs {
     font-weight: normal;
     color: #999999;
