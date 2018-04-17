@@ -21,6 +21,7 @@ except IOError:
 setup(
     name=package_name,
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
+    include_package_data=True,
     version=__version__,
     description='django-treenode is an abstract model for your tree based stuff.',
     long_description=long_description,

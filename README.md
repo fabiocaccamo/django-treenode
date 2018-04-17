@@ -44,7 +44,7 @@ class Category(TreeNodeModel):
         verbose_name_plural = 'Categories'
 
     def __str__(self):
-        return self.get_display(self.name)
+        return self.get_display_text(self.name)
 ```
 
 #### `admin.py`

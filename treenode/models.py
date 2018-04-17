@@ -47,7 +47,7 @@ class TreeNodeModel(models.Model):
             verbose_name_plural = 'My Models'
 
         def __str__(self):
-            return self.get_display(self.name)
+            return self.get_display_text(self.name)
     """
 
     tn_parent = models.ForeignKey('self',
