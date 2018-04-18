@@ -466,15 +466,17 @@ class TreeNodeModel(models.Model):
 
         # update db data
         for obj_key in objs_dict:
-            obj_pk = int(obj_key)
-            obj_data = objs_dict[obj_key]
-            sender.objects.filter(pk=obj_pk).update(**obj_data)
+            obj_data = objs_dict.get(obj_key)
+            if obj_data:
+                obj_pk = int(obj_key)
+                sender.objects.filter(pk=obj_pk).update(**obj_data)
 
         # update instance data
         obj_key = str(instance.pk)
-        obj_data = objs_dict[obj_key]
-        for key, value in obj_data.items():
-            setattr(instance, key, value)
+        obj_data = objs_dict.get(obj_key)
+        if obj_data:
+            for key, value in obj_data.items():
+                setattr(instance, key, value)
 
         # print(json.dumps(instance.get_children_tree(), indent=4))
         # print(json.dumps(instance.get_tree(), indent=4))
