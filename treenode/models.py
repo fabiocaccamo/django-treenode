@@ -251,7 +251,7 @@ class TreeNodeModel(models.Model):
         text = text or str(self.pk)
         return force_text(tabs + text)
 
-    PKS_SEPARATOR = '|'
+    PKS_SEPARATOR = ','
 
     @classmethod
     def join_pks(cls, l):
