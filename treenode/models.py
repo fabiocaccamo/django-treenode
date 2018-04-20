@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import connection, models, transaction
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.encoding import force_text
@@ -12,7 +12,14 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+try:
+    # use bulk_update if installed
+    from django_bulk_update.helper import bulk_update
+except ImportError:
+    bulk_update = None
+
 import json
+import timeit
 
 
 class classproperty(object):
@@ -289,10 +296,7 @@ class TreeNodeModel(models.Model):
         s = s.upper()
         return s
 
-    def __get_node_data(self):
-
-        obj_dict = {}
-        objs_manager = self.__class__.objects
+    def __get_node_data(self, objs):
 
         # retrieve parents
         parent_obj = self.tn_parent
@@ -306,27 +310,28 @@ class TreeNodeModel(models.Model):
         parents_pks = [obj.pk for obj in parents_list]
         parents_count = len(parents_list)
 
+        obj_dict = {}
+
         # update parents
         obj_dict['tn_parents_pks'] = parents_pks
         obj_dict['tn_parents_count'] = parents_count
 
         # update children
-        children_qs = objs_manager.filter(tn_parent=self.pk)\
-            .values_list('pk', flat=True)
-        children_list = list(children_qs)
+        children_pks = [
+            obj.pk for obj in objs \
+            if obj.tn_parent == self]
 
-        obj_dict['tn_children_pks'] = children_list
-        obj_dict['tn_children_count'] = len(children_list)
+        obj_dict['tn_children_pks'] = children_pks
+        obj_dict['tn_children_count'] = len(children_pks)
         obj_dict['tn_children_tree_pks'] = []
 
         # update siblings
-        siblings_qs = objs_manager.filter(tn_parent=parent_obj)\
-            .exclude(pk=self.pk)\
-            .values_list('pk', flat=True)
-        siblings_list = list(siblings_qs)
+        siblings_pks = [
+            obj.pk for obj in objs \
+            if obj.tn_parent == self.tn_parent and obj.pk != self.pk]
 
-        obj_dict['tn_siblings_pks'] = siblings_list
-        obj_dict['tn_siblings_count'] = len(siblings_list)
+        obj_dict['tn_siblings_pks'] = siblings_pks
+        obj_dict['tn_siblings_count'] = len(siblings_pks)
 
         # update level
         obj_dict['tn_level'] = (parents_count + 1)
@@ -345,24 +350,21 @@ class TreeNodeModel(models.Model):
     @classmethod
     def __get_nodes_data(cls):
 
-        objs_qs = cls.objects.select_related('tn_parent')\
-                            .prefetch_related('tn_children')
+        objs_qs = cls.objects.select_related('tn_parent')
         objs_list = list(objs_qs)
-        objs_dict = {}
-        objs_tree = []
-
-        for obj in objs_list:
-            obj_data = obj.__get_node_data()
-            obj_key = str(obj.pk)
-            objs_dict[obj_key] = obj_data
+        objs_dict = {
+            str(obj.pk):obj.__get_node_data(objs_list) \
+            for obj in objs_list}
 
         # get sorted dict keys
         objs_dict_keys = list(objs_dict.keys())
-        objs_dict_keys.sort(key=lambda obj_key: objs_dict[obj_key]['tn_order_str'])
+        objs_dict_keys.sort(
+            key=lambda obj_key: objs_dict[obj_key]['tn_order_str'])
 
         # get sorted dict values
         objs_dict_values = list(objs_dict.values())
-        objs_dict_values.sort(key=lambda obj_value: obj_value['tn_order_str'])
+        objs_dict_values.sort(
+            key=lambda obj_value: obj_value['tn_order_str'])
 
         objs_sort_pks = lambda obj_pk: objs_dict_keys.index(str(obj_pk))
 
@@ -434,7 +436,7 @@ class TreeNodeModel(models.Model):
             obj_data['tn_children_pks'] = cls.join_pks(obj_data['tn_children_pks'])
             obj_data['tn_children_tree_pks'] = cls.join_pks(obj_data['tn_children_tree_pks'])
 
-        return objs_dict
+        return (objs_list, objs_dict, )
 
     @classmethod
     def __get_nodes_tree(cls, instance=None):
@@ -451,7 +453,7 @@ class TreeNodeModel(models.Model):
             return child_tree
 
         if instance:
-            objs_list = instance.query_pks(instance.tn_children_tree_pks)
+            objs_list = instance.get_children()
             objs_dict = { str(obj.pk):obj for obj in objs_list }
             objs_tree = __get_node_tree(instance)['children']
         else:
@@ -460,6 +462,11 @@ class TreeNodeModel(models.Model):
             objs_tree = [__get_node_tree(obj) for obj in objs_list if obj.level == 1]
 
         return objs_tree
+
+    def __update_node_data(self, data):
+        if data:
+            for key, value in data.items():
+                setattr(self, key, value)
 
     @staticmethod
     @receiver(post_delete, dispatch_uid='post_delete_treenode')
@@ -470,32 +477,33 @@ class TreeNodeModel(models.Model):
             return
 
         if settings.DEBUG:
-            import timeit
             start_time = timeit.default_timer()
+            start_queries = len(connection.queries)
 
-        objs_dict = sender.__get_nodes_data()
-
-        # update db data
-        for obj_key in objs_dict:
-            obj_data = objs_dict.get(obj_key)
-            if obj_data:
-                obj_pk = int(obj_key)
-                sender.objects.filter(pk=obj_pk).update(**obj_data)
+        objs_list, objs_dict = sender.__get_nodes_data()
 
         # update instance data
-        obj_key = str(instance.pk)
-        obj_data = objs_dict.get(obj_key)
-        if obj_data:
-            for key, value in obj_data.items():
-                setattr(instance, key, value)
+        instance.__update_node_data(objs_dict.get(str(instance.pk)))
+
+        # update db data
+        if bulk_update:
+            for obj in objs_list:
+                obj.__update_node_data(objs_dict.get(str(obj.pk)))
+            bulk_update(objs_list)
+        else:
+            with transaction.atomic():
+                for obj_key, obj_data in objs_dict.items():
+                    obj_pk = int(obj_key)
+                    sender.objects.filter(pk=obj_pk).update(**obj_data)
 
         # print(json.dumps(instance.get_children_tree(), indent=4))
         # print(json.dumps(instance.get_tree(), indent=4))
 
         if settings.DEBUG:
-            elapsed = timeit.default_timer() - start_time
-            print('%s.__update_nodes_data in %ss' % (
-                sender.__name__, elapsed, ))
+            duration = timeit.default_timer() - start_time
+            queries = len(connection.queries) - start_queries
+            print('%s.__update_nodes_data in %ss with %s queries.' % (
+                sender.__name__, duration, queries, ))
 
     class Meta:
         abstract = True
