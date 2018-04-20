@@ -251,6 +251,12 @@ class TreeNodeModel(models.Model):
         text = text or str(self.pk)
         return force_text(tabs + text)
 
+    def is_first_child(self):
+        return (self.tn_index == 0)
+
+    def is_last_child(self):
+        return (self.tn_index == (self.tn_siblings_count - 1))
+
     PKS_SEPARATOR = ','
 
     @classmethod
