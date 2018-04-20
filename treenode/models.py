@@ -180,7 +180,11 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def get_roots(cls):
-        return list(cls.objects.filter(tn_parent=None))
+        return list(cls.get_roots_queryset())
+
+    @classmethod
+    def get_roots_queryset(cls):
+        return cls.objects.filter(tn_parent=None)
 
     def get_root(self):
         root_pk = (self.split_pks(self.tn_parents_pks) + [self.pk])[0]
@@ -191,28 +195,34 @@ class TreeNodeModel(models.Model):
         return self.tn_parent
 
     def get_parents(self):
-        return self.query_pks(self.tn_parents_pks)
+        return list(self.get_parents_queryset())
 
     def get_parents_count(self):
         return self.tn_parents_count
 
+    def get_parents_queryset(self):
+        return self.queryset_pks(self.tn_parents_pks)
+
     def get_children(self):
-        return self.query_pks(self.tn_children_pks)
+        return list(self.get_children_queryset())
 
     def get_children_count(self):
         return self.tn_children_count
+
+    def get_children_queryset(self):
+        return self.queryset_pks(self.tn_children_pks)
 
     def get_children_tree(self):
         return self.__get_nodes_tree(self)
 
     def get_siblings(self):
-        return self.query_pks(self.tn_siblings_pks)
+        return list(self.get_siblings_queryset())
 
     def get_siblings_count(self):
         return self.tn_siblings_count
 
-    def get_siblings_count(self):
-        return self.tn_siblings_count
+    def get_siblings_queryset(self):
+        return self.queryset_pks(self.tn_siblings_pks)
 
     def get_level(self):
         return self.tn_level
