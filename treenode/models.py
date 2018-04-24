@@ -12,11 +12,11 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-try:
-    # use bulk_update if installed
-    from django_bulk_update.helper import bulk_update
-except ImportError:
-    bulk_update = None
+# try:
+#     # use bulk_update if installed
+#     from django_bulk_update.helper import bulk_update
+# except ImportError:
+#     bulk_update = None
 
 import json
 import timeit
@@ -436,6 +436,50 @@ class TreeNodeModel(models.Model):
             obj_data['tn_children_pks'] = cls.join_pks(obj_data['tn_children_pks'])
             obj_data['tn_children_tree_pks'] = cls.join_pks(obj_data['tn_children_tree_pks'])
 
+        # clean dict data
+        for obj in objs_list:
+            obj_key = str(obj.pk)
+            obj_data = objs_dict[obj_key]
+
+            if obj_data['tn_children_count'] == obj.tn_children_count:
+                obj_data.pop('tn_children_count', None)
+
+            if obj_data['tn_children_pks'] == obj.tn_children_pks:
+                obj_data.pop('tn_children_pks', None)
+
+            if obj_data['tn_children_tree_pks'] == obj.tn_children_tree_pks:
+                obj_data.pop('tn_children_tree_pks', None)
+
+            if obj_data['tn_parents_count'] == obj.tn_parents_count:
+                obj_data.pop('tn_parents_count')
+
+            if obj_data['tn_parents_pks'] == obj.tn_parents_pks:
+                obj_data.pop('tn_parents_pks', None)
+
+            if obj_data['tn_siblings_count'] == obj.tn_siblings_count:
+                obj_data.pop('tn_siblings_count', None)
+
+            if obj_data['tn_siblings_pks'] == obj.tn_siblings_pks:
+                obj_data.pop('tn_siblings_pks', None)
+
+            if obj_data['tn_depth'] == obj.tn_depth:
+                obj_data.pop('tn_depth', None)
+
+            if obj_data['tn_index'] == obj.tn_index:
+                obj_data.pop('tn_index', None)
+
+            if obj_data['tn_level'] == obj.tn_level:
+                obj_data.pop('tn_level', None)
+
+            if obj_data['tn_order'] == obj.tn_order:
+                obj_data.pop('tn_order', None)
+
+            if len(obj_data) == 0:
+                objs_dict.pop(obj_key, None)
+
+        # clean list data
+        objs_list = [obj for obj in objs_list if str(obj.pk) in objs_dict]
+
         return (objs_list, objs_dict, )
 
     @classmethod
@@ -486,15 +530,15 @@ class TreeNodeModel(models.Model):
         instance.__update_node_data(objs_dict.get(str(instance.pk)))
 
         # update db data
-        if bulk_update:
-            for obj in objs_list:
-                obj.__update_node_data(objs_dict.get(str(obj.pk)))
-            bulk_update(objs_list)
-        else:
-            with transaction.atomic():
-                for obj_key, obj_data in objs_dict.items():
-                    obj_pk = int(obj_key)
-                    sender.objects.filter(pk=obj_pk).update(**obj_data)
+        # if bulk_update:
+        #     for obj in objs_list:
+        #         obj.__update_node_data(objs_dict.get(str(obj.pk)))
+        #     bulk_update(objs_list)
+        # else:
+        with transaction.atomic():
+            for obj_key, obj_data in objs_dict.items():
+                obj_pk = int(obj_key)
+                sender.objects.filter(pk=obj_pk).update(**obj_data)
 
         # print(json.dumps(instance.get_children_tree(), indent=4))
         # print(json.dumps(instance.get_tree(), indent=4))
