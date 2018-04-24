@@ -7,9 +7,27 @@ from django.utils.safestring import mark_safe
 
 class TreeNodeModelAdmin(admin.ModelAdmin):
 
+    treenode_field = None
+    treenode_accordion = False
     list_per_page = 1000
 
-    def get_treenode_display(self, obj, text, style='', accordion=True):
+    def get_list_display(self, request):
+        base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)
+        if self.treenode_field:
+            def treenode_field_display(obj):
+                return self.__get_treenode_field_display(
+                    obj,
+                    getattr(obj, self.treenode_field),
+                    accordion=self.treenode_accordion)
+            treenode_field_display.short_description = self.model._meta.verbose_name
+            treenode_field_display.allow_tags = True
+            if len(base_list_display) == 1 and base_list_display[0] == '__str__':
+                return (treenode_field_display, )
+            else:
+                return (treenode_field_display, ) + base_list_display
+        return base_list_display
+
+    def __get_treenode_field_display(self, obj, text, style='', accordion=True):
         parents_count = obj.tn_parents_count
         parent_pk = ''
         if parents_count:
@@ -32,12 +50,6 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
                 str(obj.tn_level),
                 str(parent_pk),
                 tabs_class, tabs, text, ))
-
-    def get_treenode_accordion_display(self, obj, text, style=''):
-        return self.get_treenode_display(obj, text, style, accordion=True)
-
-    def get_treenode_simple_display(self, obj, text, style=''):
-        return self.get_treenode_display(obj, text, style, accordion=False)
 
     class Media:
         css = {'all':(static('/treenode/css/treenode.css'),)}

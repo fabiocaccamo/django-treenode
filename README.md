@@ -60,13 +60,8 @@ from .models import Category
 
 class CategoryAdmin(TreeNodeModelAdmin):
 
-    list_display = ('name_display', )
-
-    def name_display(self, obj):
-        return self.get_treenode_display(obj, obj.name, accordion=True)
-
-    name_display.short_description = 'Name'
-    name_display.allow_tags = True
+    treenode_field = 'name'
+    treenode_accordion = True
 
 admin.site.register(Category, CategoryAdmin)
 ```
