@@ -2,8 +2,10 @@ django.jQuery(function($){
 
     $(document).ready(function($)
     {
-        var rowsExpandedDataKey = 'treenode_adminChangelistAccordionState';
-        var rowsExpandedDataSep = '|';
+        var rowsExpandedDataKeyPrefix = 'treenode_admin_accordion_state_for';
+        var rowsExpandedDataKeySuffix = '';
+        var rowsExpandedDataKey = '';
+        var rowsExpandedDataSep = ',';
 
         function init()
         {
@@ -11,7 +13,8 @@ django.jQuery(function($){
 
                 var scope = $(this);
 
-                var rowPk = scope.attr('data-treenode');
+                var rowType = scope.attr('data-treenode-type');
+                var rowPk = scope.attr('data-treenode-pk');
                 var rowAccordion = scope.attr('data-treenode-accordion');
                 var rowDepth = scope.attr('data-treenode-depth');
                 var rowLevel = scope.attr('data-treenode-level');
@@ -19,18 +22,28 @@ django.jQuery(function($){
 
                 // add treenode attributes to row
                 var rowEl = scope.closest('tr');
+                rowEl.attr('data-treenode-type', rowType);
                 rowEl.attr('data-treenode-accordion', rowAccordion);
                 rowEl.attr('data-treenode-parent', rowParentPk);
                 rowEl.attr('data-treenode-level', rowLevel);
                 rowEl.attr('data-treenode-depth', rowDepth);
-                rowEl.attr('data-treenode', rowPk);
+                rowEl.attr('data-treenode-pk', rowPk);
 
                 // remove original attributes
-                scope.removeAttr('data-treenode');
+                scope.removeAttr('data-treenode-type');
+                scope.removeAttr('data-treenode-pk');
                 scope.removeAttr('data-treenode-accordion');
                 scope.removeAttr('data-treenode-depth');
                 scope.removeAttr('data-treenode-level');
                 scope.removeAttr('data-treenode-parent');
+
+                if (rowsExpandedDataKeySuffix == '') {
+                    rowsExpandedDataKeySuffix = rowType;
+                }
+
+                if (rowsExpandedDataKey == '') {
+                    rowsExpandedDataKey = String(rowsExpandedDataKeyPrefix + '_' + rowsExpandedDataKeySuffix);
+                }
 
                 rowAccordion = Boolean(parseInt(rowAccordion));
                 rowDepth = parseInt(rowDepth);
@@ -80,6 +93,19 @@ django.jQuery(function($){
                 if (Boolean(rowParentPk)) {
                     rowEl.addClass('treenode-hide');
                 }
+
+                // $('.treenode-row').each(function(){
+                //     var rowEl = $(this);
+                //     var rowParentPk = rowEl.attr('data-treenode-parent');
+                //     if (Boolean(rowParentPk)) {
+                //         rowEl.addClass('treenode-hide');
+                //         var rowParentSel = '[data-treenode-pk="' + rowParentPk + '"]';
+                //         var rowParentEl = $('.treenode-row').filter(rowParentSel);
+                //         if (rowParentEl.length == 0) {
+                //             rowEl.addClass('treenode-root');
+                //         }
+                //     }
+                // });
             });
         }
 
@@ -101,7 +127,7 @@ django.jQuery(function($){
 
         function expandAccordionRow(target)
         {
-            var rowPk = target.attr('data-treenode');
+            var rowPk = target.attr('data-treenode-pk');
             var rowSel = '[data-treenode-parent="' + rowPk + '"]';
             var rowEl = $('.treenode-accordion').filter(rowSel);
             if (!target.hasClass('treenode-hide')) {
@@ -116,7 +142,7 @@ django.jQuery(function($){
 
         function collapseAccordionRow(target)
         {
-            var rowPk = target.attr('data-treenode');
+            var rowPk = target.attr('data-treenode-pk');
             var rowSel = '[data-treenode-parent="' + rowPk + '"]';
             var rowEl = $('.treenode-accordion').filter(rowSel);
             rowEl.addClass('treenode-hide');
@@ -145,7 +171,7 @@ django.jQuery(function($){
             var rowsExpandedData = (localStorage.getItem(rowsExpandedDataKey) || '');
             var rowsExpanded = rowsExpandedData.split(rowsExpandedDataSep);
             for (var i = 0, j = rowsExpanded.length; i < j; i++) {
-                rowSel = '.treenode-accordion[data-treenode="' + rowsExpanded[i] + '"]';
+                rowSel = '.treenode-accordion[data-treenode-pk="' + rowsExpanded[i] + '"]';
                 rowEl = $(rowSel);
                 rowEl.addClass('treenode-expanded');
                 rowEl.trigger('treenode-expand');
@@ -157,7 +183,7 @@ django.jQuery(function($){
             var rowPk;
             var rowsExpanded = [];
             $('.treenode-accordion.treenode-expanded').each(function(){
-                rowPk = $(this).attr('data-treenode');
+                rowPk = $(this).attr('data-treenode-pk');
                 rowsExpanded.push(rowPk);
             });
             var rowsExpandedData = rowsExpanded.join(rowsExpandedDataSep);

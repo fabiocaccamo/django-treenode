@@ -35,15 +35,18 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             parent_pk = parents_pks_list[-1]
         tabs = ('&mdash; ' * parents_count)
         tabs_class = 'treenode-tabs' if tabs else ''
+        model_package = '%s.%s' % (obj.__module__, obj.__class__.__name__, )
         return mark_safe(''\
             '<span class="treenode" style="%s"'\
-                    ' data-treenode="%s"'\
+                    ' data-treenode-type="%s"'\
+                    ' data-treenode-pk="%s"'\
                     ' data-treenode-accordion="%s"'\
                     ' data-treenode-depth="%s"'\
                     ' data-treenode-level="%s"'\
                     ' data-treenode-parent="%s">'\
                 '<span class="%s">%s</span> %s'\
             '</span>' % (style,
+                model_package.lower().replace('.', '_'),
                 str(obj.pk),
                 str(int(accordion)),
                 str(obj.tn_depth),

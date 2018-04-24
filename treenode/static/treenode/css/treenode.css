@@ -63,3 +63,7 @@
 .treenode-accordion.treenode-hide {
     display: none !important;
 }
+
+/*.treenode-accordion.treenode-hide:not(.treenode-root) {
+    display: none !important;
+}*/
