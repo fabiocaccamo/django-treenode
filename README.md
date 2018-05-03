@@ -55,7 +55,7 @@ The `TreeNodeModel` abstract class adds many fields and public methods to your m
 
 All fields are prefixed with `tn_` to prevent direct access and avoid conflicts with possible existing fields.
 
-If you want to access public methods as properties just make your model class inherit from both `TreenodeModel` and `TreenodeProperties`:
+If you want to access public methods as properties just make your model class inherit from both `TreeNodeModel` and `TreeNodeProperties`:
 
 ```python
 # ...
