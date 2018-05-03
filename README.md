@@ -7,10 +7,10 @@
 [![License](https://img.shields.io/pypi/l/django-treenode.svg)](https://img.shields.io/pypi/l/django-treenode.svg)
 
 # django-treenode
-Probably the best abstract model for your tree based stuff.
+Probably the best abstract model / admin for your **tree** based stuff.
 
 ## Features
-- **Fast** - get model `children`, `depth`, `index`, `level`, `parents`, `root`, `siblings`, `tree`, and much more... *(max 1 query)*
+- **Fast** - get `children`, `descendants`, `depth`, `index`, `level`, `parents`, `root`, `siblings`, `tree`, ... *(max 1 query)*
 - **Synced** - in-memory model instances are automatically updated *(0 queries)*
 - **Compatibility** - you can easily add treenode to existing projects
 - **Easy configuration** - just extend the abstract model / model-admin
@@ -23,13 +23,14 @@ Probably the best abstract model for your tree based stuff.
 
 ## Installation
 - Run `pip install django-treenode`
+- Add `treenode` to `settings.INSTALLED_APPS`
 - Make your model inherit from `treenode.models.TreeNodeModel` *(described below)*
 - Make your model-admin inherit from `treenode.admin.TreeNodeModelAdmin` *(described below)*
 - Run `python manage.py makemigrations` and `python manage.py migrate`
 
 ## Configuration
 #### `models.py`
-Make your model class inherit from `TreeNodeModel`:
+Make your model class inherit from `treenode.models.TreeNodeModel`:
 
 ```python
 from django.db import models
@@ -50,12 +51,11 @@ class Category(TreeNodeModel):
         verbose_name_plural = 'Categories'
 ```
 
-Now many fields *(used internally to speed-up operations)* have been added to your model,
-and many public methods are available.
+The `TreeNodeModel` abstract class adds many fields and public methods to your models.
 
-All `TreeNodeModel` fields are prefixed with `tn_` to prevent direct access and avoid conflicts with possible existing fields.
+All fields are prefixed with `tn_` to prevent direct access and avoid conflicts with possible existing fields.
 
-If you want to access public methods as properties just make your model inherit from both `treenode.models.TreenodeModel` and `treenode.models.TreenodeProperties`:
+If you want to access public methods as properties just make your model class inherit from both `TreenodeModel` and `TreenodeProperties`:
 
 ```python
 # ...
@@ -68,8 +68,10 @@ class Category(TreeNodeModel, TreeNodeProperties):
     # ...
 ```
 
+---
+
 #### `admin.py`
-Make your model-admin class inherit from `TreeNodeModelAdmin`.
+Make your model-admin class inherit from `treenode.admin.TreeNodeModelAdmin`.
 
 ```python
 from django.contrib import admin
@@ -93,183 +95,194 @@ admin.site.register(Category, CategoryAdmin)
 ```
 
 ## Usage
-The following methods/properties will be available on your model instances:
 
-### Methods/Properties:
-*Note that properties are available only if your model implements* `treenode.models.TreeNodeProperties` *for more info check the configuration section)*
+#### Methods/Properties:
+*Note that properties are available only if your model implements* `treenode.models.TreeNodeProperties` *(for more info check the configuration section)*
 
-Return a list containing all children *(1 query)*:
+Get a **list containing all children** *(1 query)*:
 ```python
-instance.get_children()
+obj.get_children()
 # or
-instance.children
+obj.children
 ```
 
-Return the children count *(0 queries)*:
+Get the **children count** *(0 queries)*:
 ```python
-instance.get_children_count()
+obj.get_children_count()
 # or
-instance.children_count
+obj.children_count
 ```
 
-Return the children queryset *(0 queries)*:
+Get the **children queryset** *(0 queries)*:
 ```python
-instance.get_children_queryset()
+obj.get_children_queryset()
 ```
 
-Return the node depth (how many levels of descendants) *(0 queries)*:
+Get the **node depth** (how many levels of descendants) *(0 queries)*:
 ```python
-instance.get_depth()
+obj.get_depth()
 # or
-instance.depth
+obj.depth
 ```
 
-Return a list containing all descendants *(1 query)*:
+Get a **list containing all descendants** *(1 query)*:
 ```python
-instance.get_descendants()
+obj.get_descendants()
 # or
-instance.descendants
+obj.descendants
 ```
 
-Return the descendants count *(0 queries)*:
+Get the **descendants count** *(0 queries)*:
 ```python
-instance.get_descendants_count()
+obj.get_descendants_count()
 # or
-instance.descendants_count
+obj.descendants_count
 ```
 
-Return the descendants queryset *(0 queries)*:
+Get the **descendants queryset** *(0 queries)*:
 ```python
-instance.get_descendants_queryset()
+obj.get_descendants_queryset()
 ```
 
-Return a n-dimensional `dict` representing the model tree starting from the current node *(1 query)*:
+Get a **n-dimensional** `dict` representing the **model tree** *(1 query)*:
 ```python
-instance.get_descendants_tree()
+obj.get_descendants_tree()
 # or
-instance.descendants_tree
+obj.descendants_tree
 ```
 
-Return a multiline string representing the model tree starting from the current node *(1 query)*:
+Get a **multiline** `string` representing the **model tree** *(1 query)*:
 ```python
-instance.get_descendants_tree_display()
+obj.get_descendants_tree_display()
 # or
-instance.descendants_tree_display
+obj.descendants_tree_display
 ```
 
-Return the node index (index in node.parent.children list) *(0 queries)*:
+Get the **node index** (index in node.parent.children list) *(0 queries)*:
 ```python
-instance.get_index()
+obj.get_index()
 # or
-instance.index
+obj.index
 ```
 
-Return the node level (starting from 1) *(0 queries)*:
+Get the **node level** (starting from 1) *(0 queries)*:
 ```python
-instance.get_level()
+obj.get_level()
 # or
-instance.level
+obj.level
 ```
 
-Return the order value used for ordering *(0 queries)*:
+Get the **order value** used for ordering *(0 queries)*:
 ```python
-instance.get_order()
+obj.get_order()
 # or
-instance.order
+obj.order
 ```
 
-Return the parent node *(1 query)*:
+Get the **parent node** *(1 query)*:
 ```python
-instance.get_parent()
+obj.get_parent()
 # or
-instance.parent
+obj.parent
 ```
 
-Return a list with all parents ordered from root to parent *(1 query)*:
+Set the **parent node** *(1 query)*:
 ```python
-instance.get_parents()
+obj.set_parent(parent_obj)
+```
+
+Get a **list with all parents** (ordered from root to parent) *(1 query)*:
+```python
+obj.get_parents()
 # or
-instance.parents
+obj.parents
 ```
 
-Return the parents count *(0 queries)*:
+Get the **parents count** *(0 queries)*:
 ```python
-instance.get_parents_count()
+obj.get_parents_count()
 # or
-instance.parents_count
+obj.parents_count
 ```
 
-Return the parents queryset *(0 queries)*:
+Get the **parents queryset** *(0 queries)*:
 ```python
-instance.get_parents_queryset()
+obj.get_parents_queryset()
 ```
 
-Return the node priority *(0 queries)*:
+Get the **node priority** *(0 queries)*:
 ```python
-instance.get_priority()
+obj.get_priority()
 # or
-instance.priority
+obj.priority
 ```
 
-Return the root node for the current node *(1 query)*:
+Set the **node priority** *(1 query)*:
 ```python
-instance.get_root()
-# or
-instance.root
+obj.set_priority(100)
 ```
 
-Return all root nodes *(1 query)*:
+Get the **root node** for the current node *(1 query)*:
+```python
+obj.get_root()
+# or
+obj.root
+```
+
+Get **all root nodes** *(1 query)*:
 ```python
 cls.get_roots()
 # or
 cls.roots
 ```
 
-Return a list with all the siblings *(1 query)*:
+Get a **list with all the siblings** *(1 query)*:
 ```python
-instance.get_siblings()
+obj.get_siblings()
 # or
-instance.siblings
+obj.siblings
 ```
 
-Return the siblings count *(0 queries)*:
+Get the **siblings count** *(0 queries)*:
 ```python
-instance.get_siblings_count()
+obj.get_siblings_count()
 # or
-instance.siblings_count
+obj.siblings_count
 ```
 
-Return the siblings queryset *(0 queries)*:
+Get the **siblings queryset** *(0 queries)*:
 ```python
-instance.get_siblings_queryset()
+obj.get_siblings_queryset()
 ```
 
-Return a n-dimensional `dict` representing the model tree *(1 query)*:
+Get a **n-dimensional** `dict` representing the **model tree** *(1 query)*:
 ```python
 cls.get_tree()
 # or
 cls.tree
 ```
 
-Return a multiline string representing the model tree *(1 query)*:
+Get a **multiline** `string` representing the **model tree** *(1 query)*:
 ```python
 cls.get_tree_display()
 # or
 cls.tree_display
 ```
 
-Return `True` if the current node is the first child *(0 queries)*:
+Return `True` if the current node is the **first child** *(0 queries)*:
 ```python
-instance.is_first_child()
+obj.is_first_child()
 ```
 
-Return `True` if the current node is the last child *(0 queries)*:
+Return `True` if the current node is the **last child** *(0 queries)*:
 ```python
-instance.is_last_child()
+obj.is_last_child()
 ```
 
-### Update tree manually:
-Useful after bulk updates:
+---
+
+#### Update tree manually:
+Useful after **bulk updates**:
 ```python
 cls.update_tree()
 ```
