@@ -3,13 +3,13 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
-from treenode.models import TreeNodeModel
+from treenode.models import TreeNodeModel, TreeNodeProperties
 
 
-@python_2_unicode_compatible
-class Category(TreeNodeModel):
+class Category(TreeNodeModel, TreeNodeProperties):
+
+    treenode_display_field = 'name'
 
     name = models.CharField(max_length=50, unique=True)
 
@@ -17,6 +17,3 @@ class Category(TreeNodeModel):
         app_label = 'tests'
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
-
-    def __str__(self):
-        return self.get_display_text(self.name)

@@ -4,34 +4,54 @@ from django.contrib import admin
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.safestring import mark_safe
 
+from .forms import TreenodeForm
+from .utils import split_pks
+
 
 class TreeNodeModelAdmin(admin.ModelAdmin):
 
-    treenode_field = None
+    """
+    Usage:
+
+    from django.contrib import admin
+    from treenode.admin import TreeNodeModelAdmin
+    from treenode.forms import TreenodeForm
+    from .models import MyModel
+
+
+    class MyModelAdmin(TreeNodeModelAdmin):
+
+        treenode_accordion = True
+        form = TreenodeForm
+
+    admin.site.register(MyModel, MyModelAdmin)
+    """
+
+    form = TreenodeForm
     treenode_accordion = False
     list_per_page = 1000
 
     def get_list_display(self, request):
         base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)
-        if self.treenode_field:
-            def treenode_field_display(obj):
-                return self.__get_treenode_field_display(
-                    obj,
-                    getattr(obj, self.treenode_field),
-                    accordion=self.treenode_accordion)
-            treenode_field_display.short_description = self.model._meta.verbose_name
-            treenode_field_display.allow_tags = True
-            if len(base_list_display) == 1 and base_list_display[0] == '__str__':
-                return (treenode_field_display, )
-            else:
-                return (treenode_field_display, ) + base_list_display
+        def treenode_field_display(obj):
+            return self.__get_treenode_field_display(
+                obj, accordion=self.treenode_accordion, style='')
+        treenode_field_display.short_description = self.model._meta.verbose_name
+        treenode_field_display.allow_tags = True
+        if len(base_list_display) == 1 and base_list_display[0] == '__str__':
+            return (treenode_field_display, )
+        else:
+            return (treenode_field_display, ) + base_list_display
         return base_list_display
 
-    def __get_treenode_field_display(self, obj, text, style='', accordion=True):
+    def get_list_filter(self, request):
+        return None
+
+    def __get_treenode_field_display(self, obj, accordion=True, style=''):
         parents_count = obj.tn_parents_count
         parent_pk = ''
         if parents_count:
-            parents_pks_list = obj.split_pks(obj.tn_parents_pks)
+            parents_pks_list = split_pks(obj.tn_parents_pks)
             parent_pk = parents_pks_list[-1]
         tabs = ('&mdash; ' * parents_count)
         tabs_class = 'treenode-tabs' if tabs else ''
@@ -52,7 +72,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
                 str(obj.tn_depth),
                 str(obj.tn_level),
                 str(parent_pk),
-                tabs_class, tabs, text, ))
+                tabs_class, tabs, obj.get_display(indent=False), ))
 
     class Media:
         css = {'all':(static('/treenode/css/treenode.css'),)}
