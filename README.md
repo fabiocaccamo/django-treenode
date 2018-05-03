@@ -229,11 +229,16 @@ obj.get_root()
 obj.root
 ```
 
-Get **all root nodes** *(1 query)*:
+Get a **list with all root nodes** *(1 query)*:
 ```python
 cls.get_roots()
 # or
 cls.roots
+```
+
+Get **root nodes queryset** *(1 query)*:
+```python
+cls.get_roots_queryset()
 ```
 
 Get a **list with all the siblings** *(1 query)*:
