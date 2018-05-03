@@ -279,10 +279,7 @@ Return `True` if the current node is the **last child** *(0 queries)*:
 obj.is_last_child()
 ```
 
----
-
-#### Update tree manually:
-Useful after **bulk updates**:
+**Update tree** manually, useful after **bulk updates**:
 ```python
 cls.update_tree()
 ```
