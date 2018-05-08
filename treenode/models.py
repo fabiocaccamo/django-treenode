@@ -274,11 +274,52 @@ class TreeNodeModel(models.Model):
     #         default=func if not default else default)
     #     return dump
 
+    def is_ancestor_of(self, obj):
+        return (self.__class__ == obj.__class__ and \
+                self.pk and \
+                self.pk != obj.pk and \
+                self.pk in split_pks(obj.tn_ancestors_pks))
+
+    def is_child_of(self, obj):
+        return (self.__class__ == obj.__class__ and \
+                self.pk and \
+                self.pk != obj.pk and \
+                self.pk in split_pks(obj.tn_children_pks))
+
+    def is_descendant_of(self, obj):
+        return (self.__class__ == obj.__class__ and \
+                self.pk and \
+                self.pk != obj.pk and \
+                self.pk in split_pks(obj.tn_descendants_pks))
+
     def is_first_child(self):
-        return (self.tn_index == 0)
+        return (self.pk and \
+                self.tn_index == 0)
 
     def is_last_child(self):
-        return (self.tn_index == self.tn_siblings_count)
+        return (self.pk and \
+                self.tn_index == self.tn_siblings_count)
+
+    def is_leaf(self):
+        return (self.pk and \
+                self.tn_children_count == 0)
+
+    def is_parent_of(self, obj):
+        return (self.__class__ == obj.__class__ and \
+                self.pk and \
+                self.pk != obj.pk and \
+                obj.tn_ancestors_count > 0 and \
+                self.pk == split_pks(obj.tn_ancestors_pks)[-1])
+
+    def is_root(self):
+        return (self.pk and \
+                self.tn_ancestors_count == 0)
+
+    def is_sibling_of(self, obj):
+        return (self.__class__ == obj.__class__ and \
+                self.pk and \
+                self.pk != obj.pk and \
+                self.tn_ancestors_pks == obj.tn_ancestors_pks)
 
     @classmethod
     def update_tree(cls):
