@@ -77,7 +77,7 @@ Make your model-admin class inherit from `treenode.admin.TreeNodeModelAdmin`.
 from django.contrib import admin
 
 from treenode.admin import TreeNodeModelAdmin
-from treenode.forms import TreenodeForm
+from treenode.forms import TreeNodeForm
 
 from .models import Category
 
@@ -88,8 +88,8 @@ class CategoryAdmin(TreeNodeModelAdmin):
     # default value False
     treenode_accordion = True
 
-    # use TreenodeForm to automatically exclude invalid parent choices
-    form = TreenodeForm
+    # use TreeNodeForm to automatically exclude invalid parent choices
+    form = TreeNodeForm
 
 admin.site.register(Category, CategoryAdmin)
 ```
