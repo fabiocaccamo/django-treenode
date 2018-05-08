@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
+from django.conf import settings
 
 from treenode.utils import join_pks, split_pks
 
@@ -71,6 +72,27 @@ class TreeNodeModelsTestCase(TestCase):
 
     def __get_cat(self, name):
         return Category.objects.get(name=name)
+
+    def test_delete(self):
+        self.__create_cat_tree()
+        # settings.DEBUG = True
+        a = self.__get_cat(name='a')
+        b = self.__get_cat(name='b')
+        c = self.__get_cat(name='c')
+        d = self.__get_cat(name='d')
+        e = self.__get_cat(name='e')
+        f = self.__get_cat(name='f')
+        a.delete()
+        a.delete()
+        self.assertEqual(Category.get_roots(), [b, c, d, e, f])
+        # settings.DEBUG = False
+
+    def test_delete_all(self):
+        self.__create_cat_tree()
+        # settings.DEBUG = True
+        Category.delete_all()
+        self.assertEqual(list(Category.objects.all()), [])
+        # settings.DEBUG = False
 
     def test_get_children(self):
         self.__create_cat_tree()
