@@ -94,6 +94,26 @@ class TreeNodeModelsTestCase(TestCase):
         self.assertEqual(list(Category.objects.all()), [])
         # settings.DEBUG = False
 
+    def test_get_ancestors(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        self.assertEqual(aaaa.tn_ancestors_pks, join_pks([a.pk, aa.pk, aaa.pk]))
+        self.assertEqual(aaaa.get_ancestors(), [a, aa, aaa])
+
+    def test_get_ancestors_count(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        self.assertEqual(a.get_ancestors_count(), 0)
+        self.assertEqual(aa.get_ancestors_count(), 1)
+        self.assertEqual(aaa.get_ancestors_count(), 2)
+        self.assertEqual(aaaa.get_ancestors_count(), 3)
+
     def test_get_children(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
@@ -340,39 +360,42 @@ class TreeNodeModelsTestCase(TestCase):
         f = self.__get_cat(name='f')
         with self.assertRaises(ValueError):
             a.set_parent(a)
-        with self.assertRaises(ValueError):
-            a.set_parent(aa)
+        # with self.assertRaises(ValueError):
+        #     a.set_parent(aa)
         d.set_parent(c)
         e.set_parent(c)
         f.set_parent(c)
-        self.assertEqual(d.tn_parents_pks, join_pks([c.pk]))
+        self.assertEqual(d.tn_ancestors_pks, join_pks([c.pk]))
         self.assertEqual(d.get_parent(), c)
-        self.assertEqual(e.tn_parents_pks, join_pks([c.pk]))
+        self.assertEqual(e.tn_ancestors_pks, join_pks([c.pk]))
         self.assertEqual(e.get_parent(), c)
-        self.assertEqual(f.tn_parents_pks, join_pks([c.pk]))
+        self.assertEqual(f.tn_ancestors_pks, join_pks([c.pk]))
         self.assertEqual(f.get_parent(), c)
         self.assertEqual(c.tn_children_pks, join_pks([d.pk, e.pk, f.pk]))
         self.assertEqual(c.get_children(), [d, e, f])
 
-    def test_get_parents_count(self):
+    def test_set_parent_none(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
         aa = self.__get_cat(name='aa')
         aaa = self.__get_cat(name='aaa')
         aaaa = self.__get_cat(name='aaaa')
-        self.assertEqual(a.get_parents_count(), 0)
-        self.assertEqual(aa.get_parents_count(), 1)
-        self.assertEqual(aaa.get_parents_count(), 2)
-        self.assertEqual(aaaa.get_parents_count(), 3)
-
-    def test_get_parents(self):
-        self.__create_cat_tree()
-        a = self.__get_cat(name='a')
-        aa = self.__get_cat(name='aa')
-        aaa = self.__get_cat(name='aaa')
-        aaaa = self.__get_cat(name='aaaa')
-        self.assertEqual(aaaa.tn_parents_pks, join_pks([a.pk, aa.pk, aaa.pk]))
-        self.assertEqual(aaaa.get_parents(), [a, aa, aaa])
+        a.set_parent(None)
+        aa.set_parent(None)
+        aaa.set_parent(None)
+        aaaa.set_parent(None)
+        self.assertTrue(a.is_root())
+        self.assertEqual(a.get_ancestors_count(), 0)
+        self.assertEqual(a.get_parent(), None)
+        self.assertTrue(aa.is_root())
+        self.assertEqual(aa.get_ancestors_count(), 0)
+        self.assertEqual(aa.get_parent(), None)
+        self.assertTrue(aaa.is_root())
+        self.assertEqual(aaa.get_ancestors_count(), 0)
+        self.assertEqual(aaa.get_parent(), None)
+        self.assertTrue(aaaa.is_root())
+        self.assertEqual(aaaa.get_ancestors_count(), 0)
+        self.assertEqual(aaaa.get_parent(), None)
 
     def test_get_priority(self):
         self.__create_cat_tree()
@@ -679,6 +702,8 @@ class TreeNodeModelsTestCase(TestCase):
         aaa = self.__get_cat(name='aaa')
         aaaa = self.__get_cat(name='aaaa')
         for obj in [a, aa, aaa, aaaa]:
+            self.assertEqual(obj.get_ancestors(), obj.ancestors)
+            self.assertEqual(obj.get_ancestors_count(), obj.ancestors_count)
             self.assertEqual(obj.get_children(), obj.children)
             self.assertEqual(obj.get_children_count(), obj.children_count)
             self.assertEqual(obj.get_depth(), obj.depth)
@@ -690,8 +715,6 @@ class TreeNodeModelsTestCase(TestCase):
             self.assertEqual(obj.get_level(), obj.level)
             self.assertEqual(obj.get_order(), obj.order)
             self.assertEqual(obj.get_parent(), obj.parent)
-            self.assertEqual(obj.get_parents(), obj.parents)
-            self.assertEqual(obj.get_parents_count(), obj.parents_count)
             self.assertEqual(obj.get_roots(), obj.roots)
             self.assertEqual(obj.get_root(), obj.root)
             self.assertEqual(obj.get_siblings(), obj.siblings)
@@ -702,7 +725,7 @@ class TreeNodeModelsTestCase(TestCase):
     def test_update_on_create(self):
         a = self.__create_cat(name='a')
         self.assertEqual(a.tn_children_pks, '')
-        self.assertEqual(a.tn_parents_pks, '')
+        self.assertEqual(a.tn_ancestors_pks, '')
         self.assertEqual(a.tn_siblings_pks, '')
         self.assertEqual(a.tn_depth, 0)
         self.assertEqual(a.tn_index, 0)
@@ -710,7 +733,7 @@ class TreeNodeModelsTestCase(TestCase):
         b = self.__create_cat(name='b')
         c = self.__create_cat(name='c')
         self.assertEqual(a.tn_children_pks, '')
-        self.assertEqual(a.tn_parents_pks, '')
+        self.assertEqual(a.tn_ancestors_pks, '')
         self.assertEqual(a.tn_siblings_pks, join_pks([b.pk, c.pk]))
         aa = self.__create_cat(name='aa', parent=a)
         ab = self.__create_cat(name='ab', parent=a)

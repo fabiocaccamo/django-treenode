@@ -46,20 +46,14 @@ class TreeNodeModel(models.Model):
     # All fields are for internal usage and they are prefixed by 'tn_'
     # to avoid direct access and conflicts with possible existing fields.
 
-    tn_parent = models.ForeignKey('self',
-        related_name='tn_children',
-        on_delete=models.CASCADE,
-        blank=True, null=True,
-        verbose_name=_('Parent'), )
-
-    tn_parents_pks = models.CharField(
+    tn_ancestors_pks = models.CharField(
         max_length=500, blank=True,
         default='', editable=False,
-        verbose_name=_('Parents pks'), )
+        verbose_name=_('Ancestors pks'), )
 
-    tn_parents_count = models.PositiveSmallIntegerField(
+    tn_ancestors_count = models.PositiveSmallIntegerField(
         default=0, editable=False,
-        verbose_name=_('Parents count'), )
+        verbose_name=_('Ancestors count'), )
 
     tn_children_pks = models.CharField(
         max_length=500, blank=True,
@@ -70,6 +64,11 @@ class TreeNodeModel(models.Model):
         default=0, editable=False,
         verbose_name=_('Children count'), )
 
+    tn_depth = models.PositiveSmallIntegerField(
+        default=0, editable=False,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+        verbose_name=_('Depth'), )
+
     tn_descendants_pks = models.CharField(
         max_length=500, blank=True,
         default='', editable=False,
@@ -79,28 +78,20 @@ class TreeNodeModel(models.Model):
         default=0, editable=False,
         verbose_name=_('Descendants count'), )
 
-    tn_siblings_pks = models.CharField(
-        max_length=500, blank=True,
-        default='', editable=False,
-        verbose_name=_('Siblings pks'), )
-
-    tn_siblings_count = models.PositiveSmallIntegerField(
+    tn_index = models.PositiveSmallIntegerField(
         default=0, editable=False,
-        verbose_name=_('Siblings count'), )
+        verbose_name=_('Index'), )
 
     tn_level = models.PositiveSmallIntegerField(
         default=0, editable=False,
         validators=[MinValueValidator(0), MaxValueValidator(10)],
         verbose_name=_('Level'), )
 
-    tn_index = models.PositiveSmallIntegerField(
-        default=0, editable=False,
-        verbose_name=_('Index'), )
-
-    tn_depth = models.PositiveSmallIntegerField(
-        default=0, editable=False,
-        validators=[MinValueValidator(0), MaxValueValidator(10)],
-        verbose_name=_('Depth'), )
+    tn_parent = models.ForeignKey('self',
+        related_name='tn_children',
+        on_delete=models.CASCADE,
+        blank=True, null=True,
+        verbose_name=_('Parent'), )
 
     tn_priority = models.PositiveSmallIntegerField(
         default=0,
@@ -110,6 +101,15 @@ class TreeNodeModel(models.Model):
     tn_order = models.PositiveSmallIntegerField(
         default=0, editable=False,
         verbose_name=_('Order'), )
+
+    tn_siblings_pks = models.CharField(
+        max_length=500, blank=True,
+        default='', editable=False,
+        verbose_name=_('Siblings pks'), )
+
+    tn_siblings_count = models.PositiveSmallIntegerField(
+        default=0, editable=False,
+        verbose_name=_('Siblings count'), )
 
     # Public methods
 
@@ -131,6 +131,16 @@ class TreeNodeModel(models.Model):
     #             self.__class__.objects.filter(
     #                 pk__in=split_pks(self.tn_children_pks)).delete()
     #         self.update_tree()
+
+    def get_ancestors(self):
+        return list(self.get_ancestors_queryset())
+
+    def get_ancestors_count(self):
+        return self.tn_ancestors_count
+
+    def get_ancestors_queryset(self):
+        return self.__class__.objects.filter(
+            pk__in=split_pks(self.tn_ancestors_pks))
 
     def get_children(self):
         return list(self.get_children_queryset())
@@ -174,7 +184,7 @@ class TreeNodeModel(models.Model):
     #     return dump
 
     def get_display(self, indent=True, mark='— '):
-        indentation = '%s' % ((mark * self.tn_parents_count) if indent else '', )
+        indentation = '%s' % ((mark * self.tn_ancestors_count) if indent else '', )
         field_name = getattr(self, 'treenode_display_field', 'pk')
         text = str(getattr(self, field_name))
         return force_text(indentation + text)
@@ -192,36 +202,26 @@ class TreeNodeModel(models.Model):
         return self.tn_parent
 
     def set_parent(self, obj):
-        obj_cls = obj.__class__
-        cls = self.__class__
-        if obj_cls != cls:
-            raise ValueError(
-                'obj can\'t be set as parent, '\
-                'it is %s and it should be %s.' % (
-                obj_cls.__name__, cls.__name__, ))
-        if obj == self:
-            raise ValueError(
-                'obj can\'t be set as parent, '\
-                'it is the same object.')
-        if obj.pk:
-            if obj.pk in split_pks(self.tn_descendants_pks):
-                raise ValueError(
-                    'obj can\'t be set as parent, '\
-                    'because it is in descendants.')
-        else:
-            obj.save()
-        self.tn_parent = obj
-        self.save()
-
-    def get_parents(self):
-        return list(self.get_parents_queryset())
-
-    def get_parents_count(self):
-        return self.tn_parents_count
-
-    def get_parents_queryset(self):
-        return self.__class__.objects.filter(
-            pk__in=split_pks(self.tn_parents_pks))
+        with no_signals():
+            if obj:
+                obj_cls = obj.__class__
+                cls = self.__class__
+                if obj_cls != cls:
+                    raise ValueError(
+                        'obj can\'t be set as parent, '\
+                        'it is istance of %s, expected instance of %s.' % (
+                        obj_cls.__name__, cls.__name__, ))
+                if obj == self:
+                    raise ValueError(
+                        'obj can\'t be set as parent of itself.')
+                if not obj.pk:
+                    obj.save()
+                if obj.pk in split_pks(self.tn_descendants_pks):
+                    obj.tn_parent = self.tn_parent
+                    obj.save()
+            self.tn_parent = obj
+            self.save()
+        self.update_tree()
 
     def get_priority(self):
         return self.tn_priority
@@ -231,7 +231,7 @@ class TreeNodeModel(models.Model):
         self.save()
 
     def get_root(self):
-        root_pk = (split_pks(self.tn_parents_pks) + [self.pk])[0]
+        root_pk = (split_pks(self.tn_ancestors_pks) + [self.pk])[0]
         root_obj = self.__class__.objects.get(pk=root_pk)
         return root_obj
 
@@ -324,62 +324,62 @@ class TreeNodeModel(models.Model):
 
     def __get_node_data(self, objs):
 
-        # retrieve parents
-        parent_obj = self.tn_parent
-        parents_list = []
-        obj = parent_obj
-
-        while obj:
-            parents_list.insert(0, obj)
-            obj = obj.tn_parent
-
-        parents_pks = [obj.pk for obj in parents_list]
-        parents_count = len(parents_list)
-
         obj_dict = {}
 
-        # update parents
-        obj_dict['tn_parents_pks'] = parents_pks
-        obj_dict['tn_parents_count'] = parents_count
+        # update ancestors
+        ancestors_list = []
+
+        parent_obj = self.tn_parent
+        while parent_obj:
+            ancestors_list.insert(0, parent_obj)
+            parent_obj = parent_obj.tn_parent
+
+        ancestors_pks = [obj.pk for obj in ancestors_list]
+        ancestors_count = len(ancestors_pks)
+
+        obj_dict['tn_ancestors_pks'] = ancestors_pks
+        obj_dict['tn_ancestors_count'] = ancestors_count
 
         # update children
         children_pks = [
             obj.pk for obj in objs \
             if obj.tn_parent == self]
+        children_count = len(children_pks)
 
         obj_dict['tn_children_pks'] = children_pks
-        obj_dict['tn_children_count'] = len(children_pks)
+        obj_dict['tn_children_count'] = children_count
+
+        # update depth
+        obj_dict['tn_depth'] = 0
 
         # update descendants
         obj_dict['tn_descendants_pks'] = []
         obj_dict['tn_descendants_count'] = 0
 
+        # update level
+        obj_dict['tn_level'] = (ancestors_count + 1)
+
+        # update order
+        order_objs = list(ancestors_list) + [self]
+        order_strs = [obj.__get_node_order_str() for obj in order_objs]
+        order_str = ''.join(order_strs)[0:150]
+        obj_dict['tn_order_str'] = order_str
+
         # update siblings
         siblings_pks = [
             obj.pk for obj in objs \
             if obj.tn_parent == self.tn_parent and obj.pk != self.pk]
+        siblings_count = len(siblings_pks)
 
         obj_dict['tn_siblings_pks'] = siblings_pks
-        obj_dict['tn_siblings_count'] = len(siblings_pks)
-
-        # update level
-        obj_dict['tn_level'] = (parents_count + 1)
-
-        # update depth
-        obj_dict['tn_depth'] = 0
-
-        # update order
-        order_objs = list(parents_list) + [self]
-        order_strs = [obj.__get_node_order_str() for obj in order_objs]
-        order_str = ''.join(order_strs)[0:150]
-        obj_dict['tn_order_str'] = order_str
+        obj_dict['tn_siblings_count'] = siblings_count
 
         return obj_dict
 
     @classmethod
     def __get_nodes_data(cls):
 
-        objs_qs = cls.objects.select_related('tn_parent')
+        objs_qs = cls.objects.select_related('tn_parent').select_for_update()
         objs_list = list(objs_qs)
         objs_dict = {
             str(obj.pk):obj.__get_node_data(objs_list) \
@@ -408,28 +408,28 @@ class TreeNodeModel(models.Model):
         objs_index_cursors = {}
         objs_index_cursor = 0
         for obj_data in objs_dict_values:
-            obj_parents_pks = str(obj_data['tn_parents_pks'])
-            objs_index_cursor = objs_index_cursors.get(obj_parents_pks, 0)
+            obj_ancestors_pks = str(obj_data['tn_ancestors_pks'])
+            objs_index_cursor = objs_index_cursors.get(obj_ancestors_pks, 0)
             obj_data['tn_index'] = objs_index_cursor
             objs_index_cursor += 1
-            objs_index_cursors[obj_parents_pks] = objs_index_cursor
+            objs_index_cursors[obj_ancestors_pks] = objs_index_cursor
 
         # update depth
         for obj_data in objs_dict_values:
             obj_children_count = obj_data['tn_children_count']
             if obj_children_count > 0:
                 continue
-            obj_parents_count = obj_data['tn_parents_count']
-            if obj_parents_count == 0:
+            obj_ancestors_count = obj_data['tn_ancestors_count']
+            if obj_ancestors_count == 0:
                 continue
-            obj_parents_pks = obj_data['tn_parents_pks']
-            for obj_parent_pk in obj_parents_pks:
-                obj_parent_key = str(obj_parent_pk)
-                obj_parent_data = objs_dict[obj_parent_key]
-                obj_parent_index = obj_parents_pks.index(obj_parent_pk)
-                obj_parent_depth = (obj_parents_count - obj_parent_index)
-                if obj_parent_data['tn_depth'] < obj_parent_depth:
-                    obj_parent_data['tn_depth'] = obj_parent_depth
+            obj_ancestors_pks = obj_data['tn_ancestors_pks']
+            for obj_ancestor_pk in obj_ancestors_pks:
+                obj_ancestor_key = str(obj_ancestor_pk)
+                obj_ancestor_data = objs_dict[obj_ancestor_key]
+                obj_ancestor_index = obj_ancestors_pks.index(obj_ancestor_pk)
+                obj_ancestor_depth = (obj_ancestors_count - obj_ancestor_index)
+                if obj_ancestor_data['tn_depth'] < obj_ancestor_depth:
+                    obj_ancestor_data['tn_depth'] = obj_ancestor_depth
 
         # update children and siblings pks order
         for obj_data in objs_dict_values:
@@ -461,15 +461,21 @@ class TreeNodeModel(models.Model):
 
         # join all pks lists
         for obj_data in objs_dict_values:
-            obj_data['tn_parents_pks'] = join_pks(obj_data['tn_parents_pks'])
-            obj_data['tn_siblings_pks'] = join_pks(obj_data['tn_siblings_pks'])
+            obj_data['tn_ancestors_pks'] = join_pks(obj_data['tn_ancestors_pks'])
             obj_data['tn_children_pks'] = join_pks(obj_data['tn_children_pks'])
             obj_data['tn_descendants_pks'] = join_pks(obj_data['tn_descendants_pks'])
+            obj_data['tn_siblings_pks'] = join_pks(obj_data['tn_siblings_pks'])
 
         # clean dict data
         for obj in objs_list:
             obj_key = str(obj.pk)
             obj_data = objs_dict[obj_key]
+
+            if obj_data['tn_ancestors_count'] == obj.tn_ancestors_count:
+                obj_data.pop('tn_ancestors_count')
+
+            if obj_data['tn_ancestors_pks'] == obj.tn_ancestors_pks:
+                obj_data.pop('tn_ancestors_pks', None)
 
             if obj_data['tn_children_count'] == obj.tn_children_count:
                 obj_data.pop('tn_children_count', None)
@@ -477,26 +483,14 @@ class TreeNodeModel(models.Model):
             if obj_data['tn_children_pks'] == obj.tn_children_pks:
                 obj_data.pop('tn_children_pks', None)
 
+            if obj_data['tn_depth'] == obj.tn_depth:
+                obj_data.pop('tn_depth', None)
+
             if obj_data['tn_descendants_count'] == obj.tn_descendants_count:
                 obj_data.pop('tn_descendants_count', None)
 
             if obj_data['tn_descendants_pks'] == obj.tn_descendants_pks:
                 obj_data.pop('tn_descendants_pks', None)
-
-            if obj_data['tn_parents_count'] == obj.tn_parents_count:
-                obj_data.pop('tn_parents_count')
-
-            if obj_data['tn_parents_pks'] == obj.tn_parents_pks:
-                obj_data.pop('tn_parents_pks', None)
-
-            if obj_data['tn_siblings_count'] == obj.tn_siblings_count:
-                obj_data.pop('tn_siblings_count', None)
-
-            if obj_data['tn_siblings_pks'] == obj.tn_siblings_pks:
-                obj_data.pop('tn_siblings_pks', None)
-
-            if obj_data['tn_depth'] == obj.tn_depth:
-                obj_data.pop('tn_depth', None)
 
             if obj_data['tn_index'] == obj.tn_index:
                 obj_data.pop('tn_index', None)
@@ -506,6 +500,12 @@ class TreeNodeModel(models.Model):
 
             if obj_data['tn_order'] == obj.tn_order:
                 obj_data.pop('tn_order', None)
+
+            if obj_data['tn_siblings_count'] == obj.tn_siblings_count:
+                obj_data.pop('tn_siblings_count', None)
+
+            if obj_data['tn_siblings_pks'] == obj.tn_siblings_pks:
+                obj_data.pop('tn_siblings_pks', None)
 
             if len(obj_data) == 0:
                 objs_dict.pop(obj_key, None)
@@ -563,6 +563,14 @@ class TreeNodeProperties(object):
     """
 
     @property
+    def ancestors(self):
+        return self.get_ancestors()
+
+    @property
+    def ancestors_count(self):
+        return self.get_ancestors_count()
+
+    @property
     def children(self):
         return self.get_children()
 
@@ -605,14 +613,6 @@ class TreeNodeProperties(object):
     @property
     def parent(self):
         return self.get_parent()
-
-    @property
-    def parents(self):
-        return self.get_parents()
-
-    @property
-    def parents_count(self):
-        return self.get_parents_count()
 
     @property
     def priority(self):
