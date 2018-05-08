@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from django.test import TestCase
 from django.conf import settings
+from django.test import TransactionTestCase
 
 from treenode.utils import join_pks, split_pks
 
 from .models import Category
 
 
-class TreeNodeModelsTestCase(TestCase):
+class TreeNodeModelsTestCase(TransactionTestCase):
 
     def setUp(self):
         pass
@@ -829,6 +829,84 @@ class TreeNodeModelsTestCase(TestCase):
         self.assertFalse(aaaa.is_sibling_of(aaaa))
         self.assertFalse(aaaa.is_sibling_of(aa))
         self.assertFalse(aaaa.is_sibling_of(aaa))
+
+    def test_num_queries(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        b = self.__get_cat(name='b')
+        c = self.__get_cat(name='c')
+        e = self.__get_cat(name='d')
+        d = self.__get_cat(name='e')
+        f = self.__get_cat(name='f')
+        with self.assertNumQueries(1):
+            aaaa.get_ancestors()
+        with self.assertNumQueries(0):
+            aaaa.get_ancestors_count()
+        with self.assertNumQueries(0):
+            aaaa.get_ancestors_queryset()
+        with self.assertNumQueries(1):
+            a.get_children()
+        with self.assertNumQueries(0):
+            a.get_children_count()
+        with self.assertNumQueries(0):
+            a.get_children_queryset()
+        with self.assertNumQueries(0):
+            a.get_depth()
+        with self.assertNumQueries(1):
+            a.get_descendants()
+        with self.assertNumQueries(0):
+            a.get_descendants_count()
+        with self.assertNumQueries(0):
+            a.get_descendants_queryset()
+        with self.assertNumQueries(1):
+            a.get_descendants_tree()
+        with self.assertNumQueries(1):
+            a.get_descendants_tree_display()
+        with self.assertNumQueries(0):
+            a.get_index()
+        with self.assertNumQueries(0):
+            a.get_level()
+        with self.assertNumQueries(0):
+            a.get_order()
+        with self.assertNumQueries(0):
+            a.get_parent()
+        with self.assertNumQueries(0):
+            a.get_priority()
+        with self.assertNumQueries(1):
+            a.get_root()
+        with self.assertNumQueries(1):
+            Category.get_roots()
+        with self.assertNumQueries(1):
+            a.get_siblings()
+        with self.assertNumQueries(0):
+            a.get_siblings_count()
+        with self.assertNumQueries(0):
+            a.get_siblings_queryset()
+        with self.assertNumQueries(1):
+            Category.get_tree()
+        with self.assertNumQueries(1):
+            Category.get_tree_display()
+        with self.assertNumQueries(0):
+            a.is_ancestor_of(aa)
+        with self.assertNumQueries(0):
+            aa.is_child_of(a)
+        with self.assertNumQueries(0):
+            aa.is_descendant_of(a)
+        with self.assertNumQueries(0):
+            a.is_first_child()
+        with self.assertNumQueries(0):
+            a.is_last_child()
+        with self.assertNumQueries(0):
+            a.is_leaf()
+        with self.assertNumQueries(0):
+            a.is_parent_of(aa)
+        with self.assertNumQueries(0):
+            a.is_root()
+        with self.assertNumQueries(0):
+            a.is_sibling_of(b)
 
     def test_properties(self):
         self.__create_cat_tree()
