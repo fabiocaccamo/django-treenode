@@ -5,27 +5,42 @@ from collections import defaultdict
 import weakref
 
 
-# __refs__ = defaultdict(weakref.WeakSet)
-__refs__ = defaultdict(list)
+__refs__ = defaultdict(weakref.WeakSet)
+
+
+def clear_refs(cls):
+    __refs__[cls].clear()
 
 
 def get_refs(cls):
-    # return __refs__[cls]
-    refs = []
-    for ref in __refs__[cls]:
-        instance = ref()
-        if instance is not None:
-            refs.append(ref)
-            yield instance
-    # print(len(refs))
-    __refs__[cls] = refs
+    # print(len(__refs__[cls]))
+    return __refs__[cls]
 
 
-def set_ref(instance):
-    # if instance.pk:
-    #     cls = instance.__class__
-    #     __refs__[cls].add(instance)
-    if instance.pk:
-        cls = instance.__class__
-        ref = weakref.ref(instance)
-        __refs__[cls].append(ref)
+def set_ref(cls, obj):
+    if obj.pk:
+        __refs__[cls].add(obj)
+
+
+# __refs__ = defaultdict(list)
+
+
+# def clear_refs(cls):
+#     __refs__[cls][:] = []
+
+
+# def get_refs(cls):
+#     refs = []
+#     for ref in __refs__[cls]:
+#         obj = ref()
+#         if obj is not None:
+#             refs.append(ref)
+#             yield obj
+#     # print(len(refs))
+#     __refs__[cls] = refs
+
+
+# def set_ref(cls, obj):
+#     if obj.pk:
+#         ref = weakref.ref(obj)
+#         __refs__[cls].append(ref)

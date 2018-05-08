@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 import timeit
 
 from . import classproperty
-from .memory import get_refs
+from .memory import clear_refs, get_refs
 from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
 
@@ -123,6 +123,7 @@ class TreeNodeModel(models.Model):
         with no_signals():
             with transaction.atomic():
                 cls.objects.all().delete()
+            clear_refs(cls)
 
     def get_ancestors(self):
         return list(self.get_ancestors_queryset())

@@ -15,13 +15,13 @@ def __is_treenode_signal(instance):
 def post_init_treenode(sender, instance, **kwargs):
     if not __is_treenode_signal(instance):
         return
-    set_ref(instance)
+    set_ref(sender, instance)
 
 
 def post_save_treenode(sender, instance, **kwargs):
     if not __is_treenode_signal(instance):
         return
-    set_ref(instance)
+    set_ref(sender, instance)
     sender.update_tree()
 
 
