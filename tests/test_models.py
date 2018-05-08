@@ -75,7 +75,6 @@ class TreeNodeModelsTestCase(TransactionTestCase):
 
     def test_delete(self):
         self.__create_cat_tree()
-        # settings.DEBUG = True
         a = self.__get_cat(name='a')
         b = self.__get_cat(name='b')
         c = self.__get_cat(name='c')
@@ -85,14 +84,11 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         a.delete()
         a.delete()
         self.assertEqual(Category.get_roots(), [b, c, d, e, f])
-        # settings.DEBUG = False
 
     def test_delete_tree(self):
         self.__create_cat_tree()
-        # settings.DEBUG = True
         Category.delete_tree()
         self.assertEqual(list(Category.objects.all()), [])
-        # settings.DEBUG = False
 
     def test_get_ancestors(self):
         self.__create_cat_tree()
@@ -947,6 +943,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             self.assertEqual(obj.get_level(), obj.level)
             self.assertEqual(obj.get_order(), obj.order)
             self.assertEqual(obj.get_parent(), obj.parent)
+            self.assertEqual(obj.get_priority(), obj.priority)
             self.assertEqual(obj.get_roots(), obj.roots)
             self.assertEqual(obj.get_root(), obj.root)
             self.assertEqual(obj.get_siblings(), obj.siblings)
