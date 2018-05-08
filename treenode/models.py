@@ -308,6 +308,9 @@ class TreeNodeModel(models.Model):
         return (self.pk and \
                 self.tn_ancestors_count == 0)
 
+    def is_root_of(self, obj):
+        return (self.is_root() and self.is_ancestor_of(obj))
+
     def is_sibling_of(self, obj):
         return (self.__class__ == obj.__class__ and \
                 self.pk and \

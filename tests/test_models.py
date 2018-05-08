@@ -796,6 +796,23 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertTrue(b.is_root())
         self.assertTrue(c.is_root())
 
+    def test_is_root_of(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        self.assertFalse(a.is_root_of(a))
+        self.assertTrue(a.is_root_of(aa))
+        self.assertTrue(a.is_root_of(aaa))
+        self.assertTrue(a.is_root_of(aaaa))
+        self.assertFalse(aa.is_root_of(aaaa))
+        self.assertFalse(aaa.is_root_of(aaaa))
+        self.assertFalse(aaaa.is_root_of(aaaa))
+        self.assertFalse(aaaa.is_root_of(aaa))
+        self.assertFalse(aaaa.is_root_of(aa))
+        self.assertFalse(aaaa.is_root_of(a))
+
     def test_is_sibling_of(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
@@ -905,6 +922,8 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             a.is_parent_of(aa)
         with self.assertNumQueries(0):
             a.is_root()
+        with self.assertNumQueries(0):
+            a.is_root_of(aaaa)
         with self.assertNumQueries(0):
             a.is_sibling_of(b)
 
