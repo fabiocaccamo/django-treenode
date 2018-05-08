@@ -8,7 +8,7 @@ Probably the best abstract model / admin for your **tree** based stuff.
 Features
 --------
 
--  **Fast** - get ``children``, ``descendants``, ``depth``, ``index``, ``level``, ``parents``, ``root``, ``siblings``, ``tree``, ... *(max 1 query)*
+-  **Fast** - get ``ancestors``, ``children``, ``descendants``, ``parent``, ``root``, ``siblings``, ``tree``, ... *(1 query)*
 -  **Synced** - in-memory model instances are automatically updated *(0 queries)*
 -  **Compatibility** - you can easily add treenode to existing projects
 -  **Easy configuration** - just extend the abstract model / model-admin
@@ -109,6 +109,18 @@ Methods/Properties:
 ^^^^^^^^^^^^^^^^^^^
 
 *Note that properties are available only if your model implements* ``treenode.models.TreeNodeProperties`` *(for more info check the configuration section)*
+
+**Delete a node** and all its descendants:
+
+.. code:: python
+
+    obj.delete()
+
+**Delete the whole tree** for the current node class:
+
+.. code:: python
+
+    cls.delete_tree()
 
 Get a **list containing all children** *(1 query)*:
 
@@ -312,6 +324,24 @@ Get a **multiline** ``string`` representing the **model tree** *(1 query)*:
     # or
     cls.tree_display
 
+Return `True` if the current node **is ancestor** of obj *(0 queries)*:
+
+.. code:: python
+
+    obj.is_ancestor_of(obj)
+
+Return `True` if the current node **is child** of obj *(0 queries)*:
+
+.. code:: python
+
+    obj.is_child_of(obj)
+
+Return `True` if the current node **is descendant** of obj *(0 queries)*:
+
+.. code:: python
+
+    obj.is_descendant_of(obj)
+
 Return ``True`` if the current node is the **first child** *(0 queries)*:
 
 .. code:: python
@@ -323,6 +353,37 @@ Return ``True`` if the current node is the **last child** *(0 queries)*:
 .. code:: python
 
     obj.is_last_child()
+
+
+Return `True` if the current node is **leaf** (it has not children) *(0 queries)*:
+
+.. code:: python
+
+    obj.is_leaf()
+
+Return `True` if the current node **is parent** of obj *(0 queries)*:
+
+.. code:: python
+
+    obj.is_parent_of(obj)
+
+Return `True` if the current node **is root** *(0 queries)*:
+
+.. code:: python
+
+    obj.is_root()
+
+Return `True` if the current node **is root** of obj *(0 queries)*:
+
+.. code:: python
+
+    obj.is_root_of(obj)
+
+Return `True` if the current node **is sibling** of obj *(0 queries)*:
+
+.. code:: python
+
+    obj.is_sibling_of(obj)
 
 **Update tree** manually, useful after **bulk updates**:
 
