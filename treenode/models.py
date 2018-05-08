@@ -5,19 +5,16 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import connection, models, transaction
-from django.db.models.signals import post_delete, post_init, post_save
-from django.dispatch import receiver
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from collections import defaultdict
-# import json
 import timeit
-import weakref
 
 from . import classproperty
+from .memory import get_refs
+from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
 
 
@@ -279,7 +276,7 @@ class TreeNodeModel(models.Model):
                 cls.objects.filter(pk=obj_pk).update(**obj_data)
 
         # update in-memory instances
-        for obj in cls.__get_references():
+        for obj in get_refs(cls):
             obj_data = objs_dict.get(str(obj.pk))
             if obj_data:
                 obj.__update_node_data(obj_data)
@@ -531,65 +528,6 @@ class TreeNodeModel(models.Model):
             for key, value in data.items():
                 setattr(self, key, value)
 
-    # In-memory references
-    # Used to keep in memory instances updated
-
-    # __refs__ = defaultdict(weakref.WeakSet)
-
-    # @classmethod
-    # def __get_references(cls):
-    #     return cls.__refs__[cls]
-
-    # @classmethod
-    # def __set_reference(cls, instance):
-    #     if instance.pk:
-    #         cls.__refs__[cls].add(instance)
-
-    __refs__ = defaultdict(list)
-
-    @classmethod
-    def __get_references(cls):
-        refs = []
-        for ref in cls.__refs__[cls]:
-            instance = ref()
-            if instance is not None:
-                refs.append(ref)
-                yield instance
-        # print(len(refs))
-        cls.__refs__[cls] = refs
-
-    @classmethod
-    def __set_reference(cls, instance):
-        if instance.pk:
-            cls.__refs__[cls].append(weakref.ref(instance))
-
-    # Signals
-    # Used to keep tree data updated
-
-    @staticmethod
-    @receiver(post_init, dispatch_uid='post_init_treenode')
-    def __post_init_treenode(sender, instance, **kwargs):
-        if not isinstance(instance, TreeNodeModel):
-            return
-        sender.__set_reference(instance)
-
-    @staticmethod
-    @receiver(post_delete, dispatch_uid='post_delete_treenode')
-    def __post_delete_treenode(sender, instance, **kwargs):
-        if not isinstance(instance, TreeNodeModel):
-            return
-        sender.update_tree()
-
-    @staticmethod
-    @receiver(post_save, dispatch_uid='post_save_treenode')
-    def __post_save_treenode(sender, instance, **kwargs):
-        if not isinstance(instance, TreeNodeModel):
-            return
-        sender.__set_reference(instance)
-        sender.update_tree()
-
-    # Meta
-
     class Meta:
         abstract = True
         ordering = ['tn_order']
@@ -684,3 +622,6 @@ class TreeNodeProperties(object):
     @classproperty
     def tree_display(cls):
         return cls.get_tree_display()
+
+
+connect_signals()
