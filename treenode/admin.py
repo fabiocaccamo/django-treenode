@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.safestring import mark_safe
 
-from .forms import TreenodeForm
+from .forms import TreeNodeForm
 from .utils import split_pks
 
 
@@ -15,19 +15,19 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
 
     from django.contrib import admin
     from treenode.admin import TreeNodeModelAdmin
-    from treenode.forms import TreenodeForm
+    from treenode.forms import TreeNodeForm
     from .models import MyModel
 
 
     class MyModelAdmin(TreeNodeModelAdmin):
 
         treenode_accordion = True
-        form = TreenodeForm
+        form = TreeNodeForm
 
     admin.site.register(MyModel, MyModelAdmin)
     """
 
-    form = TreenodeForm
+    form = TreeNodeForm
     treenode_accordion = False
     list_per_page = 1000
 

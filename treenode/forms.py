@@ -5,10 +5,10 @@ from django import forms
 from .utils import split_pks
 
 
-class TreenodeForm(forms.ModelForm):
+class TreeNodeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(TreenodeForm, self).__init__(*args, **kwargs)
+        super(TreeNodeForm, self).__init__(*args, **kwargs)
         exclude_pks = []
         obj = self.instance
         if obj.pk:
