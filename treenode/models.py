@@ -120,7 +120,7 @@ class TreeNodeModel(models.Model):
         self.update_tree()
 
     @classmethod
-    def delete_all(cls):
+    def delete_tree(cls):
         with no_signals():
             cls.objects.all().delete()
         cls.update_tree()

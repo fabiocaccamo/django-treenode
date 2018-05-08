@@ -87,10 +87,10 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertEqual(Category.get_roots(), [b, c, d, e, f])
         # settings.DEBUG = False
 
-    def test_delete_all(self):
+    def test_delete_tree(self):
         self.__create_cat_tree()
         # settings.DEBUG = True
-        Category.delete_all()
+        Category.delete_tree()
         self.assertEqual(list(Category.objects.all()), [])
         # settings.DEBUG = False
 
