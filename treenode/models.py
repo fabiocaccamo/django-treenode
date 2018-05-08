@@ -115,22 +115,14 @@ class TreeNodeModel(models.Model):
 
     def delete(self):
         with no_signals():
-            self.__class__.objects.filter(
-                pk=self.pk).delete()
+            self.__class__.objects.filter(pk=self.pk).delete()
         self.update_tree()
 
     @classmethod
     def delete_tree(cls):
         with no_signals():
-            cls.objects.all().delete()
-        cls.update_tree()
-
-    # def delete_children(self):
-    #     if self.tn_children_count > 0:
-    #         with no_signals():
-    #             self.__class__.objects.filter(
-    #                 pk__in=split_pks(self.tn_children_pks)).delete()
-    #         self.update_tree()
+            with transaction.atomic():
+                cls.objects.all().delete()
 
     def get_ancestors(self):
         return list(self.get_ancestors_queryset())
