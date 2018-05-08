@@ -2,17 +2,15 @@
 
 from __future__ import unicode_literals
 
-from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import connection, models, transaction
+from django.db import models, transaction
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-import timeit
-
 from . import classproperty
+# from .debug import debug_performance
 from .memory import clear_refs, get_refs
 from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
@@ -320,9 +318,7 @@ class TreeNodeModel(models.Model):
     @classmethod
     def update_tree(cls):
 
-        if settings.DEBUG:
-            start_queries = len(connection.queries)
-            start_time = timeit.default_timer()
+        # with debug_performance(cls):
 
         # update db
         objs_list, objs_dict = cls.__get_nodes_data()
@@ -336,12 +332,6 @@ class TreeNodeModel(models.Model):
             obj_data = objs_dict.get(str(obj.pk))
             if obj_data:
                 obj.__update_node_data(obj_data)
-
-        if settings.DEBUG:
-            stop_queries = len(connection.queries) - start_queries
-            stop_duration = timeit.default_timer() - start_time
-            print('%s.update_tree() with %s queries in %ss.' % (
-                cls.__name__, stop_queries, stop_duration, ))
 
     # Private methods
 
