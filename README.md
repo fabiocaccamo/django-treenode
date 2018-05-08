@@ -284,19 +284,19 @@ cls.get_tree_display()
 cls.tree_display
 ```
 
-Return `True` if the current node **is ancestor** of obj *(0 queries)*:
+Return `True` if the current node **is ancestor** of target_obj *(0 queries)*:
 ```python
-obj.is_ancestor_of(obj)
+obj.is_ancestor_of(target_obj)
 ```
 
-Return `True` if the current node **is child** of obj *(0 queries)*:
+Return `True` if the current node **is child** of target_obj *(0 queries)*:
 ```python
-obj.is_child_of(obj)
+obj.is_child_of(target_obj)
 ```
 
-Return `True` if the current node **is descendant** of obj *(0 queries)*:
+Return `True` if the current node **is descendant** of target_obj *(0 queries)*:
 ```python
-obj.is_descendant_of(obj)
+obj.is_descendant_of(target_obj)
 ```
 
 Return `True` if the current node is the **first child** *(0 queries)*:
@@ -314,9 +314,9 @@ Return `True` if the current node is **leaf** (it has not children) *(0 queries)
 obj.is_leaf()
 ```
 
-Return `True` if the current node **is parent** of obj *(0 queries)*:
+Return `True` if the current node **is parent** of target_obj *(0 queries)*:
 ```python
-obj.is_parent_of(obj)
+obj.is_parent_of(target_obj)
 ```
 
 Return `True` if the current node **is root** *(0 queries)*:
@@ -324,14 +324,14 @@ Return `True` if the current node **is root** *(0 queries)*:
 obj.is_root()
 ```
 
-Return `True` if the current node **is root** of obj *(0 queries)*:
+Return `True` if the current node **is root** of target_obj *(0 queries)*:
 ```python
-obj.is_root_of(obj)
+obj.is_root_of(target_obj)
 ```
 
-Return `True` if the current node **is sibling** of obj *(0 queries)*:
+Return `True` if the current node **is sibling** of target_obj *(0 queries)*:
 ```python
-obj.is_sibling_of(obj)
+obj.is_sibling_of(target_obj)
 ```
 
 **Update tree** manually, useful after **bulk updates**:
