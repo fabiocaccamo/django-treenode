@@ -9,6 +9,8 @@ class TreeNodeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TreeNodeForm, self).__init__(*args, **kwargs)
+        if 'tn_parent' not in self.fields:
+            return
         exclude_pks = []
         obj = self.instance
         if obj.pk:
