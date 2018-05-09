@@ -11,9 +11,15 @@ Features
 -  **Fast** - get ``ancestors``, ``children``, ``descendants``, ``parent``, ``root``, ``siblings``, ``tree``, ... *(1 query)*
 -  **Synced** - in-memory model instances are automatically updated *(0 queries)*
 -  **Compatibility** - you can easily add treenode to existing projects
+-  **No dependencies**
 -  **Easy configuration** - just extend the abstract model / model-admin
 -  **Admin integration** - great tree visualization with optional accordion
--  **No dependencies**
+
++------------------+---------------------+
+| Simple admin     | Accordion admin     |
++==================+=====================+
+| |simple-admin|   | |accordion-admin|   |
++------------------+---------------------+
 
 Requirements
 ------------
@@ -324,19 +330,19 @@ Get a **multiline** ``string`` representing the **model tree** *(1 query)*:
     # or
     cls.tree_display
 
-Return `True` if the current node **is ancestor** of target_obj *(0 queries)*:
+Return ``True`` if the current node **is ancestor** of target\_obj *(0 queries)*:
 
 .. code:: python
 
     obj.is_ancestor_of(target_obj)
 
-Return `True` if the current node **is child** of target_obj *(0 queries)*:
+Return ``True`` if the current node **is child** of target\_obj *(0 queries)*:
 
 .. code:: python
 
     obj.is_child_of(target_obj)
 
-Return `True` if the current node **is descendant** of target_obj *(0 queries)*:
+Return ``True`` if the current node **is descendant** of target\_obj *(0 queries)*:
 
 .. code:: python
 
@@ -354,32 +360,31 @@ Return ``True`` if the current node is the **last child** *(0 queries)*:
 
     obj.is_last_child()
 
-
-Return `True` if the current node is **leaf** (it has not children) *(0 queries)*:
+Return ``True`` if the current node is **leaf** (it has not children) *(0 queries)*:
 
 .. code:: python
 
     obj.is_leaf()
 
-Return `True` if the current node **is parent** of target_obj *(0 queries)*:
+Return ``True`` if the current node **is parent** of target\_obj *(0 queries)*:
 
 .. code:: python
 
     obj.is_parent_of(target_obj)
 
-Return `True` if the current node **is root** *(0 queries)*:
+Return ``True`` if the current node **is root** *(0 queries)*:
 
 .. code:: python
 
     obj.is_root()
 
-Return `True` if the current node **is root** of target_obj *(0 queries)*:
+Return ``True`` if the current node **is root** of target\_obj *(0 queries)*:
 
 .. code:: python
 
     obj.is_root_of(target_obj)
 
-Return `True` if the current node **is sibling** of target_obj *(0 queries)*:
+Return ``True`` if the current node **is sibling** of target\_obj *(0 queries)*:
 
 .. code:: python
 
@@ -410,3 +415,5 @@ Released under `MIT License <LICENSE.txt>`__.
    :target: https://img.shields.io/pypi/pyversions/django-treenode.svg
 .. |License| image:: https://img.shields.io/pypi/l/django-treenode.svg
    :target: https://img.shields.io/pypi/l/django-treenode.svg
+.. |simple-admin| image:: https://user-images.githubusercontent.com/1035294/39823224-dff5944c-53ac-11e8-9d7f-60f1a31b2730.png
+.. |accordion-admin| image:: https://user-images.githubusercontent.com/1035294/39823232-e3a5d99e-53ac-11e8-98ad-edd6b77c44a4.png

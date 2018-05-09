@@ -6,6 +6,9 @@
 [![Py versions](https://img.shields.io/pypi/pyversions/django-treenode.svg)](https://img.shields.io/pypi/pyversions/django-treenode.svg)
 [![License](https://img.shields.io/pypi/l/django-treenode.svg)](https://img.shields.io/pypi/l/django-treenode.svg)
 
+[simple-admin]: https://user-images.githubusercontent.com/1035294/39823224-dff5944c-53ac-11e8-9d7f-60f1a31b2730.png
+[accordion-admin]: https://user-images.githubusercontent.com/1035294/39823232-e3a5d99e-53ac-11e8-98ad-edd6b77c44a4.png
+
 # django-treenode
 Probably the best abstract model / admin for your **tree** based stuff.
 
@@ -13,9 +16,13 @@ Probably the best abstract model / admin for your **tree** based stuff.
 - **Fast** - get `ancestors`, `children`, `descendants`, `parent`, `root`, `siblings`, `tree`, ... *(1 query)*
 - **Synced** - in-memory model instances are automatically updated *(0 queries)*
 - **Compatibility** - you can easily add treenode to existing projects
+- **No dependencies**
 - **Easy configuration** - just extend the abstract model / model-admin
 - **Admin integration** - great tree visualization with optional accordion
-- **No dependencies**
+
+| Simple admin | Accordion admin |
+| --- | --- |
+| ![simple-admin][simple-admin] | ![accordion-admin][accordion-admin] |
 
 ## Requirements
 - Python 2.7, 3.4, 3.5, 3.6
