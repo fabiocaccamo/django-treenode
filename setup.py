@@ -29,7 +29,7 @@ setup(
     author_email='fabio.caccamo@gmail.com',
     url='%s/%s' % (github_url, package_name, ),
     download_url='%s/%s/archive/%s.tar.gz' % (github_url, package_name, __version__, ),
-    keywords=['python', 'django', 'trees', 'tree', 'nodes', 'node', 'categories', 'category', 'parents', 'children', 'descendants', 'siblings', 'abstract', 'model'],
+    keywords=['python', 'django', 'trees', 'tree', 'nodes', 'node', 'categories', 'category', 'ancestors', 'parents', 'children', 'descendants', 'siblings', 'abstract', 'model'],
     requires=['django(>=1.8)'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
