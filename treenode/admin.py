@@ -48,10 +48,10 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         return None
 
     def __get_treenode_field_display(self, obj, accordion=True, style=''):
-        parents_count = obj.tn_parents_count
+        parents_count = obj.tn_ancestors_count
         parent_pk = ''
         if parents_count:
-            parents_pks_list = split_pks(obj.tn_parents_pks)
+            parents_pks_list = split_pks(obj.tn_ancestors_pks)
             parent_pk = parents_pks_list[-1]
         tabs = ('&mdash; ' * parents_count)
         tabs_class = 'treenode-tabs' if tabs else ''
