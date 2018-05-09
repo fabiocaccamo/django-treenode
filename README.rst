@@ -122,6 +122,28 @@ Methods/Properties:
 
     cls.delete_tree()
 
+Get a **list with all ancestors** (ordered from root to parent) *(1 query)*:
+
+.. code:: python
+
+    obj.get_ancestors()
+    # or
+    obj.ancestors
+
+Get the **ancestors count** *(0 queries)*:
+
+.. code:: python
+
+    obj.get_ancestors_count()
+    # or
+    obj.ancestors_count
+
+Get the **ancestors queryset** *(0 queries)*:
+
+.. code:: python
+
+    obj.get_ancestors_queryset()
+
 Get a **list containing all children** *(1 query)*:
 
 .. code:: python
@@ -227,28 +249,6 @@ Set the **parent node** *(1 query)*:
 .. code:: python
 
     obj.set_parent(parent_obj)
-
-Get a **list with all parents** (ordered from root to parent) *(1 query)*:
-
-.. code:: python
-
-    obj.get_parents()
-    # or
-    obj.parents
-
-Get the **parents count** *(0 queries)*:
-
-.. code:: python
-
-    obj.get_parents_count()
-    # or
-    obj.parents_count
-
-Get the **parents queryset** *(0 queries)*:
-
-.. code:: python
-
-    obj.get_parents_queryset()
 
 Get the **node priority** *(0 queries)*:
 
