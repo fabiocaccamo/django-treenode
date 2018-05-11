@@ -189,6 +189,12 @@ class TreeNodeModel(models.Model):
     def get_order(self):
         return self.tn_order
 
+    def get_path(self):
+        return self.get_ancestors() + [self]
+
+    def get_path_attr(self, name):
+        return [getattr(obj, name) for obj in self.get_path()]
+
     def get_parent(self):
         return self.tn_parent
 
@@ -639,6 +645,10 @@ class TreeNodeProperties(object):
     @property
     def order(self):
         return self.get_order()
+
+    @property
+    def path(self):
+        return self.get_path()
 
     @property
     def parent(self):

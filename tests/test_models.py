@@ -398,6 +398,28 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertEqual(aaaa.get_ancestors_count(), 0)
         self.assertEqual(aaaa.get_parent(), None)
 
+    def test_get_path(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        self.assertEqual(a.get_path(), [a])
+        self.assertEqual(aa.get_path(), [a, aa])
+        self.assertEqual(aaa.get_path(), [a, aa, aaa])
+        self.assertEqual(aaaa.get_path(), [a, aa, aaa, aaaa])
+
+    def test_get_path_attr(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        self.assertEqual(a.get_path_attr('name'), ['a'])
+        self.assertEqual(aa.get_path_attr('name'), ['a', 'aa'])
+        self.assertEqual(aaa.get_path_attr('name'), ['a', 'aa', 'aaa'])
+        self.assertEqual(aaaa.get_path_attr('name'), ['a', 'aa', 'aaa', 'aaaa'])
+
     def test_get_priority(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
@@ -948,6 +970,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             self.assertEqual(obj.get_level(), obj.level)
             self.assertEqual(obj.get_order(), obj.order)
             self.assertEqual(obj.get_parent(), obj.parent)
+            self.assertEqual(obj.get_path(), obj.path)
             self.assertEqual(obj.get_priority(), obj.priority)
             self.assertEqual(obj.get_roots(), obj.roots)
             self.assertEqual(obj.get_root(), obj.root)
