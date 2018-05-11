@@ -10,7 +10,7 @@ import timeit
 logger = logging.getLogger(__name__)
 
 
-class debug_performance():
+class debug_performance(object):
 
     def __init__(self, message_prefix=''):
         super(debug_performance, self).__init__()
