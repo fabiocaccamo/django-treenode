@@ -256,6 +256,20 @@ Set the **parent node** *(1 query)*:
 
     obj.set_parent(parent_obj)
 
+Get the **nodes path** to current node (included) *(1 query)*:
+
+.. code:: python
+
+    obj.get_path()
+    # or
+    obj.path
+
+Get the **getattr(node, name) path** to current node (included) *(1 query)*:
+
+.. code:: python
+
+    obj.get_path_attr(name)
+
 Get the **node priority** *(0 queries)*:
 
 .. code:: python
