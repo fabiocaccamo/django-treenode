@@ -10,7 +10,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from . import classproperty
-# from .debug import debug_performance
+from .debug import debug_performance
 from .memory import clear_refs, get_refs
 from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
@@ -318,20 +318,23 @@ class TreeNodeModel(models.Model):
     @classmethod
     def update_tree(cls):
 
-        # with debug_performance(cls):
+        debug_message_prefix = '[treenode] update %s.%s tree: ' % (
+            cls.__module__, cls.__name__, )
 
-        # update db
-        objs_list, objs_dict = cls.__get_nodes_data()
-        with transaction.atomic():
-            for obj_key, obj_data in objs_dict.items():
-                obj_pk = int(obj_key)
-                cls.objects.filter(pk=obj_pk).update(**obj_data)
+        with debug_performance(debug_message_prefix):
 
-        # update in-memory instances
-        for obj in get_refs(cls):
-            obj_data = objs_dict.get(str(obj.pk))
-            if obj_data:
-                obj.__update_node_data(obj_data)
+            # update db
+            objs_list, objs_dict = cls.__get_nodes_data()
+            with transaction.atomic():
+                for obj_key, obj_data in objs_dict.items():
+                    obj_pk = int(obj_key)
+                    cls.objects.filter(pk=obj_pk).update(**obj_data)
+
+            # update in-memory instances
+            for obj in get_refs(cls):
+                obj_data = objs_dict.get(str(obj.pk))
+                if obj_data:
+                    obj.__update_node_data(obj_data)
 
     # Private methods
 

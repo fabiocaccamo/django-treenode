@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 
 class debug_performance():
 
+    def __init__(self, message_prefix=''):
+        super(debug_performance, self).__init__()
+        self.__message_prefix = message_prefix
+
     def __get_queries(self):
         return len(connection.queries)
 
@@ -27,6 +31,9 @@ class debug_performance():
         queries = (self.__get_queries() - self.__init_queries)
         timer = (self.__get_timer() - self.__init_timer)
         if settings.DEBUG:
-            message = '\rExecuted %s %s in %ss.' % (
-                queries, 'query' if queries == 1 else 'queries', timer, )
+            message = '\r%sexecuted %s %s in %ss.' % (
+                self.__message_prefix,
+                queries,
+                'query' if queries == 1 else 'queries',
+                timer, )
             print(message)

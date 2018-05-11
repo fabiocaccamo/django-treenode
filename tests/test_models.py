@@ -73,6 +73,11 @@ class TreeNodeModelsTestCase(TransactionTestCase):
     def __get_cat(self, name):
         return Category.objects.get(name=name)
 
+    def test_debug_performance(self):
+        settings.DEBUG = True
+        self.__create_cat_tree()
+        settings.DEBUG = False
+
     def test_delete(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
