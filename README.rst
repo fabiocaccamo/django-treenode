@@ -150,6 +150,14 @@ Get the **ancestors queryset** *(0 queries)*:
 
     obj.get_ancestors_queryset()
 
+Get the **breadcrumbs** to current node (included) *(1 query)*
+
+.. code:: python
+
+    obj.get_breadcrumbs(attr=None)
+    # or
+    obj.breadcrumbs
+
 Get a **list containing all children** *(1 query)*:
 
 .. code:: python
@@ -255,20 +263,6 @@ Set the **parent node** *(1 query)*:
 .. code:: python
 
     obj.set_parent(parent_obj)
-
-Get the **nodes path** to current node (included) *(1 query)*:
-
-.. code:: python
-
-    obj.get_path()
-    # or
-    obj.path
-
-Get the **getattr(node, name) path** to current node (included) *(1 query)*:
-
-.. code:: python
-
-    obj.get_path_attr(name)
 
 Get the **node priority** *(0 queries)*:
 

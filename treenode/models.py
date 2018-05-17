@@ -133,6 +133,10 @@ class TreeNodeModel(models.Model):
         return self.__class__.objects.filter(
             pk__in=split_pks(self.tn_ancestors_pks))
 
+    def get_breadcrumbs(self, attr=None):
+        objs = self.get_ancestors() + [self]
+        return [getattr(obj, attr) for obj in objs] if attr else objs
+
     def get_children(self):
         return list(self.get_children_queryset())
 
@@ -190,12 +194,6 @@ class TreeNodeModel(models.Model):
 
     def get_order(self):
         return self.tn_order
-
-    def get_path(self):
-        return self.get_ancestors() + [self]
-
-    def get_path_attr(self, name):
-        return [getattr(obj, name) for obj in self.get_path()]
 
     def get_parent(self):
         return self.tn_parent
@@ -607,6 +605,10 @@ class TreeNodeProperties(object):
         return self.get_ancestors_count()
 
     @property
+    def breadcrumbs(self):
+        return self.get_breadcrumbs()
+
+    @property
     def children(self):
         return self.get_children()
 
@@ -645,10 +647,6 @@ class TreeNodeProperties(object):
     @property
     def order(self):
         return self.get_order()
-
-    @property
-    def path(self):
-        return self.get_path()
 
     @property
     def parent(self):
