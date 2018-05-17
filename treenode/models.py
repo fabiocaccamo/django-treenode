@@ -332,17 +332,20 @@ class TreeNodeModel(models.Model):
         with debug_performance(debug_message_prefix):
 
             # update db
-            objs_list, objs_dict = cls.__get_nodes_data()
+            objs_qs, objs_list, objs_dict, objs_data = cls.__get_nodes_data()
+
             with transaction.atomic():
-                for obj_key, obj_data in objs_dict.items():
+                for obj_key, obj_data in objs_data.items():
                     obj_pk = int(obj_key)
                     cls.objects.filter(pk=obj_pk).update(**obj_data)
 
             # update in-memory instances
             for obj in get_refs(cls):
-                obj_data = objs_dict.get(str(obj.pk))
+                obj_key = str(obj.pk)
+                obj_data = objs_data.get(obj_key)
                 if obj_data:
-                    obj.__update_node_data(obj_data)
+                    for key, value in obj_data.items():
+                        setattr(obj, key, value)
 
     # Private methods
 
@@ -419,25 +422,25 @@ class TreeNodeModel(models.Model):
 
         objs_qs = cls.objects.select_related('tn_parent').select_for_update()
         objs_list = list(objs_qs)
-        objs_dict = {
-            str(obj.pk):obj.__get_node_data(objs_list) \
-            for obj in objs_list}
+        objs_dict = {str(obj.pk):obj for obj in objs_list}
+        objs_data = {str(obj.pk):obj.__get_node_data(objs_list) \
+                    for obj in objs_list}
 
         # get sorted dict keys
-        objs_dict_keys = list(objs_dict.keys())
-        objs_dict_keys.sort(
-            key=lambda obj_key: objs_dict[obj_key]['tn_order_str'])
+        objs_data_keys = list(objs_data.keys())
+        objs_data_keys.sort(
+            key=lambda obj_key: objs_data[obj_key]['tn_order_str'])
 
         # get sorted dict values
-        objs_dict_values = list(objs_dict.values())
-        objs_dict_values.sort(
+        objs_data_values = list(objs_data.values())
+        objs_data_values.sort(
             key=lambda obj_value: obj_value['tn_order_str'])
 
-        objs_sort_pks = lambda obj_pk: objs_dict_keys.index(str(obj_pk))
+        objs_sort_pks = lambda obj_pk: objs_data_keys.index(str(obj_pk))
 
         # update order
         objs_order_cursor = 0
-        for obj_data in objs_dict_values:
+        for obj_data in objs_data_values:
             obj_data.pop('tn_order_str', None)
             obj_data['tn_order'] = objs_order_cursor
             objs_order_cursor += 1
@@ -445,7 +448,7 @@ class TreeNodeModel(models.Model):
         # update index
         objs_index_cursors = {}
         objs_index_cursor = 0
-        for obj_data in objs_dict_values:
+        for obj_data in objs_data_values:
             obj_ancestors_pks = str(obj_data['tn_ancestors_pks'])
             objs_index_cursor = objs_index_cursors.get(obj_ancestors_pks, 0)
             obj_data['tn_index'] = objs_index_cursor
@@ -453,7 +456,7 @@ class TreeNodeModel(models.Model):
             objs_index_cursors[obj_ancestors_pks] = objs_index_cursor
 
         # update depth
-        for obj_data in objs_dict_values:
+        for obj_data in objs_data_values:
             obj_children_count = obj_data['tn_children_count']
             if obj_children_count > 0:
                 continue
@@ -463,14 +466,14 @@ class TreeNodeModel(models.Model):
             obj_ancestors_pks = obj_data['tn_ancestors_pks']
             for obj_ancestor_pk in obj_ancestors_pks:
                 obj_ancestor_key = str(obj_ancestor_pk)
-                obj_ancestor_data = objs_dict[obj_ancestor_key]
+                obj_ancestor_data = objs_data[obj_ancestor_key]
                 obj_ancestor_index = obj_ancestors_pks.index(obj_ancestor_pk)
                 obj_ancestor_depth = (obj_ancestors_count - obj_ancestor_index)
                 if obj_ancestor_data['tn_depth'] < obj_ancestor_depth:
                     obj_ancestor_data['tn_depth'] = obj_ancestor_depth
 
         # update children and siblings pks order
-        for obj_data in objs_dict_values:
+        for obj_data in objs_data_values:
             # update children pks order
             if obj_data['tn_children_pks']:
                 obj_data['tn_children_pks'].sort(key=objs_sort_pks)
@@ -479,15 +482,15 @@ class TreeNodeModel(models.Model):
                 obj_data['tn_siblings_pks'].sort(key=objs_sort_pks)
 
         # update descendants pks
-        objs_dict_values.sort(key=lambda obj: obj['tn_level'], reverse=True)
-        for obj_data in objs_dict_values:
+        objs_data_values.sort(key=lambda obj: obj['tn_level'], reverse=True)
+        for obj_data in objs_data_values:
             if obj_data['tn_children_count'] == 0:
                 continue
             obj_children_pks = obj_data['tn_children_pks']
             obj_descendants_pks = list(obj_children_pks)
             for obj_child_pk in obj_children_pks:
                 obj_child_key = str(obj_child_pk)
-                obj_child_data = objs_dict[obj_child_key]
+                obj_child_data = objs_data[obj_child_key]
                 obj_child_descendants_pks = obj_child_data.get('tn_descendants_pks', [])
                 if obj_child_descendants_pks:
                     obj_descendants_pks += obj_child_descendants_pks
@@ -498,7 +501,7 @@ class TreeNodeModel(models.Model):
                 obj_data['tn_descendants_count'] = len(obj_data['tn_descendants_pks'])
 
         # join all pks lists
-        for obj_data in objs_dict_values:
+        for obj_data in objs_data_values:
             obj_data['tn_ancestors_pks'] = join_pks(obj_data['tn_ancestors_pks'])
             obj_data['tn_children_pks'] = join_pks(obj_data['tn_children_pks'])
             obj_data['tn_descendants_pks'] = join_pks(obj_data['tn_descendants_pks'])
@@ -507,7 +510,7 @@ class TreeNodeModel(models.Model):
         # clean dict data
         for obj in objs_list:
             obj_key = str(obj.pk)
-            obj_data = objs_dict[obj_key]
+            obj_data = objs_data[obj_key]
 
             if obj_data['tn_ancestors_count'] == obj.tn_ancestors_count:
                 obj_data.pop('tn_ancestors_count')
@@ -546,12 +549,12 @@ class TreeNodeModel(models.Model):
                 obj_data.pop('tn_siblings_pks', None)
 
             if len(obj_data) == 0:
-                objs_dict.pop(obj_key, None)
+                objs_data.pop(obj_key, None)
 
         # clean list data
-        objs_list = [obj for obj in objs_list if str(obj.pk) in objs_dict]
+        objs_list = [obj for obj in objs_list if str(obj.pk) in objs_data]
 
-        return (objs_list, objs_dict, )
+        return (objs_qs, objs_list, objs_dict, objs_data, )
 
     @classmethod
     def __get_nodes_tree(cls, instance=None):
@@ -579,11 +582,6 @@ class TreeNodeModel(models.Model):
             objs_tree = [__get_node_tree(obj) for obj in objs_list if obj.tn_level == 1]
 
         return objs_tree
-
-    def __update_node_data(self, data):
-        if data:
-            for key, value in data.items():
-                setattr(self, key, value)
 
     class Meta:
         abstract = True
