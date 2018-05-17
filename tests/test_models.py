@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.test import TransactionTestCase
+from django.utils.encoding import force_text
 
 from treenode.utils import join_pks, split_pks
 
@@ -114,6 +115,21 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertEqual(aa.get_ancestors_count(), 1)
         self.assertEqual(aaa.get_ancestors_count(), 2)
         self.assertEqual(aaaa.get_ancestors_count(), 3)
+
+    def test_get_breadcrumbs(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        self.assertEqual(a.get_breadcrumbs(), [a])
+        self.assertEqual(aa.get_breadcrumbs(), [a, aa])
+        self.assertEqual(aaa.get_breadcrumbs(), [a, aa, aaa])
+        self.assertEqual(aaaa.get_breadcrumbs(), [a, aa, aaa, aaaa])
+        self.assertEqual(a.get_breadcrumbs(attr='name'), ['a'])
+        self.assertEqual(aa.get_breadcrumbs(attr='name'), ['a', 'aa'])
+        self.assertEqual(aaa.get_breadcrumbs(attr='name'), ['a', 'aa', 'aaa'])
+        self.assertEqual(aaaa.get_breadcrumbs(attr='name'), ['a', 'aa', 'aaa', 'aaaa'])
 
     def test_get_children(self):
         self.__create_cat_tree()
@@ -256,19 +272,19 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         o = self.__create_cat(name='ò', parent=i)
         u = self.__create_cat(name='ù', parent=o)
         opts = { 'indent':False, 'mark':'- ' }
-        self.assertEqual(a.get_display(**opts), 'à')
-        self.assertEqual(c.get_display(**opts), 'ç')
-        self.assertEqual(e.get_display(**opts), 'è')
-        self.assertEqual(i.get_display(**opts), 'ì')
-        self.assertEqual(o.get_display(**opts), 'ò')
-        self.assertEqual(u.get_display(**opts), 'ù')
+        self.assertEqual(a.get_display(**opts), force_text('à'))
+        self.assertEqual(c.get_display(**opts), force_text('ç'))
+        self.assertEqual(e.get_display(**opts), force_text('è'))
+        self.assertEqual(i.get_display(**opts), force_text('ì'))
+        self.assertEqual(o.get_display(**opts), force_text('ò'))
+        self.assertEqual(u.get_display(**opts), force_text('ù'))
         opts = { 'indent':True, 'mark':'- ' }
-        self.assertEqual(a.get_display(**opts), 'à')
-        self.assertEqual(c.get_display(**opts), '- ç')
-        self.assertEqual(e.get_display(**opts), '- - è')
-        self.assertEqual(i.get_display(**opts), '- - - ì')
-        self.assertEqual(o.get_display(**opts), '- - - - ò')
-        self.assertEqual(u.get_display(**opts), '- - - - - ù')
+        self.assertEqual(a.get_display(**opts), force_text('à'))
+        self.assertEqual(c.get_display(**opts), force_text('- ç'))
+        self.assertEqual(e.get_display(**opts), force_text('- - è'))
+        self.assertEqual(i.get_display(**opts), force_text('- - - ì'))
+        self.assertEqual(o.get_display(**opts), force_text('- - - - ò'))
+        self.assertEqual(u.get_display(**opts), force_text('- - - - - ù'))
 
     def test_get_index(self):
         self.__create_cat_tree()
@@ -419,21 +435,6 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertTrue(aaaa.is_root())
         self.assertEqual(aaaa.get_ancestors_count(), 0)
         self.assertEqual(aaaa.get_parent(), None)
-
-    def test_get_breadcrumbs(self):
-        self.__create_cat_tree()
-        a = self.__get_cat(name='a')
-        aa = self.__get_cat(name='aa')
-        aaa = self.__get_cat(name='aaa')
-        aaaa = self.__get_cat(name='aaaa')
-        self.assertEqual(a.get_breadcrumbs(), [a])
-        self.assertEqual(aa.get_breadcrumbs(), [a, aa])
-        self.assertEqual(aaa.get_breadcrumbs(), [a, aa, aaa])
-        self.assertEqual(aaaa.get_breadcrumbs(), [a, aa, aaa, aaaa])
-        self.assertEqual(a.get_breadcrumbs(attr='name'), ['a'])
-        self.assertEqual(aa.get_breadcrumbs(attr='name'), ['a', 'aa'])
-        self.assertEqual(aaa.get_breadcrumbs(attr='name'), ['a', 'aa', 'aaa'])
-        self.assertEqual(aaaa.get_breadcrumbs(attr='name'), ['a', 'aa', 'aaa', 'aaaa'])
 
     def test_get_priority(self):
         self.__create_cat_tree()
