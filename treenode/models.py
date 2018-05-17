@@ -353,7 +353,7 @@ class TreeNodeModel(models.Model):
         priority_val = priority_max - min(self.tn_priority, priority_max)
         priority_key = str(priority_val).zfill(priority_len)
         alphabetical_val = slugify(str(self))
-        alphabetical_key = alphabetical_val.rjust(priority_len, str('z'))
+        alphabetical_key = alphabetical_val.ljust(priority_len, str('z'))
         alphabetical_key = alphabetical_key[0:priority_len]
         pk_val = min(self.pk, priority_max)
         pk_key = str(pk_val).zfill(priority_len)
