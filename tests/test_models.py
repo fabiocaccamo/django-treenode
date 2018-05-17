@@ -248,6 +248,28 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         # TODO
         pass
 
+    def test_get_display(self):
+        a = self.__create_cat(name='à')
+        c = self.__create_cat(name='ç', parent=a)
+        e = self.__create_cat(name='è', parent=c)
+        i = self.__create_cat(name='ì', parent=e)
+        o = self.__create_cat(name='ò', parent=i)
+        u = self.__create_cat(name='ù', parent=o)
+        opts = { 'indent':False, 'mark':'- ' }
+        self.assertEqual(a.get_display(**opts), 'à')
+        self.assertEqual(c.get_display(**opts), 'ç')
+        self.assertEqual(e.get_display(**opts), 'è')
+        self.assertEqual(i.get_display(**opts), 'ì')
+        self.assertEqual(o.get_display(**opts), 'ò')
+        self.assertEqual(u.get_display(**opts), 'ù')
+        opts = { 'indent':True, 'mark':'- ' }
+        self.assertEqual(a.get_display(**opts), 'à')
+        self.assertEqual(c.get_display(**opts), '- ç')
+        self.assertEqual(e.get_display(**opts), '- - è')
+        self.assertEqual(i.get_display(**opts), '- - - ì')
+        self.assertEqual(o.get_display(**opts), '- - - - ò')
+        self.assertEqual(u.get_display(**opts), '- - - - - ù')
+
     def test_get_index(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')

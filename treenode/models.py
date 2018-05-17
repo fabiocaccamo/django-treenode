@@ -175,10 +175,12 @@ class TreeNodeModel(models.Model):
     #     return dump
 
     def get_display(self, indent=True, mark='— '):
-        indentation = '%s' % ((mark * self.tn_ancestors_count) if indent else '', )
+        indentation = (mark * self.tn_ancestors_count) if indent else ''
+        indentation = force_text(indentation)
         field_name = getattr(self, 'treenode_display_field', 'pk')
-        text = str(getattr(self, field_name))
-        return force_text(indentation + text)
+        text = getattr(self, field_name)
+        text = force_text(text)
+        return indentation + text
 
     def get_index(self):
         return self.tn_index
