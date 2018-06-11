@@ -128,7 +128,7 @@ Methods/Properties:
 
     cls.delete_tree()
 
-Get a **list with all ancestors** (ordered from root to parent) *(1 query)*:
+Get a **list with all ancestors** (ordered from root to parent):
 
 .. code:: python
 
@@ -136,7 +136,7 @@ Get a **list with all ancestors** (ordered from root to parent) *(1 query)*:
     # or
     obj.ancestors
 
-Get the **ancestors count** *(0 queries)*:
+Get the **ancestors count**:
 
 .. code:: python
 
@@ -144,13 +144,13 @@ Get the **ancestors count** *(0 queries)*:
     # or
     obj.ancestors_count
 
-Get the **ancestors queryset** *(0 queries)*:
+Get the **ancestors queryset**:
 
 .. code:: python
 
     obj.get_ancestors_queryset()
 
-Get the **breadcrumbs** to current node (included) *(1 query)*:
+Get the **breadcrumbs** to current node (included):
 
 .. code:: python
 
@@ -158,7 +158,7 @@ Get the **breadcrumbs** to current node (included) *(1 query)*:
     # or
     obj.breadcrumbs
 
-Get a **list containing all children** *(1 query)*:
+Get a **list containing all children**:
 
 .. code:: python
 
@@ -166,7 +166,7 @@ Get a **list containing all children** *(1 query)*:
     # or
     obj.children
 
-Get the **children count** *(0 queries)*:
+Get the **children count**:
 
 .. code:: python
 
@@ -174,13 +174,13 @@ Get the **children count** *(0 queries)*:
     # or
     obj.children_count
 
-Get the **children queryset** *(0 queries)*:
+Get the **children queryset**:
 
 .. code:: python
 
     obj.get_children_queryset()
 
-Get the **node depth** (how many levels of descendants) *(0 queries)*:
+Get the **node depth** (how many levels of descendants):
 
 .. code:: python
 
@@ -188,7 +188,7 @@ Get the **node depth** (how many levels of descendants) *(0 queries)*:
     # or
     obj.depth
 
-Get a **list containing all descendants** *(1 query)*:
+Get a **list containing all descendants**:
 
 .. code:: python
 
@@ -196,7 +196,7 @@ Get a **list containing all descendants** *(1 query)*:
     # or
     obj.descendants
 
-Get the **descendants count** *(0 queries)*:
+Get the **descendants count**:
 
 .. code:: python
 
@@ -204,13 +204,13 @@ Get the **descendants count** *(0 queries)*:
     # or
     obj.descendants_count
 
-Get the **descendants queryset** *(0 queries)*:
+Get the **descendants queryset**:
 
 .. code:: python
 
     obj.get_descendants_queryset()
 
-Get a **n-dimensional** ``dict`` representing the **model tree** *(1 query)*:
+Get a **n-dimensional** ``dict`` representing the **model tree**:
 
 .. code:: python
 
@@ -218,7 +218,7 @@ Get a **n-dimensional** ``dict`` representing the **model tree** *(1 query)*:
     # or
     obj.descendants_tree
 
-Get a **multiline** ``string`` representing the **model tree** *(1 query)*:
+Get a **multiline** ``string`` representing the **model tree**:
 
 .. code:: python
 
@@ -226,7 +226,7 @@ Get a **multiline** ``string`` representing the **model tree** *(1 query)*:
     # or
     obj.descendants_tree_display
 
-Get the **node index** (index in node.parent.children list) *(0 queries)*:
+Get the **node index** (index in node.parent.children list):
 
 .. code:: python
 
@@ -234,7 +234,7 @@ Get the **node index** (index in node.parent.children list) *(0 queries)*:
     # or
     obj.index
 
-Get the **node level** (starting from 1) *(0 queries)*:
+Get the **node level** (starting from 1):
 
 .. code:: python
 
@@ -242,7 +242,7 @@ Get the **node level** (starting from 1) *(0 queries)*:
     # or
     obj.level
 
-Get the **order value** used for ordering *(0 queries)*:
+Get the **order value** used for ordering:
 
 .. code:: python
 
@@ -250,7 +250,7 @@ Get the **order value** used for ordering *(0 queries)*:
     # or
     obj.order
 
-Get the **parent node** *(1 query)*:
+Get the **parent node**:
 
 .. code:: python
 
@@ -258,13 +258,13 @@ Get the **parent node** *(1 query)*:
     # or
     obj.parent
 
-Set the **parent node** *(1 query)*:
+Set the **parent node**:
 
 .. code:: python
 
     obj.set_parent(parent_obj)
 
-Get the **node priority** *(0 queries)*:
+Get the **node priority**:
 
 .. code:: python
 
@@ -272,13 +272,13 @@ Get the **node priority** *(0 queries)*:
     # or
     obj.priority
 
-Set the **node priority** *(1 query)*:
+Set the **node priority**:
 
 .. code:: python
 
     obj.set_priority(100)
 
-Get the **root node** for the current node *(1 query)*:
+Get the **root node** for the current node:
 
 .. code:: python
 
@@ -286,7 +286,7 @@ Get the **root node** for the current node *(1 query)*:
     # or
     obj.root
 
-Get a **list with all root nodes** *(1 query)*:
+Get a **list with all root nodes**:
 
 .. code:: python
 
@@ -294,13 +294,13 @@ Get a **list with all root nodes** *(1 query)*:
     # or
     cls.roots
 
-Get **root nodes queryset** *(1 query)*:
+Get **root nodes queryset**:
 
 .. code:: python
 
     cls.get_roots_queryset()
 
-Get a **list with all the siblings** *(1 query)*:
+Get a **list with all the siblings**:
 
 .. code:: python
 
@@ -308,7 +308,7 @@ Get a **list with all the siblings** *(1 query)*:
     # or
     obj.siblings
 
-Get the **siblings count** *(0 queries)*:
+Get the **siblings count**:
 
 .. code:: python
 
@@ -316,13 +316,13 @@ Get the **siblings count** *(0 queries)*:
     # or
     obj.siblings_count
 
-Get the **siblings queryset** *(0 queries)*:
+Get the **siblings queryset**:
 
 .. code:: python
 
     obj.get_siblings_queryset()
 
-Get a **n-dimensional** ``dict`` representing the **model tree** *(1 query)*:
+Get a **n-dimensional** ``dict`` representing the **model tree**:
 
 .. code:: python
 
@@ -330,7 +330,7 @@ Get a **n-dimensional** ``dict`` representing the **model tree** *(1 query)*:
     # or
     cls.tree
 
-Get a **multiline** ``string`` representing the **model tree** *(1 query)*:
+Get a **multiline** ``string`` representing the **model tree**:
 
 .. code:: python
 
@@ -338,61 +338,61 @@ Get a **multiline** ``string`` representing the **model tree** *(1 query)*:
     # or
     cls.tree_display
 
-Return ``True`` if the current node **is ancestor** of target\_obj *(0 queries)*:
+Return ``True`` if the current node **is ancestor** of target\_obj:
 
 .. code:: python
 
     obj.is_ancestor_of(target_obj)
 
-Return ``True`` if the current node **is child** of target\_obj *(0 queries)*:
+Return ``True`` if the current node **is child** of target\_obj:
 
 .. code:: python
 
     obj.is_child_of(target_obj)
 
-Return ``True`` if the current node **is descendant** of target\_obj *(0 queries)*:
+Return ``True`` if the current node **is descendant** of target\_obj:
 
 .. code:: python
 
     obj.is_descendant_of(target_obj)
 
-Return ``True`` if the current node is the **first child** *(0 queries)*:
+Return ``True`` if the current node is the **first child**:
 
 .. code:: python
 
     obj.is_first_child()
 
-Return ``True`` if the current node is the **last child** *(0 queries)*:
+Return ``True`` if the current node is the **last child**:
 
 .. code:: python
 
     obj.is_last_child()
 
-Return ``True`` if the current node is **leaf** (it has not children) *(0 queries)*:
+Return ``True`` if the current node is **leaf** (it has not children):
 
 .. code:: python
 
     obj.is_leaf()
 
-Return ``True`` if the current node **is parent** of target\_obj *(0 queries)*:
+Return ``True`` if the current node **is parent** of target\_obj:
 
 .. code:: python
 
     obj.is_parent_of(target_obj)
 
-Return ``True`` if the current node **is root** *(0 queries)*:
+Return ``True`` if the current node **is root**:
 
 .. code:: python
 
     obj.is_root()
 
-Return ``True`` if the current node **is root** of target\_obj *(0 queries)*:
+Return ``True`` if the current node **is root** of target\_obj:
 
 .. code:: python
 
     obj.is_root_of(target_obj)
 
-Return ``True`` if the current node **is sibling** of target\_obj *(0 queries)*:
+Return ``True`` if the current node **is sibling** of target\_obj:
 
 .. code:: python
 

@@ -116,234 +116,234 @@ obj.delete()
 cls.delete_tree()
 ```
 
-Get a **list with all ancestors** (ordered from root to parent) *(1 query)*:
+Get a **list with all ancestors** (ordered from root to parent):
 ```python
 obj.get_ancestors()
 # or
 obj.ancestors
 ```
 
-Get the **ancestors count** *(0 queries)*:
+Get the **ancestors count**:
 ```python
 obj.get_ancestors_count()
 # or
 obj.ancestors_count
 ```
 
-Get the **ancestors queryset** *(0 queries)*:
+Get the **ancestors queryset**:
 ```python
 obj.get_ancestors_queryset()
 ```
 
-Get the **breadcrumbs** to current node (included) *(1 query)*:
+Get the **breadcrumbs** to current node (included):
 ```python
 obj.get_breadcrumbs(attr=None)
 # or
 obj.breadcrumbs
 ```
 
-Get a **list containing all children** *(1 query)*:
+Get a **list containing all children**:
 ```python
 obj.get_children()
 # or
 obj.children
 ```
 
-Get the **children count** *(0 queries)*:
+Get the **children count**:
 ```python
 obj.get_children_count()
 # or
 obj.children_count
 ```
 
-Get the **children queryset** *(0 queries)*:
+Get the **children queryset**:
 ```python
 obj.get_children_queryset()
 ```
 
-Get the **node depth** (how many levels of descendants) *(0 queries)*:
+Get the **node depth** (how many levels of descendants):
 ```python
 obj.get_depth()
 # or
 obj.depth
 ```
 
-Get a **list containing all descendants** *(1 query)*:
+Get a **list containing all descendants**:
 ```python
 obj.get_descendants()
 # or
 obj.descendants
 ```
 
-Get the **descendants count** *(0 queries)*:
+Get the **descendants count**:
 ```python
 obj.get_descendants_count()
 # or
 obj.descendants_count
 ```
 
-Get the **descendants queryset** *(0 queries)*:
+Get the **descendants queryset**:
 ```python
 obj.get_descendants_queryset()
 ```
 
-Get a **n-dimensional** `dict` representing the **model tree** *(1 query)*:
+Get a **n-dimensional** `dict` representing the **model tree**:
 ```python
 obj.get_descendants_tree()
 # or
 obj.descendants_tree
 ```
 
-Get a **multiline** `string` representing the **model tree** *(1 query)*:
+Get a **multiline** `string` representing the **model tree**:
 ```python
 obj.get_descendants_tree_display()
 # or
 obj.descendants_tree_display
 ```
 
-Get the **node index** (index in node.parent.children list) *(0 queries)*:
+Get the **node index** (index in node.parent.children list):
 ```python
 obj.get_index()
 # or
 obj.index
 ```
 
-Get the **node level** (starting from 1) *(0 queries)*:
+Get the **node level** (starting from 1):
 ```python
 obj.get_level()
 # or
 obj.level
 ```
 
-Get the **order value** used for ordering *(0 queries)*:
+Get the **order value** used for ordering:
 ```python
 obj.get_order()
 # or
 obj.order
 ```
 
-Get the **parent node** *(1 query)*:
+Get the **parent node**:
 ```python
 obj.get_parent()
 # or
 obj.parent
 ```
 
-Set the **parent node** *(1 query)*:
+Set the **parent node**:
 ```python
 obj.set_parent(parent_obj)
 ```
 
-Get the **node priority** *(0 queries)*:
+Get the **node priority**:
 ```python
 obj.get_priority()
 # or
 obj.priority
 ```
 
-Set the **node priority** *(1 query)*:
+Set the **node priority**:
 ```python
 obj.set_priority(100)
 ```
 
-Get the **root node** for the current node *(1 query)*:
+Get the **root node** for the current node:
 ```python
 obj.get_root()
 # or
 obj.root
 ```
 
-Get a **list with all root nodes** *(1 query)*:
+Get a **list with all root nodes**:
 ```python
 cls.get_roots()
 # or
 cls.roots
 ```
 
-Get **root nodes queryset** *(1 query)*:
+Get **root nodes queryset**:
 ```python
 cls.get_roots_queryset()
 ```
 
-Get a **list with all the siblings** *(1 query)*:
+Get a **list with all the siblings**:
 ```python
 obj.get_siblings()
 # or
 obj.siblings
 ```
 
-Get the **siblings count** *(0 queries)*:
+Get the **siblings count**:
 ```python
 obj.get_siblings_count()
 # or
 obj.siblings_count
 ```
 
-Get the **siblings queryset** *(0 queries)*:
+Get the **siblings queryset**:
 ```python
 obj.get_siblings_queryset()
 ```
 
-Get a **n-dimensional** `dict` representing the **model tree** *(1 query)*:
+Get a **n-dimensional** `dict` representing the **model tree**:
 ```python
 cls.get_tree()
 # or
 cls.tree
 ```
 
-Get a **multiline** `string` representing the **model tree** *(1 query)*:
+Get a **multiline** `string` representing the **model tree**:
 ```python
 cls.get_tree_display()
 # or
 cls.tree_display
 ```
 
-Return `True` if the current node **is ancestor** of target_obj *(0 queries)*:
+Return `True` if the current node **is ancestor** of target_obj:
 ```python
 obj.is_ancestor_of(target_obj)
 ```
 
-Return `True` if the current node **is child** of target_obj *(0 queries)*:
+Return `True` if the current node **is child** of target_obj:
 ```python
 obj.is_child_of(target_obj)
 ```
 
-Return `True` if the current node **is descendant** of target_obj *(0 queries)*:
+Return `True` if the current node **is descendant** of target_obj:
 ```python
 obj.is_descendant_of(target_obj)
 ```
 
-Return `True` if the current node is the **first child** *(0 queries)*:
+Return `True` if the current node is the **first child**:
 ```python
 obj.is_first_child()
 ```
 
-Return `True` if the current node is the **last child** *(0 queries)*:
+Return `True` if the current node is the **last child**:
 ```python
 obj.is_last_child()
 ```
 
-Return `True` if the current node is **leaf** (it has not children) *(0 queries)*:
+Return `True` if the current node is **leaf** (it has not children):
 ```python
 obj.is_leaf()
 ```
 
-Return `True` if the current node **is parent** of target_obj *(0 queries)*:
+Return `True` if the current node **is parent** of target_obj:
 ```python
 obj.is_parent_of(target_obj)
 ```
 
-Return `True` if the current node **is root** *(0 queries)*:
+Return `True` if the current node **is root**:
 ```python
 obj.is_root()
 ```
 
-Return `True` if the current node **is root** of target_obj *(0 queries)*:
+Return `True` if the current node **is root** of target_obj:
 ```python
 obj.is_root_of(target_obj)
 ```
 
-Return `True` if the current node **is sibling** of target_obj *(0 queries)*:
+Return `True` if the current node **is sibling** of target_obj:
 ```python
 obj.is_sibling_of(target_obj)
 ```
