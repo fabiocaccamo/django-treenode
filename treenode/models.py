@@ -81,8 +81,8 @@ class TreeNodeModel(models.Model):
         verbose_name=_('Index'), )
 
     tn_level = models.PositiveSmallIntegerField(
-        default=0, editable=False,
-        validators=[MinValueValidator(0), MaxValueValidator(10)],
+        default=1, editable=False,
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
         verbose_name=_('Level'), )
 
     tn_parent = models.ForeignKey('self',
