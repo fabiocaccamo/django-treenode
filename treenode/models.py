@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from . import classproperty
 from .debug import debug_performance
-from .memory import clear_refs, get_refs
+from .memory import clear_refs, update_refs
 from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
 
@@ -338,12 +338,7 @@ class TreeNodeModel(models.Model):
                     cls.objects.filter(pk=obj_pk).update(**obj_data)
 
             # update in-memory instances
-            for obj in get_refs(cls):
-                obj_key = str(obj.pk)
-                obj_data = objs_data.get(obj_key)
-                if obj_data:
-                    for key, value in obj_data.items():
-                        setattr(obj, key, value)
+            update_refs(cls, objs_data)
 
     # Private methods
 
