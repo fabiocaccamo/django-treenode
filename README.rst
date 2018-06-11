@@ -8,8 +8,8 @@ Probably the best abstract model / admin for your **tree** based stuff.
 Features
 --------
 
--  **Fast** - get ``ancestors``, ``children``, ``descendants``, ``parent``, ``root``, ``siblings``, ``tree``, ... *(1 query)*
--  **Synced** - in-memory model instances are automatically updated *(0 queries)*
+-  **Fast** - get ``ancestors``, ``children``, ``descendants``, ``parent``, ``root``, ``siblings``, ``tree`` with **no queries**
+-  **Synced** - in-memory model instances are automatically updated
 -  **Compatibility** - you can easily add treenode to existing projects
 -  **No dependencies**
 -  **Easy configuration** - just extend the abstract model / model-admin
@@ -150,7 +150,7 @@ Get the **ancestors queryset** *(0 queries)*:
 
     obj.get_ancestors_queryset()
 
-Get the **breadcrumbs** to current node (included) *(1 query)*
+Get the **breadcrumbs** to current node (included) *(1 query)*:
 
 .. code:: python
 

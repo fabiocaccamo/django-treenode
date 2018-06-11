@@ -4,6 +4,7 @@ from django.conf import settings
 from django.test import TransactionTestCase
 from django.utils.encoding import force_text
 
+from treenode.cache import clear_cache
 from treenode.utils import join_pks, split_pks
 
 from .models import Category
@@ -73,6 +74,30 @@ class TreeNodeModelsTestCase(TransactionTestCase):
 
     def __get_cat(self, name):
         return Category.objects.get(name=name)
+
+    def test_cache(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        b = self.__get_cat(name='b')
+        c = self.__get_cat(name='c')
+        e = self.__get_cat(name='d')
+        d = self.__get_cat(name='e')
+        f = self.__get_cat(name='f')
+        objs = [a, aa, aaa, aaaa, b, c, d, e, f]
+        for obj in objs:
+            self.assertEqual(obj.get_ancestors(cache=True), obj.get_ancestors(cache=False))
+            self.assertEqual(obj.get_children(cache=True), obj.get_children(cache=False))
+            self.assertEqual(obj.get_descendants(cache=True), obj.get_descendants(cache=False))
+            self.assertEqual(obj.get_descendants_tree(cache=True), obj.get_descendants_tree(cache=False))
+            self.assertEqual(obj.get_descendants_tree_display(cache=True), obj.get_descendants_tree_display(cache=False))
+            self.assertEqual(obj.get_root(cache=True), obj.get_root(cache=False))
+            self.assertEqual(obj.get_roots(cache=True), obj.get_roots(cache=False))
+            self.assertEqual(obj.get_siblings(cache=True), obj.get_siblings(cache=False))
+            self.assertEqual(obj.get_tree(cache=True), obj.get_tree(cache=False))
+            self.assertEqual(obj.get_tree_display(cache=True), obj.get_tree_display(cache=False))
 
     def test_debug_performance(self):
         settings.DEBUG = True
@@ -897,30 +922,55 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         e = self.__get_cat(name='d')
         d = self.__get_cat(name='e')
         f = self.__get_cat(name='f')
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(0):
             aaaa.get_ancestors()
+        with self.assertNumQueries(1):
+            clear_cache(Category)
+            aaaa.get_ancestors()
+        with self.assertNumQueries(1):
+            aaaa.get_ancestors(cache=False)
         with self.assertNumQueries(0):
             aaaa.get_ancestors_count()
         with self.assertNumQueries(0):
             aaaa.get_ancestors_queryset()
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(0):
             a.get_children()
+        with self.assertNumQueries(1):
+            clear_cache(Category)
+            a.get_children()
+        with self.assertNumQueries(1):
+            a.get_children(cache=False)
         with self.assertNumQueries(0):
             a.get_children_count()
         with self.assertNumQueries(0):
             a.get_children_queryset()
         with self.assertNumQueries(0):
             a.get_depth()
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(0):
             a.get_descendants()
+        with self.assertNumQueries(1):
+            clear_cache(Category)
+            a.get_descendants()
+        with self.assertNumQueries(1):
+            a.get_descendants(cache=False)
         with self.assertNumQueries(0):
             a.get_descendants_count()
         with self.assertNumQueries(0):
             a.get_descendants_queryset()
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(0):
             a.get_descendants_tree()
         with self.assertNumQueries(1):
+            clear_cache(Category)
+            a.get_descendants_tree()
+        with self.assertNumQueries(1):
+            a.get_descendants_tree(cache=False)
+        with self.assertNumQueries(0):
             a.get_descendants_tree_display()
+        with self.assertNumQueries(1):
+            clear_cache(Category)
+            a.get_descendants_tree_display()
+        with self.assertNumQueries(1):
+            a.get_descendants_tree_display(cache=False)
         with self.assertNumQueries(0):
             a.get_index()
         with self.assertNumQueries(0):
@@ -931,20 +981,45 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             a.get_parent()
         with self.assertNumQueries(0):
             a.get_priority()
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(0):
             a.get_root()
         with self.assertNumQueries(1):
+            clear_cache(Category)
+            a.get_root()
+        with self.assertNumQueries(1):
+            a.get_root(cache=False)
+        with self.assertNumQueries(0):
             Category.get_roots()
         with self.assertNumQueries(1):
+            clear_cache(Category)
+            Category.get_roots()
+        with self.assertNumQueries(1):
+            Category.get_roots(cache=False)
+        with self.assertNumQueries(0):
             a.get_siblings()
+        with self.assertNumQueries(1):
+            clear_cache(Category)
+            a.get_siblings()
+        with self.assertNumQueries(1):
+            a.get_siblings(cache=False)
         with self.assertNumQueries(0):
             a.get_siblings_count()
         with self.assertNumQueries(0):
             a.get_siblings_queryset()
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(0):
             Category.get_tree()
         with self.assertNumQueries(1):
+            clear_cache(Category)
+            Category.get_tree()
+        with self.assertNumQueries(1):
+            Category.get_tree(cache=False)
+        with self.assertNumQueries(0):
             Category.get_tree_display()
+        with self.assertNumQueries(1):
+            clear_cache(Category)
+            Category.get_tree_display()
+        with self.assertNumQueries(1):
+            Category.get_tree_display(cache=False)
         with self.assertNumQueries(0):
             a.is_ancestor_of(aa)
         with self.assertNumQueries(0):
