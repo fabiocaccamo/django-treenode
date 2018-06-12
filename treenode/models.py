@@ -197,8 +197,16 @@ class TreeNodeModel(models.Model):
         text = force_text(text)
         return indentation + text
 
+    def get_first_child(self, cache=True):
+        return self.get_children(cache=cache)[0] \
+            if self.get_children_count() else None
+
     def get_index(self):
         return self.tn_index
+
+    def get_last_child(self, cache=True):
+        return self.get_children(cache=cache)[-1] \
+            if self.get_children_count() else None
 
     def get_level(self):
         return self.tn_level
@@ -665,8 +673,16 @@ class TreeNodeProperties(object):
         return self.get_descendants_tree_display()
 
     @property
+    def first_child(self):
+        return self.get_first_child()
+
+    @property
     def index(self):
         return self.get_index()
+
+    @property
+    def last_child(self):
+        return self.get_last_child()
 
     @property
     def level(self):

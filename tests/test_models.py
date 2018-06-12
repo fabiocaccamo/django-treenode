@@ -311,6 +311,23 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertEqual(o.get_display(**opts), force_text('- - - - ò'))
         self.assertEqual(u.get_display(**opts), force_text('- - - - - ù'))
 
+    def test_get_first_child(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        ab = self.__get_cat(name='ab')
+        ac = self.__get_cat(name='ac')
+        ad = self.__get_cat(name='ad')
+        ae = self.__get_cat(name='ae')
+        af = self.__get_cat(name='af')
+        self.assertEqual(a.get_first_child(), aa)
+        self.assertEqual(aa.get_first_child(), aaa)
+        self.assertEqual(aaa.get_first_child(), aaaa)
+        self.assertEqual(aaaa.get_first_child(), None)
+        self.assertEqual(af.get_first_child(), None)
+
     def test_get_index(self):
         self.__create_cat_tree()
         a = self.__get_cat(name='a')
@@ -341,6 +358,23 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertEqual(d.get_index(), 3)
         self.assertEqual(e.get_index(), 4)
         self.assertEqual(f.get_index(), 5)
+
+    def test_get_last_child(self):
+        self.__create_cat_tree()
+        a = self.__get_cat(name='a')
+        aa = self.__get_cat(name='aa')
+        aaa = self.__get_cat(name='aaa')
+        aaaa = self.__get_cat(name='aaaa')
+        ab = self.__get_cat(name='ab')
+        ac = self.__get_cat(name='ac')
+        ad = self.__get_cat(name='ad')
+        ae = self.__get_cat(name='ae')
+        af = self.__get_cat(name='af')
+        self.assertEqual(a.get_last_child(), af)
+        self.assertEqual(aa.get_last_child(), aaa)
+        self.assertEqual(aaa.get_last_child(), aaaa)
+        self.assertEqual(aaaa.get_last_child(), None)
+        self.assertEqual(af.get_last_child(), None)
 
     def test_get_level(self):
         self.__create_cat_tree()
@@ -1058,7 +1092,9 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             self.assertEqual(obj.get_descendants_count(), obj.descendants_count)
             self.assertEqual(obj.get_descendants_tree(), obj.descendants_tree)
             self.assertEqual(obj.get_descendants_tree_display(), obj.descendants_tree_display)
+            self.assertEqual(obj.get_first_child(), obj.first_child)
             self.assertEqual(obj.get_index(), obj.index)
+            self.assertEqual(obj.get_last_child(), obj.last_child)
             self.assertEqual(obj.get_level(), obj.level)
             self.assertEqual(obj.get_order(), obj.order)
             self.assertEqual(obj.get_parent(), obj.parent)

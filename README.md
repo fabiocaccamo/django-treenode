@@ -201,11 +201,25 @@ obj.get_descendants_tree_display()
 obj.descendants_tree_display
 ```
 
+Get the **first child node**:
+```python
+obj.get_first_child()
+# or
+obj.first_child
+```
+
 Get the **node index** (index in node.parent.children list):
 ```python
 obj.get_index()
 # or
 obj.index
+```
+
+Get the **last child node**:
+```python
+obj.get_last_child()
+# or
+obj.last_child
 ```
 
 Get the **node level** (starting from 1):

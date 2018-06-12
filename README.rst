@@ -226,6 +226,14 @@ Get a **multiline** ``string`` representing the **model tree**:
     # or
     obj.descendants_tree_display
 
+Get the **first child node**:
+
+.. code:: python
+
+    obj.get_first_child()
+    # or
+    obj.first_child
+
 Get the **node index** (index in node.parent.children list):
 
 .. code:: python
@@ -233,6 +241,14 @@ Get the **node index** (index in node.parent.children list):
     obj.get_index()
     # or
     obj.index
+
+Get the **last child node**:
+
+.. code:: python
+
+    obj.get_last_child()
+    # or
+    obj.last_child
 
 Get the **node level** (starting from 1):
 
