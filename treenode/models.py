@@ -263,7 +263,6 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def get_roots_queryset(cls):
-        # return cls.objects.filter(tn_parent=None)
         return cls.objects.filter(tn_ancestors_count=0)
 
     def get_siblings(self, cache=True):
