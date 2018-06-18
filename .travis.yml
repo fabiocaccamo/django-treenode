@@ -19,14 +19,14 @@ env:
 matrix:
   include:
     - python: "3.6"
-      env:
-        - TOX_ENV=py36-dj111
-        - TOX_ENV=py36-dj20
-        - TOX_ENV=py36-djmaster
+      env: TOX_ENV=py36-dj111
+    - python: "3.6"
+      env: TOX_ENV=py36-dj20
+    - python: "3.6"
+      env: TOX_ENV=py36-djmaster
   allow_failures:
-    env:
-      - TOX_ENV=py35-djmaster
-      - TOX_ENV=py36-djmaster
+    - env: TOX_ENV=py35-djmaster
+    - env: TOX_ENV=py36-djmaster
 install:
   - pip install tox
 script:
