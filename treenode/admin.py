@@ -41,7 +41,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         if len(base_list_display) == 1 and base_list_display[0] == '__str__':
             return (treenode_field_display, )
         else:
-            return (treenode_field_display, ) + base_list_display
+            return (treenode_field_display, ) + tuple(base_list_display)
         return base_list_display
 
     def get_list_filter(self, request):
