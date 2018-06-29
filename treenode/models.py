@@ -616,16 +616,6 @@ class TreeNodeModel(models.Model):
 
         return objs_tree
 
-    class Meta:
-        abstract = True
-        ordering = ['tn_order']
-
-    def __str__(self):
-        return self.get_display(indent=True)
-
-
-class TreeNodeProperties(object):
-
     """
     Public properties
     All properties map a get_{{property}}() method.
@@ -723,5 +713,11 @@ class TreeNodeProperties(object):
     def tree_display(cls):
         return cls.get_tree_display()
 
+    class Meta:
+        abstract = True
+        ordering = ['tn_order']
+
+    def __str__(self):
+        return self.get_display(indent=True)
 
 connect_signals()

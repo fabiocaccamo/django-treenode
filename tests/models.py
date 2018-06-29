@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-from treenode.models import TreeNodeModel, TreeNodeProperties
+from treenode.models import TreeNodeModel
 
 
-class Category(TreeNodeModel, TreeNodeProperties):
+class Category(TreeNodeModel):
 
     treenode_display_field = 'name'
 

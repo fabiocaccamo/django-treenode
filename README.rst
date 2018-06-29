@@ -63,22 +63,7 @@ Make your model class inherit from ``treenode.models.TreeNodeModel``:
             verbose_name = 'Category'
             verbose_name_plural = 'Categories'
 
-The ``TreeNodeModel`` abstract class adds many fields and public methods to your models.
-
-All fields are prefixed with ``tn_`` to prevent direct access and avoid conflicts with possible existing fields.
-
-If you want to access public methods as properties just make your model class inherit from both ``TreeNodeModel`` and ``TreeNodeProperties``:
-
-.. code:: python
-
-    # ...
-
-    from treenode.models import TreeNodeModel, TreeNodeProperties
-
-
-    class Category(TreeNodeModel, TreeNodeProperties):
-
-        # ...
+The ``TreeNodeModel`` abstract class adds many fields (prefixed with ``tn_`` to prevent direct access) and public methods to your models.
 
 --------------
 
@@ -113,8 +98,6 @@ Usage
 
 Methods/Properties:
 ^^^^^^^^^^^^^^^^^^^
-
-*Note that properties are available only if your model implements* ``treenode.models.TreeNodeProperties`` *(for more info check the configuration section)*
 
 **Delete a node** and all its descendants:
 
