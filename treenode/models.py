@@ -447,7 +447,7 @@ class TreeNodeModel(models.Model):
     @classmethod
     def __get_nodes_data(cls):
 
-        objs_qs = cls.objects.select_related('tn_parent').select_for_update()
+        objs_qs = cls.objects.select_related('tn_parent')
         objs_list = list(objs_qs)
         objs_dict = {str(obj.pk):obj for obj in objs_list}
         objs_data = {str(obj.pk):obj.__get_node_data(objs_list) \
