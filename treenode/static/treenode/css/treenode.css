@@ -1,5 +1,11 @@
 .treenode {
     white-space: nowrap;
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+a > .treenode {
+    margin-left: 0px;
 }
 
 .treenode-row {
