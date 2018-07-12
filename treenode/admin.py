@@ -33,6 +33,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
 
     def get_list_display(self, request):
         base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)
+        base_list_display = list(base_list_display)
         def treenode_field_display(obj):
             return self.__get_treenode_field_display(
                 obj, accordion=self.treenode_accordion, style='')
@@ -41,6 +42,9 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         if len(base_list_display) == 1 and base_list_display[0] == '__str__':
             return (treenode_field_display, )
         else:
+            treenode_display_field = getattr(self.model, 'treenode_display_field')
+            if len(base_list_display) >= 1 and base_list_display[0] == treenode_display_field:
+                base_list_display.pop(0)
             return (treenode_field_display, ) + tuple(base_list_display)
         return base_list_display
 
