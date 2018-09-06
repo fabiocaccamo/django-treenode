@@ -49,7 +49,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         return base_list_display
 
     def get_list_filter(self, request):
-        return None
+        return ()
 
     def __get_treenode_field_display(self, obj, accordion=True, style=''):
         ancestors_count = obj.tn_ancestors_count
