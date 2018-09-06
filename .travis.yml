@@ -15,6 +15,7 @@ env:
   - TOX_ENV=py35-dj110
   - TOX_ENV=py35-dj111
   - TOX_ENV=py35-dj20
+  - TOX_ENV=py35-dj21
   - TOX_ENV=py35-djmaster
 matrix:
   include:
@@ -22,6 +23,8 @@ matrix:
       env: TOX_ENV=py36-dj111
     - python: "3.6"
       env: TOX_ENV=py36-dj20
+    - python: "3.6"
+      env: TOX_ENV=py36-dj21
     - python: "3.6"
       env: TOX_ENV=py36-djmaster
   allow_failures:
