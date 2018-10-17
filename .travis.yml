@@ -27,9 +27,25 @@ matrix:
       env: TOX_ENV=py36-dj21
     - python: "3.6"
       env: TOX_ENV=py36-djmaster
+    - python: "3.7"
+      env: TOX_ENV=py37-dj20
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.7"
+      env: TOX_ENV=py37-dj21
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.7"
+      env: TOX_ENV=py37-djmaster
+      dist: xenial
+      language: python
+      sudo: required
   allow_failures:
     - env: TOX_ENV=py35-djmaster
     - env: TOX_ENV=py36-djmaster
+    - env: TOX_ENV=py37-djmaster
 install:
   - pip install tox
 script:
