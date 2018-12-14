@@ -257,7 +257,8 @@ class TreeNodeModel(models.Model):
     @classmethod
     def get_roots(cls, cache=True):
         if cache:
-            return [obj for obj in query_cache(cls) if obj.tn_ancestors_count == 0]
+            return [obj for obj in query_cache(cls) \
+                if obj.tn_ancestors_count == 0]
         else:
             return list(cls.get_roots_queryset())
 
@@ -361,7 +362,7 @@ class TreeNodeModel(models.Model):
         with debug_performance(debug_message_prefix):
 
             # update db
-            objs_qs, objs_list, objs_dict, objs_data = cls.__get_nodes_data()
+            objs_data = cls.__get_nodes_data()
 
             with transaction.atomic():
                 for obj_key, obj_data in objs_data.items():
@@ -390,57 +391,43 @@ class TreeNodeModel(models.Model):
         s = s.upper()
         return s
 
-    def __get_node_data(self, objs):
+    def __get_node_data(self, objs_list, objs_dict):
 
         obj_dict = {}
 
         # update ancestors
+        parent_pk = self.tn_parent_id
+
         ancestors_list = []
-
-        parent_obj = self.tn_parent
-        while parent_obj:
-            ancestors_list.insert(0, parent_obj)
-            parent_obj = parent_obj.tn_parent
-
+        ancestor_pk = parent_pk
+        while ancestor_pk:
+            ancestor_obj = objs_dict.get(str(ancestor_pk))
+            ancestors_list.insert(0, ancestor_obj)
+            ancestor_pk = ancestor_obj.tn_parent_id
         ancestors_pks = [obj.pk for obj in ancestors_list]
         ancestors_count = len(ancestors_pks)
 
-        obj_dict['tn_ancestors_pks'] = ancestors_pks
-        obj_dict['tn_ancestors_count'] = ancestors_count
-
-        # update children
-        children_pks = [
-            obj.pk for obj in objs \
-            if obj.tn_parent == self]
-        children_count = len(children_pks)
-
-        obj_dict['tn_children_pks'] = children_pks
-        obj_dict['tn_children_count'] = children_count
-
-        # update depth
-        obj_dict['tn_depth'] = 0
-
-        # update descendants
-        obj_dict['tn_descendants_pks'] = []
-        obj_dict['tn_descendants_count'] = 0
-
-        # update level
-        obj_dict['tn_level'] = (ancestors_count + 1)
-
-        # update order
         order_objs = list(ancestors_list) + [self]
         order_strs = [obj.__get_node_order_str() for obj in order_objs]
         order_str = ''.join(order_strs)[0:150]
-        obj_dict['tn_order_str'] = order_str
 
-        # update siblings
-        siblings_pks = [
-            obj.pk for obj in objs \
-            if obj.tn_parent == self.tn_parent and obj.pk != self.pk]
-        siblings_count = len(siblings_pks)
-
-        obj_dict['tn_siblings_pks'] = siblings_pks
-        obj_dict['tn_siblings_count'] = siblings_count
+        obj_dict = {
+            'instance': self,
+            'pk': self.pk,
+            'tn_parent_pk': parent_pk,
+            'tn_ancestors_pks': ancestors_pks,
+            'tn_ancestors_count': ancestors_count,
+            'tn_children_pks': [],
+            'tn_children_count': 0,
+            'tn_descendants_pks': [],
+            'tn_descendants_count': 0,
+            'tn_siblings_pks': [],
+            'tn_siblings_count': 0,
+            'tn_depth': 0,
+            'tn_level': (ancestors_count + 1),
+            'tn_order': 0,
+            'tn_order_str': order_str,
+        }
 
         return obj_dict
 
@@ -450,94 +437,90 @@ class TreeNodeModel(models.Model):
         objs_qs = cls.objects.select_related('tn_parent')
         objs_list = list(objs_qs)
         objs_dict = {str(obj.pk):obj for obj in objs_list}
-        objs_data = {str(obj.pk):obj.__get_node_data(objs_list) \
-                    for obj in objs_list}
-
-        # get sorted dict keys
-        objs_data_keys = list(objs_data.keys())
-        objs_data_keys.sort(
-            key=lambda obj_key: objs_data[obj_key]['tn_order_str'])
-
-        # get sorted dict values
-        objs_data_values = list(objs_data.values())
-        objs_data_values.sort(
-            key=lambda obj_value: obj_value['tn_order_str'])
-
-        objs_sort_pks = lambda obj_pk: objs_data_keys.index(str(obj_pk))
-
-        # update order
+        objs_data_dict = {str(obj.pk):obj.__get_node_data(objs_list, objs_dict) for obj in objs_list}
+        objs_data_sort = lambda obj: objs_data_dict[str(obj['pk'])]['tn_order_str']
+        objs_data_list = list(objs_data_dict.values())
+        objs_data_list.sort(key=objs_data_sort)
+        objs_pks_by_parent = {}
         objs_order_cursor = 0
-        for obj_data in objs_data_values:
-            obj_data.pop('tn_order_str', None)
+        objs_index_cursors = {}
+        objs_index_cursor = 0
+
+        # index objects by parent pk
+        for obj_data in objs_data_list:
+            obj_parent_key = str(obj_data['tn_parent_pk'])
+            if not obj_parent_key in objs_pks_by_parent:
+                objs_pks_by_parent[obj_parent_key] = []
+            objs_pks_by_parent[obj_parent_key].append(obj_data['pk'])
+
+            # update global order with normalized value
             obj_data['tn_order'] = objs_order_cursor
             objs_order_cursor += 1
 
-        # update index
-        objs_index_cursors = {}
-        objs_index_cursor = 0
-        for obj_data in objs_data_values:
-            obj_ancestors_pks = str(obj_data['tn_ancestors_pks'])
-            objs_index_cursor = objs_index_cursors.get(obj_ancestors_pks, 0)
+            # update child index
+            obj_parent_key = str(obj_data['tn_parent_pk'])
+            objs_index_cursor = objs_index_cursors.get(obj_parent_key, 0)
             obj_data['tn_index'] = objs_index_cursor
             objs_index_cursor += 1
-            objs_index_cursors[obj_ancestors_pks] = objs_index_cursor
+            objs_index_cursors[obj_parent_key] = objs_index_cursor
 
-        # update depth
-        for obj_data in objs_data_values:
-            obj_children_count = obj_data['tn_children_count']
-            if obj_children_count > 0:
-                continue
-            obj_ancestors_count = obj_data['tn_ancestors_count']
-            if obj_ancestors_count == 0:
-                continue
-            obj_ancestors_pks = obj_data['tn_ancestors_pks']
-            for obj_ancestor_pk in obj_ancestors_pks:
-                obj_ancestor_key = str(obj_ancestor_pk)
-                obj_ancestor_data = objs_data[obj_ancestor_key]
-                obj_ancestor_index = obj_ancestors_pks.index(obj_ancestor_pk)
-                obj_ancestor_depth = (obj_ancestors_count - obj_ancestor_index)
-                if obj_ancestor_data['tn_depth'] < obj_ancestor_depth:
-                    obj_ancestor_data['tn_depth'] = obj_ancestor_depth
+        for obj_data in sorted(objs_data_list, key=lambda obj: obj['tn_level'], reverse=True):
 
-        # update children and siblings pks order
-        for obj_data in objs_data_values:
-            # update children pks order
-            if obj_data['tn_children_pks']:
-                obj_data['tn_children_pks'].sort(key=objs_sort_pks)
-            # update siblings pks order
-            if obj_data['tn_siblings_pks']:
-                obj_data['tn_siblings_pks'].sort(key=objs_sort_pks)
+            # update children
+            children_parent_key = str(obj_data['pk'])
+            obj_data['tn_children_pks'] = list(
+                objs_pks_by_parent.get(children_parent_key, []))
+            obj_data['tn_children_count'] = len(obj_data['tn_children_pks'])
 
-        # update descendants pks
-        objs_data_values.sort(key=lambda obj: obj['tn_level'], reverse=True)
-        for obj_data in objs_data_values:
-            if obj_data['tn_children_count'] == 0:
-                continue
-            obj_children_pks = obj_data['tn_children_pks']
-            obj_descendants_pks = list(obj_children_pks)
-            for obj_child_pk in obj_children_pks:
-                obj_child_key = str(obj_child_pk)
-                obj_child_data = objs_data[obj_child_key]
-                obj_child_descendants_pks = obj_child_data.get('tn_descendants_pks', [])
-                if obj_child_descendants_pks:
-                    obj_descendants_pks += obj_child_descendants_pks
-            obj_data['tn_descendants_pks'] = obj_descendants_pks
-            # update descendants pks order
-            if obj_data['tn_descendants_pks']:
-                obj_data['tn_descendants_pks'].sort(key=objs_sort_pks)
+            # update siblings
+            siblings_parent_key = str(obj_data['tn_parent_pk'])
+            obj_data['tn_siblings_pks'] = list(
+                objs_pks_by_parent.get(siblings_parent_key, []))
+            obj_data['tn_siblings_pks'].remove(obj_data['pk'])
+            obj_data['tn_siblings_count'] = len(obj_data['tn_siblings_pks'])
+
+            # update depth (this could be optimized)
+            if obj_data['tn_children_count'] == 0 and obj_data['tn_ancestors_count'] > 0:
+                # start from non-root leaf nodes
+                obj_ancestors_pks = obj_data['tn_ancestors_pks']
+                for obj_ancestor_pk in obj_ancestors_pks:
+                    obj_ancestor_key = str(obj_ancestor_pk)
+                    obj_ancestor_data = objs_data_dict[obj_ancestor_key]
+                    obj_ancestor_index = obj_ancestors_pks.index(obj_ancestor_pk)
+                    obj_ancestor_depth = (obj_data['tn_ancestors_count'] - obj_ancestor_index)
+                    if obj_ancestor_data['tn_depth'] < obj_ancestor_depth:
+                        obj_ancestor_data['tn_depth'] = obj_ancestor_depth
+
+            # update descendants
+            if obj_data['tn_children_count'] > 0:
+                obj_children_pks = obj_data['tn_children_pks']
+                obj_descendants_pks = list(obj_children_pks)
+                for obj_child_pk in obj_children_pks:
+                    obj_child_key = str(obj_child_pk)
+                    obj_child_data = objs_data_dict[obj_child_key]
+                    obj_child_descendants_pks = obj_child_data.get('tn_descendants_pks', [])
+                    if obj_child_descendants_pks:
+                        obj_descendants_pks += obj_child_descendants_pks
+                obj_descendants_sort = lambda obj_pk: objs_data_dict[str(obj_pk)]['tn_order']
+                obj_descendants_pks.sort(key=obj_descendants_sort)
+                obj_data['tn_descendants_pks'] = obj_descendants_pks
                 obj_data['tn_descendants_count'] = len(obj_data['tn_descendants_pks'])
 
-        # join all pks lists
-        for obj_data in objs_data_values:
+        for obj_data in objs_data_list:
+            obj = obj_data['instance']
+            obj_key = str(obj_data['pk'])
+
+            # join all pks lists
             obj_data['tn_ancestors_pks'] = join_pks(obj_data['tn_ancestors_pks'])
             obj_data['tn_children_pks'] = join_pks(obj_data['tn_children_pks'])
             obj_data['tn_descendants_pks'] = join_pks(obj_data['tn_descendants_pks'])
             obj_data['tn_siblings_pks'] = join_pks(obj_data['tn_siblings_pks'])
 
-        # clean dict data
-        for obj in objs_list:
-            obj_key = str(obj.pk)
-            obj_data = objs_data[obj_key]
+            # clean data
+            obj_data.pop('instance', None)
+            obj_data.pop('pk', None)
+            obj_data.pop('tn_parent_pk', None)
+            obj_data.pop('tn_order_str', None)
 
             if obj_data['tn_ancestors_count'] == obj.tn_ancestors_count:
                 obj_data.pop('tn_ancestors_count')
@@ -576,12 +559,9 @@ class TreeNodeModel(models.Model):
                 obj_data.pop('tn_siblings_pks', None)
 
             if len(obj_data) == 0:
-                objs_data.pop(obj_key, None)
+                objs_data_dict.pop(obj_key, None)
 
-        # clean list data
-        objs_list = [obj for obj in objs_list if str(obj.pk) in objs_data]
-
-        return (objs_qs, objs_list, objs_dict, objs_data, )
+        return objs_data_dict
 
     @classmethod
     def __get_nodes_tree(cls, instance=None, cache=True):
@@ -612,7 +592,8 @@ class TreeNodeModel(models.Model):
             else:
                 objs_list = list(cls.objects.all())
             objs_dict = { str(obj.pk):obj for obj in objs_list }
-            objs_tree = [__get_node_tree(obj) for obj in objs_list if obj.tn_level == 1]
+            objs_tree = [__get_node_tree(obj)
+                        for obj in objs_list if obj.tn_level == 1]
 
         return objs_tree
 
