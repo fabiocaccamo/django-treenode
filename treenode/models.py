@@ -45,18 +45,16 @@ class TreeNodeModel(models.Model):
     # All fields are for internal usage and they are prefixed by 'tn_'
     # to avoid direct access and conflicts with possible existing fields.
 
-    tn_ancestors_pks = models.CharField(
-        max_length=500, blank=True,
-        default='', editable=False,
+    tn_ancestors_pks = models.TextField(
+        blank=True, default='', editable=False,
         verbose_name=_('Ancestors pks'), )
 
     tn_ancestors_count = models.PositiveSmallIntegerField(
         default=0, editable=False,
         verbose_name=_('Ancestors count'), )
 
-    tn_children_pks = models.CharField(
-        max_length=500, blank=True,
-        default='', editable=False,
+    tn_children_pks = models.TextField(
+        blank=True, default='', editable=False,
         verbose_name=_('Children pks'), )
 
     tn_children_count = models.PositiveSmallIntegerField(
@@ -68,9 +66,8 @@ class TreeNodeModel(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(10)],
         verbose_name=_('Depth'), )
 
-    tn_descendants_pks = models.CharField(
-        max_length=500, blank=True,
-        default='', editable=False,
+    tn_descendants_pks = models.TextField(
+        blank=True, default='', editable=False,
         verbose_name=_('Descendants pks'), )
 
     tn_descendants_count = models.PositiveSmallIntegerField(
@@ -101,9 +98,8 @@ class TreeNodeModel(models.Model):
         default=0, editable=False,
         verbose_name=_('Order'), )
 
-    tn_siblings_pks = models.CharField(
-        max_length=500, blank=True,
-        default='', editable=False,
+    tn_siblings_pks = models.TextField(
+        blank=True, default='', editable=False,
         verbose_name=_('Siblings pks'), )
 
     tn_siblings_count = models.PositiveSmallIntegerField(
