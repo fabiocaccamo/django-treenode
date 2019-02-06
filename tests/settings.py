@@ -11,42 +11,41 @@ SECRET_KEY = 'django-treenode'
 
 ALLOWED_HOSTS = ['*']
 
-DATABASES = {
-    'default': {
+database_engine = os.environ.get('DATABASE_ENGINE', 'sqlite')
+database_config = {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': ':memory:',
+    },
+    # 'mysql': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'treenode',
+    #     'USER': 'mysql',
+    #     'PASSWORD': 'mysql',
+    #     'HOST': '',
+    #     'PORT': '',
+    # },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'treenode',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '',
+        'PORT': '',
     }
+}
+
+DATABASES = {
+    'default': database_config.get(database_engine),
 }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.messages',
     'django.contrib.sessions',
     'tests',
     'treenode',
-]
-
-MIDDLEWARE = [
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-]
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'treenode/public/media/')
