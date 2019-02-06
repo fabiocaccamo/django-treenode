@@ -31,8 +31,6 @@ env:
   - TOX_ENV=py35-dj20-postgres
   - TOX_ENV=py35-dj21-sqlite
   - TOX_ENV=py35-dj21-postgres
-  - TOX_ENV=py35-djmaster-sqlite
-  - TOX_ENV=py35-djmaster-postgres
 matrix:
   include:
     - python: "3.6"
