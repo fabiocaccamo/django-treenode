@@ -1,4 +1,4 @@
-|Build Status| |coverage| |Code Health| |Requirements Status| |PyPI version| |Py versions| |License|
+|Build Status| |coverage| |Code Health| |Requirements Status| |PyPI version| |PyPI downloads| |Py versions| |License|
 
 django-treenode
 ===============
@@ -418,6 +418,8 @@ Released under `MIT License <LICENSE.txt>`__.
    :target: https://requires.io/github/fabiocaccamo/django-treenode/requirements/?branch=master
 .. |PyPI version| image:: https://badge.fury.io/py/django-treenode.svg
    :target: https://badge.fury.io/py/django-treenode
+.. |PyPI downloads| image:: https://img.shields.io/pypi/dm/django-treenode.svg
+   :target: https://img.shields.io/pypi/dm/django-treenode.svg
 .. |Py versions| image:: https://img.shields.io/pypi/pyversions/django-treenode.svg
    :target: https://img.shields.io/pypi/pyversions/django-treenode.svg
 .. |License| image:: https://img.shields.io/pypi/l/django-treenode.svg
