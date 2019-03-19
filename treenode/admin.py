@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.safestring import mark_safe
 
 from .forms import TreeNodeForm
@@ -79,5 +78,5 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
                 tabs_class, tabs, obj.get_display(indent=False), ))
 
     class Media:
-        css = {'all':(static('/treenode/css/treenode.css'),)}
-        js = [static('/treenode/js/treenode.js')]
+        css = {'all':('treenode/css/treenode.css',)}
+        js = ['treenode/js/treenode.js']
