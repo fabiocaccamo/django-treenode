@@ -13,7 +13,7 @@ Features
 -  **Compatibility** - you can easily add treenode to existing projects
 -  **No dependencies**
 -  **Easy configuration** - just extend the abstract model / model-admin
--  **Admin integration** - great tree visualization with optional accordion
+-  **Admin integration** - great tree visualization: accordion, breadcrumbs or indentation
 
 +------------------+---------------------+
 | Simple admin     | Accordion admin     |
@@ -84,9 +84,12 @@ Make your model-admin class inherit from ``treenode.admin.TreeNodeModelAdmin``.
 
     class CategoryAdmin(TreeNodeModelAdmin):
 
-        # if True an accordion will be used in the changelist view
-        # default value False
-        treenode_accordion = True
+        # set the changelist display mode: 'accordion', 'breadcrumbs' or 'indentation' (default)
+        # when changelist results are filtered by a querystring,
+        # 'breadcrumbs' mode will be used (to preserve data display integrity)
+        treenode_display_mode = TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_INDENTATION
+        # treenode_display_mode = TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_BREADCRUMBS
+        # treenode_display_mode = TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_INDENTATION
 
         # use TreeNodeForm to automatically exclude invalid parent choices
         form = TreeNodeForm

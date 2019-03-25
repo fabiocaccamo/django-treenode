@@ -12,14 +12,14 @@ a > .treenode {
     white-space: nowrap;
 }
 
-.treenode-tabs {
+.treenode-indentation {
     font-weight: normal;
     color: #999999;
     display: inline-block;
     margin-right: 5px;
 }
 
-.treenode-accordion .treenode-tabs {
+.treenode-accordion .treenode-indentation {
     display: none;
 }
 
@@ -73,3 +73,13 @@ a > .treenode {
 /*.treenode-accordion.treenode-hide:not(.treenode-root) {
     display: none !important;
 }*/
+
+.treenode-breadcrumbs {
+    font-weight: normal;
+    color: #888888;
+}
+
+.treenode-breadcrumbs:after {
+    content: " / ";
+    color: #CCCCCC;
+}
