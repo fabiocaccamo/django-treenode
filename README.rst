@@ -10,16 +10,16 @@ Features
 
 -  **Fast** - get ``ancestors``, ``children``, ``descendants``, ``parent``, ``root``, ``siblings``, ``tree`` with **no queries**
 -  **Synced** - in-memory model instances are automatically updated
--  **Compatibility** - you can easily add treenode to existing projects
+-  **Compatibility** - you can easily add ``treenode`` to existing projects
 -  **No dependencies**
 -  **Easy configuration** - just extend the abstract model / model-admin
--  **Admin integration** - great tree visualization: accordion, breadcrumbs or indentation
+-  **Admin integration** - great tree visualization: **accordion**, **breadcrumbs** or **indentation**
 
-+------------------+---------------------+
-| Simple admin     | Accordion admin     |
-+==================+=====================+
-| |simple-admin|   | |accordion-admin|   |
-+------------------+---------------------+
++---------------------------------------------+---------------------------------------------+-------------------------------------------+
+| indentation (default)                       | breadcrumbs                                 | accordion                                 |
++=============================================+=============================================+===========================================+
+| |treenode-admin-display-mode-indentation|   | |treenode-admin-display-mode-breadcrumbs|   | |treenode-admin-display-mode-accordion|   |
++---------------------------------------------+---------------------------------------------+-------------------------------------------+
 
 Requirements
 ------------
@@ -427,5 +427,6 @@ Released under `MIT License <LICENSE.txt>`__.
    :target: https://img.shields.io/pypi/pyversions/django-treenode.svg
 .. |License| image:: https://img.shields.io/pypi/l/django-treenode.svg
    :target: https://img.shields.io/pypi/l/django-treenode.svg
-.. |simple-admin| image:: https://user-images.githubusercontent.com/1035294/39823224-dff5944c-53ac-11e8-9d7f-60f1a31b2730.png
-.. |accordion-admin| image:: https://user-images.githubusercontent.com/1035294/39823232-e3a5d99e-53ac-11e8-98ad-edd6b77c44a4.png
+.. |treenode-admin-display-mode-accordion| image:: https://user-images.githubusercontent.com/1035294/54942407-5040ec00-4f2f-11e9-873b-d0b3b521f534.png
+.. |treenode-admin-display-mode-breadcrumbs| image:: https://user-images.githubusercontent.com/1035294/54942410-50d98280-4f2f-11e9-8a8b-a1ac6208398a.png
+.. |treenode-admin-display-mode-indentation| image:: https://user-images.githubusercontent.com/1035294/54942411-50d98280-4f2f-11e9-9daf-d8339dd7a159.png
