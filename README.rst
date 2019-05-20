@@ -412,21 +412,13 @@ License
 Released under `MIT License <LICENSE.txt>`__.
 
 .. |Build Status| image:: https://travis-ci.org/fabiocaccamo/django-treenode.svg?branch=master
-   :target: https://travis-ci.org/fabiocaccamo/django-treenode
 .. |coverage| image:: https://codecov.io/gh/fabiocaccamo/django-treenode/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/fabiocaccamo/django-treenode
-.. |Code Health| image:: https://landscape.io/github/fabiocaccamo/django-treenode/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/fabiocaccamo/django-treenode/master
+.. |Codacy| image:: https://api.codacy.com/project/badge/Grade/0c79c196e5c9411babbaf5e8e5f7469c
 .. |Requirements Status| image:: https://requires.io/github/fabiocaccamo/django-treenode/requirements.svg?branch=master
-   :target: https://requires.io/github/fabiocaccamo/django-treenode/requirements/?branch=master
 .. |PyPI version| image:: https://badge.fury.io/py/django-treenode.svg
-   :target: https://badge.fury.io/py/django-treenode
 .. |PyPI downloads| image:: https://img.shields.io/pypi/dm/django-treenode.svg
-   :target: https://img.shields.io/pypi/dm/django-treenode.svg
 .. |Py versions| image:: https://img.shields.io/pypi/pyversions/django-treenode.svg
-   :target: https://img.shields.io/pypi/pyversions/django-treenode.svg
 .. |License| image:: https://img.shields.io/pypi/l/django-treenode.svg
-   :target: https://img.shields.io/pypi/l/django-treenode.svg
 .. |treenode-admin-display-mode-accordion| image:: https://user-images.githubusercontent.com/1035294/54942407-5040ec00-4f2f-11e9-873b-d0b3b521f534.png
 .. |treenode-admin-display-mode-breadcrumbs| image:: https://user-images.githubusercontent.com/1035294/54942410-50d98280-4f2f-11e9-8a8b-a1ac6208398a.png
 .. |treenode-admin-display-mode-indentation| image:: https://user-images.githubusercontent.com/1035294/54942411-50d98280-4f2f-11e9-9daf-d8339dd7a159.png

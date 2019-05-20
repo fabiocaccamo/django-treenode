@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/fabiocaccamo/django-treenode.svg?branch=master)](https://travis-ci.org/fabiocaccamo/django-treenode)
 [![coverage](https://codecov.io/gh/fabiocaccamo/django-treenode/branch/master/graph/badge.svg)](https://codecov.io/gh/fabiocaccamo/django-treenode)
-[![Code Health](https://landscape.io/github/fabiocaccamo/django-treenode/master/landscape.svg?style=flat)](https://landscape.io/github/fabiocaccamo/django-treenode/master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0c79c196e5c9411babbaf5e8e5f7469c)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
 [![Requirements Status](https://requires.io/github/fabiocaccamo/django-treenode/requirements.svg?branch=master)](https://requires.io/github/fabiocaccamo/django-treenode/requirements/?branch=master)
 [![PyPI version](https://badge.fury.io/py/django-treenode.svg)](https://badge.fury.io/py/django-treenode)
 [![PyPI downloads](https://img.shields.io/pypi/dm/django-treenode.svg)](https://img.shields.io/pypi/dm/django-treenode.svg)
