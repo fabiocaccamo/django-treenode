@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import django
+# import django
 import os
 
 DEBUG = True

@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.utils.encoding import force_text, python_2_unicode_compatible
-from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 

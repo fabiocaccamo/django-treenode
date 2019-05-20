@@ -5,7 +5,7 @@ from django.test import TransactionTestCase
 from django.utils.encoding import force_text
 
 from treenode.cache import clear_cache
-from treenode.utils import join_pks, split_pks
+from treenode.utils import join_pks
 
 from .models import Category
 

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.test import TestCase
 
-from treenode.admin import TreeNodeModelAdmin
+# from treenode.admin import TreeNodeModelAdmin
 
 
 class TreeNodeAdminTestCase(TestCase):
