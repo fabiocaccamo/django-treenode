@@ -16,10 +16,10 @@ class debug_performance(object):
         super(debug_performance, self).__init__()
         self.__message_prefix = message_prefix
 
-    def __get_queries(self):
+    def __get_queries(cls):
         return len(connection.queries)
 
-    def __get_timer(self):
+    def __get_timer(cls):
         return timeit.default_timer()
 
     def __enter__(self):

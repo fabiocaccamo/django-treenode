@@ -7,38 +7,31 @@
 [![Py versions](https://img.shields.io/pypi/pyversions/django-treenode.svg)](https://img.shields.io/pypi/pyversions/django-treenode.svg)
 [![License](https://img.shields.io/pypi/l/django-treenode.svg)](https://img.shields.io/pypi/l/django-treenode.svg)
 
-[simple-admin]: https://user-images.githubusercontent.com/1035294/39823224-dff5944c-53ac-11e8-9d7f-60f1a31b2730.png
-[accordion-admin]: https://user-images.githubusercontent.com/1035294/39823232-e3a5d99e-53ac-11e8-98ad-edd6b77c44a4.png
-
-[treenode-admin-display-mode-accordion]: https://user-images.githubusercontent.com/1035294/54942407-5040ec00-4f2f-11e9-873b-d0b3b521f534.png
-[treenode-admin-display-mode-breadcrumbs]: https://user-images.githubusercontent.com/1035294/54942410-50d98280-4f2f-11e9-8a8b-a1ac6208398a.png
-[treenode-admin-display-mode-indentation]: https://user-images.githubusercontent.com/1035294/54942411-50d98280-4f2f-11e9-9daf-d8339dd7a159.png
-
 # django-treenode
 Probably the best abstract model / admin for your **tree** based stuff.
 
 ## Features
-- **Fast** - get `ancestors`, `children`, `descendants`, `parent`, `root`, `siblings`, `tree` with **no queries**
-- **Synced** - in-memory model instances are automatically updated
-- **Compatibility** - you can easily add `treenode` to existing projects
-- **No dependencies**
-- **Easy configuration** - just extend the abstract model / model-admin
-- **Admin integration** - great tree visualization: **accordion**, **breadcrumbs** or **indentation**
+-  **Fast** - get `ancestors`, `children`, `descendants`, `parent`, `root`, `siblings`, `tree` with **no queries**
+-  **Synced** - in-memory model instances are automatically updated
+-  **Compatibility** - you can easily add `treenode` to existing projects
+-  **No dependencies**
+-  **Easy configuration** - just extend the abstract model / model-admin
+-  **Admin integration** - great tree visualization: **accordion**, **breadcrumbs** or **indentation**
 
 | indentation (default) | breadcrumbs | accordion |
 | --- | --- | --- |
 | ![treenode-admin-display-mode-indentation][treenode-admin-display-mode-indentation] | ![treenode-admin-display-mode-breadcrumbs][treenode-admin-display-mode-breadcrumbs] | ![treenode-admin-display-mode-accordion][treenode-admin-display-mode-accordion] |
 
 ## Requirements
-- Python 2.7, 3.4, 3.5, 3.6, 3.7
-- Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1
+-  Python 2.7, 3.4, 3.5, 3.6, 3.7
+-  Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1
 
 ## Installation
-- Run `pip install django-treenode`
-- Add `treenode` to `settings.INSTALLED_APPS`
-- Make your model inherit from `treenode.models.TreeNodeModel` *(described below)*
-- Make your model-admin inherit from `treenode.admin.TreeNodeModelAdmin` *(described below)*
-- Run `python manage.py makemigrations` and `python manage.py migrate`
+-  Run `pip install django-treenode`
+-  Add `treenode` to `settings.INSTALLED_APPS`
+-  Make your model inherit from `treenode.models.TreeNodeModel` *(described below)*
+-  Make your model-admin inherit from `treenode.admin.TreeNodeModelAdmin` *(described below)*
+-  Run `python manage.py makemigrations` and `python manage.py migrate`
 
 ## Configuration
 #### `models.py`
@@ -96,7 +89,7 @@ admin.site.register(Category, CategoryAdmin)
 
 ## Usage
 
-#### Methods/Properties:
+#### Methods/Properties
 
 **Delete a node** and all its descendants:
 ```python
@@ -361,3 +354,7 @@ cls.update_tree()
 
 ## License
 Released under [MIT License](LICENSE.txt).
+
+[treenode-admin-display-mode-accordion]: https://user-images.githubusercontent.com/1035294/54942407-5040ec00-4f2f-11e9-873b-d0b3b521f534.png
+[treenode-admin-display-mode-breadcrumbs]: https://user-images.githubusercontent.com/1035294/54942410-50d98280-4f2f-11e9-8a8b-a1ac6208398a.png
+[treenode-admin-display-mode-indentation]: https://user-images.githubusercontent.com/1035294/54942411-50d98280-4f2f-11e9-9daf-d8339dd7a159.png

@@ -107,7 +107,7 @@ class TreeNodeModel(models.Model):
 
     # Public methods
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
         with no_signals():
             self.__class__.objects.filter(pk=self.pk).delete()
         self.update_tree()
@@ -585,10 +585,8 @@ class TreeNodeModel(models.Model):
 
         return objs_tree
 
-    """
-    Public properties
-    All properties map a get_{{property}}() method.
-    """
+    # Public properties
+    # All properties map a get_{{property}}() method.
 
     @property
     def ancestors(self):

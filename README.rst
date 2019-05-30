@@ -99,7 +99,7 @@ Make your model-admin class inherit from ``treenode.admin.TreeNodeModelAdmin``.
 Usage
 -----
 
-Methods/Properties:
+Methods/Properties
 ^^^^^^^^^^^^^^^^^^^
 
 **Delete a node** and all its descendants:

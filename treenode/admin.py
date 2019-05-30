@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from .forms import TreeNodeForm
-from .utils import split_pks
 
 
 class TreeNodeModelAdmin(admin.ModelAdmin):
@@ -78,11 +77,11 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         else:
             return self._get_treenode_field_default_display(obj)
 
-    def _can_use_treenode_field_display_with_accordion(self, request, obj):
+    def _can_use_treenode_field_display_with_accordion(cls, request, obj):
         querystring = (request.GET.urlencode() or '')
         return len(querystring) <= 2
 
-    def _get_treenode_field_display_with_accordion(self, obj):
+    def _get_treenode_field_display_with_accordion(cls, obj):
         tn_namespace = '%s.%s' % (obj.__module__, obj.__class__.__name__, )
         tn_namespace_key = tn_namespace.lower().replace('.', '_')
         return mark_safe(''\
@@ -100,7 +99,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
                 str(obj.tn_parent_id or ''),
                 obj.get_display(indent=False), ))
 
-    def _get_treenode_field_display_with_breadcrumbs(self, obj):
+    def _get_treenode_field_display_with_breadcrumbs(cls, obj):
         obj_display = ''
         for obj_ancestor in obj.get_ancestors():
             obj_ancestor_display = obj_ancestor.get_display(indent=False)
@@ -108,7 +107,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         obj_display += obj.get_display(indent=False)
         return mark_safe('<span class="treenode">%s</span>' % (obj_display, ))
 
-    def _get_treenode_field_display_with_indentation(self, obj):
+    def _get_treenode_field_display_with_indentation(cls, obj):
         obj_display = '<span class="treenode-indentation">&mdash;</span>' * obj.ancestors_count
         obj_display += obj.get_display(indent=False)
         return mark_safe('<span class="treenode">%s</span>' % (obj_display, ))

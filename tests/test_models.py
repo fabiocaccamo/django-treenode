@@ -18,13 +18,13 @@ class TreeNodeModelsTestCase(TransactionTestCase):
     def tearDown(self):
         pass
 
-    def __create_cat(self, name, parent=None, priority=0):
+    def __create_cat(cls, name, parent=None, priority=0):
         return Category.objects.create(
             name=name,
             tn_parent=parent,
             tn_priority=priority)
 
-    def __create_cat_tree(self):
+    def __create_cat_tree(cls):
         """
             a
                 aa
@@ -49,28 +49,28 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             e
             f
         """
-        a = self.__create_cat(name='a')
-        aa = self.__create_cat(name='aa', parent=a)
-        aaa = self.__create_cat(name='aaa', parent=aa)
-        aaaa = self.__create_cat(name='aaaa', parent=aaa)
-        ab = self.__create_cat(name='ab', parent=a)
-        ac = self.__create_cat(name='ac', parent=a)
-        aca = self.__create_cat(name='aca', parent=ac)
-        acaa = self.__create_cat(name='acaa', parent=aca)
-        acab = self.__create_cat(name='acab', parent=aca)
-        acb = self.__create_cat(name='acb', parent=ac)
-        acc = self.__create_cat(name='acc', parent=ac)
-        ad = self.__create_cat(name='ad', parent=a)
-        ae = self.__create_cat(name='ae', parent=a)
-        af = self.__create_cat(name='af', parent=a)
-        b = self.__create_cat(name='b')
-        ba = self.__create_cat(name='ba', parent=b)
-        bb = self.__create_cat(name='bb', parent=b)
-        bc = self.__create_cat(name='bc', parent=b)
-        c = self.__create_cat(name='c')
-        d = self.__create_cat(name='d')
-        e = self.__create_cat(name='e')
-        f = self.__create_cat(name='f')
+        a = cls.__create_cat(name='a')
+        aa = cls.__create_cat(name='aa', parent=a)
+        aaa = cls.__create_cat(name='aaa', parent=aa)
+        aaaa = cls.__create_cat(name='aaaa', parent=aaa)
+        ab = cls.__create_cat(name='ab', parent=a)
+        ac = cls.__create_cat(name='ac', parent=a)
+        aca = cls.__create_cat(name='aca', parent=ac)
+        acaa = cls.__create_cat(name='acaa', parent=aca)
+        acab = cls.__create_cat(name='acab', parent=aca)
+        acb = cls.__create_cat(name='acb', parent=ac)
+        acc = cls.__create_cat(name='acc', parent=ac)
+        ad = cls.__create_cat(name='ad', parent=a)
+        ae = cls.__create_cat(name='ae', parent=a)
+        af = cls.__create_cat(name='af', parent=a)
+        b = cls.__create_cat(name='b')
+        ba = cls.__create_cat(name='ba', parent=b)
+        bb = cls.__create_cat(name='bb', parent=b)
+        bc = cls.__create_cat(name='bc', parent=b)
+        c = cls.__create_cat(name='c')
+        d = cls.__create_cat(name='d')
+        e = cls.__create_cat(name='e')
+        f = cls.__create_cat(name='f')
 
     def __get_cat(self, name):
         return Category.objects.get(name=name)

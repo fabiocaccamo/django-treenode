@@ -27,7 +27,8 @@ class TreeNodePerformanceTestCase(TransactionTestCase):
         with debug_performance(debug_message_prefix):
             with no_signals():
                 for i in range(2000):
-                    cat_obj = Category.objects.create(
+                    # cat_obj = Category.objects.create(
+                    Category.objects.create(
                         name=str(i),
                         tn_parent=None,
                         tn_priority=0)
