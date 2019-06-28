@@ -36,6 +36,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
 
     form = TreeNodeForm
     list_per_page = 1000
+    ordering = ('tn_order', )
 
     def get_list_display(self, request):
         base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)

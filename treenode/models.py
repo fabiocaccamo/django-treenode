@@ -373,7 +373,7 @@ class TreeNodeModel(models.Model):
     # Private methods
 
     def __get_node_order_str(self):
-        priority_max = 99999
+        priority_max = 9999999999
         priority_len = len(str(priority_max))
         priority_val = priority_max - min(self.tn_priority, priority_max)
         priority_key = str(priority_val).zfill(priority_len)
