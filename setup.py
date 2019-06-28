@@ -10,7 +10,8 @@ exec(open('treenode/version.py').read())
 github_url = 'https://github.com/fabiocaccamo'
 package_name = 'django-treenode'
 package_path = os.path.abspath(os.path.dirname(__file__))
-long_description_file_path = os.path.join(package_path, 'README.rst')
+long_description_file_path = os.path.join(package_path, 'README.md')
+long_description_content_type = 'text/markdown'
 long_description = ''
 try:
     with open(long_description_file_path) as f:
@@ -25,6 +26,7 @@ setup(
     version=__version__,
     description='django-treenode is probably the best abstract model / admin for your tree based stuff.',
     long_description=long_description,
+    long_description_content_type=long_description_content_type,
     author='Fabio Caccamo',
     author_email='fabio.caccamo@gmail.com',
     url='%s/%s' % (github_url, package_name, ),
