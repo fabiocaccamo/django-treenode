@@ -16,20 +16,22 @@ class debug_performance(object):
         super(debug_performance, self).__init__()
         self.__message_prefix = message_prefix
 
-    def __get_queries(cls):
+    @staticmethod
+    def _get_queries():
         return len(connection.queries)
 
-    def __get_timer(cls):
+    @staticmethod
+    def _get_timer():
         return timeit.default_timer()
 
     def __enter__(self):
-        self.__init_queries = self.__get_queries()
-        self.__init_timer = self.__get_timer()
+        self.__init_queries = debug_performance._get_queries()
+        self.__init_timer = debug_performance._get_timer()
         return None
 
     def __exit__(self, type, value, traceback):
-        queries = (self.__get_queries() - self.__init_queries)
-        timer = (self.__get_timer() - self.__init_timer)
+        queries = (debug_performance._get_queries() - self.__init_queries)
+        timer = (debug_performance._get_timer() - self.__init_timer)
         if settings.DEBUG:
             message = '\r%sexecuted %s %s in %ss.' % (
                 self.__message_prefix,

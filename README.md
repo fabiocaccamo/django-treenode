@@ -11,30 +11,30 @@
 Probably the best abstract model / admin for your **tree** based stuff.
 
 ## Features
--  **Fast** - get `ancestors`, `children`, `descendants`, `parent`, `root`, `siblings`, `tree` with **no queries**
--  **Synced** - in-memory model instances are automatically updated
--  **Compatibility** - you can easily add `treenode` to existing projects
--  **No dependencies**
--  **Easy configuration** - just extend the abstract model / model-admin
--  **Admin integration** - great tree visualization: **accordion**, **breadcrumbs** or **indentation**
+-   **Fast** - get `ancestors`, `children`, `descendants`, `parent`, `root`, `siblings`, `tree` with **no queries**
+-   **Synced** - in-memory model instances are automatically updated
+-   **Compatibility** - you can easily add `treenode` to existing projects
+-   **No dependencies**
+-   **Easy configuration** - just extend the abstract model / model-admin
+-   **Admin integration** - great tree visualization: **accordion**, **breadcrumbs** or **indentation**
 
 | indentation (default) | breadcrumbs | accordion |
 | --- | --- | --- |
 | ![treenode-admin-display-mode-indentation][treenode-admin-display-mode-indentation] | ![treenode-admin-display-mode-breadcrumbs][treenode-admin-display-mode-breadcrumbs] | ![treenode-admin-display-mode-accordion][treenode-admin-display-mode-accordion] |
 
 ## Requirements
--  Python 2.7, 3.4, 3.5, 3.6, 3.7
--  Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1
+-   Python 2.7, 3.4, 3.5, 3.6, 3.7
+-   Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1, 2.2
 
 ## Installation
--  Run `pip install django-treenode`
--  Add `treenode` to `settings.INSTALLED_APPS`
--  Make your model inherit from `treenode.models.TreeNodeModel` *(described below)*
--  Make your model-admin inherit from `treenode.admin.TreeNodeModelAdmin` *(described below)*
--  Run `python manage.py makemigrations` and `python manage.py migrate`
+-   Run `pip install django-treenode`
+-   Add `treenode` to `settings.INSTALLED_APPS`
+-   Make your model inherit from `treenode.models.TreeNodeModel` *(described below)*
+-   Make your model-admin inherit from `treenode.admin.TreeNodeModelAdmin` *(described below)*
+-   Run `python manage.py makemigrations` and `python manage.py migrate`
 
 ## Configuration
-#### `models.py`
+### `models.py`
 Make your model class inherit from `treenode.models.TreeNodeModel`:
 
 ```python
@@ -60,7 +60,7 @@ The `TreeNodeModel` abstract class adds many fields (prefixed with `tn_` to prev
 
 ---
 
-#### `admin.py`
+### `admin.py`
 Make your model-admin class inherit from `treenode.admin.TreeNodeModelAdmin`.
 
 ```python
@@ -89,7 +89,7 @@ admin.site.register(Category, CategoryAdmin)
 
 ## Usage
 
-#### Methods/Properties
+### Methods/Properties
 
 **Delete a node** and all its descendants:
 ```python

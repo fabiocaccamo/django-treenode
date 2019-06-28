@@ -107,7 +107,7 @@ class TreeNodeModel(models.Model):
 
     # Public methods
 
-    def delete(self, *args, **kwargs):
+    def delete(self, using=None, keep_parents=False):
         with no_signals():
             self.__class__.objects.filter(pk=self.pk).delete()
         self.update_tree()
