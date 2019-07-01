@@ -1,6 +1,6 @@
-django.jQuery(function($){
+(function($) {
 
-    $(document).ready(function($)
+    $(document).ready(function()
     {
         var rowsExpandedDataKeyPrefix = 'treenode_admin_accordion_state_for';
         var rowsExpandedDataKeySuffix = '';
@@ -195,4 +195,5 @@ django.jQuery(function($){
         updateAccordionEvenOddRows();
         saveAccordionExpandedRows();
     });
-});
+
+})(django.jQuery || window.jQuery);
