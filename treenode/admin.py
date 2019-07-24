@@ -58,6 +58,10 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
 
         return base_list_display
 
+    def _use_treenode_display_mode(cls, request, obj):
+        querystring = (request.GET.urlencode() or '')
+        return len(querystring) <= 2
+
     def _get_treenode_display_mode(self, request, obj):
         return self.treenode_display_mode
 
@@ -65,22 +69,17 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         return self._get_treenode_field_display_with_breadcrumbs(obj)
 
     def _get_treenode_field_display(self, request, obj):
+        if not self._use_treenode_display_mode(request, obj):
+            return self._get_treenode_field_default_display(obj)
         display_mode = self._get_treenode_display_mode(request, obj)
         if display_mode == TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_ACCORDION:
-            if self._can_use_treenode_field_display_with_accordion(request, obj):
-                return self._get_treenode_field_display_with_accordion(obj)
-            else:
-                return self._get_treenode_field_display_with_breadcrumbs(obj)
+            return self._get_treenode_field_display_with_accordion(obj)
         elif display_mode == TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_BREADCRUMBS:
             return self._get_treenode_field_display_with_breadcrumbs(obj)
         elif display_mode == TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_INDENTATION:
             return self._get_treenode_field_display_with_indentation(obj)
         else:
             return self._get_treenode_field_default_display(obj)
-
-    def _can_use_treenode_field_display_with_accordion(cls, request, obj):
-        querystring = (request.GET.urlencode() or '')
-        return len(querystring) <= 2
 
     def _get_treenode_field_display_with_accordion(cls, obj):
         tn_namespace = '%s.%s' % (obj.__module__, obj.__class__.__name__, )
