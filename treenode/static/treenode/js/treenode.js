@@ -1,3 +1,5 @@
+/** global: django */
+
 (function($) {
 
     $(document).ready(function()
@@ -6,60 +8,6 @@
         var rowsExpandedDataKeySuffix = '';
         var rowsExpandedDataKey = '';
         var rowsExpandedDataSep = ',';
-
-        function toggleAccordionRow(target)
-        {
-            if (target.hasClass('treenode-accordion')) {
-                if (target.hasClass('treenode-expanded')) {
-                    target.removeClass('treenode-expanded');
-                    target.trigger('treenode-collapse');
-                } else {
-                    target.addClass('treenode-expanded');
-                    target.trigger('treenode-expand');
-                }
-
-                updateAccordionEvenOddRows();
-                saveAccordionExpandedRows();
-            }
-        }
-
-        function expandAccordionRow(target)
-        {
-            var rowPk = target.attr('data-treenode-pk');
-            var rowSel = '[data-treenode-parent="' + rowPk + '"]';
-            var rowEl = $('.treenode-accordion').filter(rowSel);
-            if (!target.hasClass('treenode-hide')) {
-                rowEl.removeClass('treenode-hide');
-            }
-            rowEl.each(function(){
-                if ($(this).hasClass('treenode-expanded')) {
-                    $(this).trigger('treenode-expand');
-                }
-            });
-        }
-
-        function collapseAccordionRow(target)
-        {
-            var rowPk = target.attr('data-treenode-pk');
-            var rowSel = '[data-treenode-parent="' + rowPk + '"]';
-            var rowEl = $('.treenode-accordion').filter(rowSel);
-            rowEl.addClass('treenode-hide');
-            rowEl.trigger('treenode-collapse');
-        }
-
-        function updateAccordionEvenOddRows()
-        {
-            $('.treenode-accordion').not('.treenode-hide').each(function(index, element){
-                $(this).removeClass('row1')
-                $(this).removeClass('row2');
-                // update rows even/odd class
-                if ((index % 2) === 0) {
-                    $(this).addClass('row1');
-                } else {
-                    $(this).addClass('row2');
-                }
-            });
-        }
 
         function loadAccordionExpandedRows()
         {
@@ -86,6 +34,60 @@
             });
             var rowsExpandedData = rowsExpanded.join(rowsExpandedDataSep);
             localStorage.setItem(rowsExpandedDataKey, rowsExpandedData);
+        }
+
+        function updateAccordionEvenOddRows()
+        {
+            $('.treenode-accordion').not('.treenode-hide').each(function(index, element){
+                $(this).removeClass('row1');
+                $(this).removeClass('row2');
+                // update rows even/odd class
+                if ((index % 2) === 0) {
+                    $(this).addClass('row1');
+                } else {
+                    $(this).addClass('row2');
+                }
+            });
+        }
+
+        function expandAccordionRow(target)
+        {
+            var rowPk = target.attr('data-treenode-pk');
+            var rowSel = '[data-treenode-parent="' + rowPk + '"]';
+            var rowEl = $('.treenode-accordion').filter(rowSel);
+            if (!target.hasClass('treenode-hide')) {
+                rowEl.removeClass('treenode-hide');
+            }
+            rowEl.each(function(){
+                if ($(this).hasClass('treenode-expanded')) {
+                    $(this).trigger('treenode-expand');
+                }
+            });
+        }
+
+        function collapseAccordionRow(target)
+        {
+            var rowPk = target.attr('data-treenode-pk');
+            var rowSel = '[data-treenode-parent="' + rowPk + '"]';
+            var rowEl = $('.treenode-accordion').filter(rowSel);
+            rowEl.addClass('treenode-hide');
+            rowEl.trigger('treenode-collapse');
+        }
+
+        function toggleAccordionRow(target)
+        {
+            if (target.hasClass('treenode-accordion')) {
+                if (target.hasClass('treenode-expanded')) {
+                    target.removeClass('treenode-expanded');
+                    target.trigger('treenode-collapse');
+                } else {
+                    target.addClass('treenode-expanded');
+                    target.trigger('treenode-expand');
+                }
+
+                updateAccordionEvenOddRows();
+                saveAccordionExpandedRows();
+            }
         }
 
         function init()
@@ -196,4 +198,4 @@
         saveAccordionExpandedRows();
     });
 
-})(django.jQuery || window.jQuery);
+}(django.jQuery || window.jQuery));

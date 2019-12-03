@@ -29,7 +29,7 @@ class debug_performance(object):
         self.__init_timer = debug_performance._get_timer()
         return None
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type_, value, traceback):
         queries = (debug_performance._get_queries() - self.__init_queries)
         timer = (debug_performance._get_timer() - self.__init_timer)
         if settings.DEBUG:

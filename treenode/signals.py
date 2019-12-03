@@ -68,5 +68,5 @@ class no_signals():
     def __enter__(self):
         disconnect_signals()
         return None
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type_, value, traceback):
         connect_signals()
