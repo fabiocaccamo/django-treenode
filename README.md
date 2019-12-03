@@ -23,8 +23,8 @@ Probably the best abstract model / admin for your **tree** based stuff.
 | ![treenode-admin-display-mode-indentation][treenode-admin-display-mode-indentation] | ![treenode-admin-display-mode-breadcrumbs][treenode-admin-display-mode-breadcrumbs] | ![treenode-admin-display-mode-accordion][treenode-admin-display-mode-accordion] |
 
 ## Requirements
--   Python 2.7, 3.4, 3.5, 3.6, 3.7
--   Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1, 2.2
+-   Python 2.7, 3.4, 3.5, 3.6, 3.7, 3.8
+-   Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1, 2.2, 3.0
 
 ## Installation
 -   Run `pip install django-treenode`

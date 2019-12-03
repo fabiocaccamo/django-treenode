@@ -33,6 +33,9 @@ setup(
     download_url='%s/%s/archive/%s.tar.gz' % (github_url, package_name, __version__, ),
     keywords=['python', 'django', 'trees', 'tree', 'nodes', 'node', 'categories', 'category', 'ancestors', 'parents', 'children', 'descendants', 'siblings', 'abstract', 'model'],
     requires=['django(>=1.8)'],
+    install_requires=[
+        'six >= 1.9.0, < 2.0.0',
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -44,6 +47,7 @@ setup(
         'Framework :: Django :: 2.0',
         'Framework :: Django :: 2.1',
         'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -55,6 +59,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Build Tools',
     ],
     license='MIT',
