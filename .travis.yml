@@ -53,6 +53,10 @@ matrix:
     - python: "3.6"
       env: TOX_ENV=py36-dj22-postgres
     - python: "3.6"
+      env: TOX_ENV=py36-dj30-sqlite
+    - python: "3.6"
+      env: TOX_ENV=py36-dj30-postgres
+    - python: "3.6"
       env: TOX_ENV=py36-djmaster-sqlite
     - python: "3.6"
       env: TOX_ENV=py36-djmaster-postgres
@@ -87,6 +91,16 @@ matrix:
       language: python
       sudo: required
     - python: "3.7"
+      env: TOX_ENV=py37-dj30-sqlite
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.7"
+      env: TOX_ENV=py37-dj30-postgres
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.7"
       env: TOX_ENV=py37-djmaster-sqlite
       dist: xenial
       language: python
@@ -96,11 +110,43 @@ matrix:
       dist: xenial
       language: python
       sudo: required
+    - python: "3.8"
+      env: TOX_ENV=py38-dj22-sqlite
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.8"
+      env: TOX_ENV=py38-dj22-postgres
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.8"
+      env: TOX_ENV=py38-dj30-sqlite
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.8"
+      env: TOX_ENV=py38-dj30-postgres
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.8"
+      env: TOX_ENV=py38-djmaster-sqlite
+      dist: xenial
+      language: python
+      sudo: required
+    - python: "3.8"
+      env: TOX_ENV=py38-djmaster-postgres
+      dist: xenial
+      language: python
+      sudo: required
   allow_failures:
     - env: TOX_ENV=py36-djmaster-sqlite
     - env: TOX_ENV=py36-djmaster-postgres
     - env: TOX_ENV=py37-djmaster-sqlite
     - env: TOX_ENV=py37-djmaster-postgres
+    - env: TOX_ENV=py38-djmaster-sqlite
+    - env: TOX_ENV=py38-djmaster-postgres
 install:
   - pip install tox
 services:
