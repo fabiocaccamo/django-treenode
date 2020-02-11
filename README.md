@@ -2,7 +2,7 @@
 [![Django Versions](https://img.shields.io/pypi/djversions/django-treenode?color=0C4B33&logo=django&logoColor=white&label=django)](https://www.djangoproject.com/)
 
 [![PyPI Version](https://img.shields.io/pypi/v/django-treenode.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/django-treenode/)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/django-treenode.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/django-treenode/)
+[![PyPI Downloads](https://img.shields.io/pypi/dt/django-treenode.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/django-treenode/)
 [![Stars](https://img.shields.io/github/stars/fabiocaccamo/django-treenode?logo=github)](https://github.com/fabiocaccamo/django-treenode/)
 [![License](https://img.shields.io/pypi/l/django-treenode.svg?color=blue)](https://github.com/fabiocaccamo/django-treenode/blob/master/LICENSE.txt)
 
