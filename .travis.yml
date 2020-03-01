@@ -1,41 +1,53 @@
 os: linux
+dist: xenial
 language: python
-python: 3.5
-env:
-  - TOX_ENV=py27-dj18-sqlite
-  - TOX_ENV=py27-dj18-postgres
-  - TOX_ENV=py27-dj19-sqlite
-  - TOX_ENV=py27-dj19-postgres
-  - TOX_ENV=py27-dj110-sqlite
-  - TOX_ENV=py27-dj110-postgres
-  - TOX_ENV=py27-dj111-sqlite
-  - TOX_ENV=py27-dj111-postgres
-  # - TOX_ENV=py34-dj18-sqlite
-  # - TOX_ENV=py34-dj18-postgres
-  # - TOX_ENV=py34-dj19-sqlite
-  # - TOX_ENV=py34-dj19-postgres
-  # - TOX_ENV=py34-dj110-sqlite
-  # - TOX_ENV=py34-dj110-postgres
-  # - TOX_ENV=py34-dj111-sqlite
-  # - TOX_ENV=py34-dj111-postgres
-  # - TOX_ENV=py34-dj20-sqlite
-  # - TOX_ENV=py34-dj20-postgres
-  - TOX_ENV=py35-dj18-sqlite
-  - TOX_ENV=py35-dj18-postgres
-  - TOX_ENV=py35-dj19-sqlite
-  - TOX_ENV=py35-dj19-postgres
-  - TOX_ENV=py35-dj110-sqlite
-  - TOX_ENV=py35-dj110-postgres
-  - TOX_ENV=py35-dj111-sqlite
-  - TOX_ENV=py35-dj111-postgres
-  - TOX_ENV=py35-dj20-sqlite
-  - TOX_ENV=py35-dj20-postgres
-  - TOX_ENV=py35-dj21-sqlite
-  - TOX_ENV=py35-dj21-postgres
-  - TOX_ENV=py35-dj22-sqlite
-  - TOX_ENV=py35-dj22-postgres
+cache: pip
 jobs:
   include:
+    - python: "2.7"
+      env: TOX_ENV=py27-dj18-sqlite
+    - python: "2.7"
+      env: TOX_ENV=py27-dj18-postgres
+    - python: "2.7"
+      env: TOX_ENV=py27-dj19-sqlite
+    - python: "2.7"
+      env: TOX_ENV=py27-dj19-postgres
+    - python: "2.7"
+      env: TOX_ENV=py27-dj110-sqlite
+    - python: "2.7"
+      env: TOX_ENV=py27-dj110-postgres
+    - python: "2.7"
+      env: TOX_ENV=py27-dj111-sqlite
+    - python: "2.7"
+      env: TOX_ENV=py27-dj111-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj18-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj18-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj19-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj19-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj110-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj110-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj111-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj111-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj20-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj20-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj21-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj21-postgres
+    - python: "3.5"
+      env: TOX_ENV=py35-dj22-sqlite
+    - python: "3.5"
+      env: TOX_ENV=py35-dj22-postgres
     - python: "3.6"
       env: TOX_ENV=py36-dj111-sqlite
     - python: "3.6"
@@ -62,68 +74,36 @@ jobs:
       env: TOX_ENV=py36-djmaster-postgres
     - python: "3.7"
       env: TOX_ENV=py37-dj20-sqlite
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj20-postgres
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj21-sqlite
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj21-postgres
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj22-sqlite
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj22-postgres
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj30-sqlite
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-dj30-postgres
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-djmaster-sqlite
-      dist: xenial
-      language: python
     - python: "3.7"
       env: TOX_ENV=py37-djmaster-postgres
-      dist: xenial
-      language: python
     - python: "3.8"
       env: TOX_ENV=py38-dj22-sqlite
-      dist: xenial
-      language: python
     - python: "3.8"
       env: TOX_ENV=py38-dj22-postgres
-      dist: xenial
-      language: python
     - python: "3.8"
       env: TOX_ENV=py38-dj30-sqlite
-      dist: xenial
-      language: python
     - python: "3.8"
       env: TOX_ENV=py38-dj30-postgres
-      dist: xenial
-      language: python
     - python: "3.8"
       env: TOX_ENV=py38-djmaster-sqlite
-      dist: xenial
-      language: python
     - python: "3.8"
       env: TOX_ENV=py38-djmaster-postgres
-      dist: xenial
-      language: python
   allow_failures:
     - env: TOX_ENV=py36-djmaster-sqlite
     - env: TOX_ENV=py36-djmaster-postgres
