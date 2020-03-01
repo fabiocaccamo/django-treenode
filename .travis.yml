@@ -1,4 +1,4 @@
-sudo: false
+os: linux
 language: python
 python: 3.5
 env:
@@ -34,7 +34,7 @@ env:
   - TOX_ENV=py35-dj21-postgres
   - TOX_ENV=py35-dj22-sqlite
   - TOX_ENV=py35-dj22-postgres
-matrix:
+jobs:
   include:
     - python: "3.6"
       env: TOX_ENV=py36-dj111-sqlite
@@ -64,82 +64,66 @@ matrix:
       env: TOX_ENV=py37-dj20-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj20-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj21-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj21-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj22-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj22-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj30-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-dj30-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-djmaster-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.7"
       env: TOX_ENV=py37-djmaster-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.8"
       env: TOX_ENV=py38-dj22-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.8"
       env: TOX_ENV=py38-dj22-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.8"
       env: TOX_ENV=py38-dj30-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.8"
       env: TOX_ENV=py38-dj30-postgres
       dist: xenial
       language: python
-      sudo: required
     - python: "3.8"
       env: TOX_ENV=py38-djmaster-sqlite
       dist: xenial
       language: python
-      sudo: required
     - python: "3.8"
       env: TOX_ENV=py38-djmaster-postgres
       dist: xenial
       language: python
-      sudo: required
   allow_failures:
     - env: TOX_ENV=py36-djmaster-sqlite
     - env: TOX_ENV=py36-djmaster-postgres
