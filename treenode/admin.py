@@ -82,16 +82,16 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             return self._get_treenode_field_default_display(obj)
 
     def _get_treenode_field_display_with_accordion(self, obj):
-        tn_namespace = '%s.%s' % (obj.__module__, obj.__class__.__name__, )
+        tn_namespace = '{}.{}'.format(obj.__module__, obj.__class__.__name__)
         tn_namespace_key = tn_namespace.lower().replace('.', '_')
         return mark_safe(''\
             '<span class="treenode"'\
-                    ' data-treenode-type="%s"'\
-                    ' data-treenode-pk="%s"'\
+                    ' data-treenode-type="{}"'\
+                    ' data-treenode-pk="{}"'\
                     ' data-treenode-accordion="1"'\
-                    ' data-treenode-depth="%s"'\
-                    ' data-treenode-level="%s"'\
-                    ' data-treenode-parent="%s">%s</span>' % (
+                    ' data-treenode-depth="{}"'\
+                    ' data-treenode-level="{}"'\
+                    ' data-treenode-parent="{}">{}</span>'.format(
                 tn_namespace_key,
                 str(obj.pk),
                 str(obj.tn_depth),
@@ -103,14 +103,14 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         obj_display = ''
         for obj_ancestor in obj.get_ancestors():
             obj_ancestor_display = obj_ancestor.get_display(indent=False)
-            obj_display += '<span class="treenode-breadcrumbs">%s</span>' % (obj_ancestor_display, )
+            obj_display += '<span class="treenode-breadcrumbs">{}</span>'.format(obj_ancestor_display)
         obj_display += obj.get_display(indent=False)
-        return mark_safe('<span class="treenode">%s</span>' % (obj_display, ))
+        return mark_safe('<span class="treenode">{}</span>'.format(obj_display))
 
     def _get_treenode_field_display_with_indentation(self, obj):
         obj_display = '<span class="treenode-indentation">&mdash;</span>' * obj.ancestors_count
         obj_display += obj.get_display(indent=False)
-        return mark_safe('<span class="treenode">%s</span>' % (obj_display, ))
+        return mark_safe('<span class="treenode">{}</span>'.format(obj_display))
 
     class Media:
         css = {'all':('treenode/css/treenode.css',)}
