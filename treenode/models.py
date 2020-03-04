@@ -406,7 +406,7 @@ class TreeNodeModel(models.Model):
 
         order_objs = list(ancestors_list) + [self]
         order_strs = [obj.__get_node_order_str() for obj in order_objs]
-        order_str = ''.join(order_strs)[0:150]
+        order_str = ''.join(order_strs)
 
         obj_dict = {
             'instance': self,

@@ -1196,3 +1196,16 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         a.save()
         self.assertEqual(a.get_level(), 1)
         self.assertEqual(a.get_depth(), 0)
+
+    def test_deep_cat_tree_ordering(self):
+        cat_level_list = []
+        cat_level_parent = None
+        for i in range(1, 120):
+            cat_level = self.__create_cat(name='Cat Level {}'.format(i), parent=cat_level_parent)
+            cat_level_list.append(cat_level)
+            cat_level_parent = cat_level
+        cat_level_1 = cat_level_list.pop(0)
+        cat_level_1_descendants = cat_level_1.get_descendants()
+        cat_level_1_expected_descendants = cat_level_list
+        self.assertEqual(len(cat_level_1_descendants), len(cat_level_1_expected_descendants))
+        self.assertEqual(cat_level_1_descendants, cat_level_1_expected_descendants)
