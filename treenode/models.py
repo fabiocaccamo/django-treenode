@@ -173,7 +173,7 @@ class TreeNodeModel(models.Model):
 
     def get_descendants_tree_display(self, cache=True):
         objs = self.get_descendants(cache=cache)
-        strs = ['{}'.format(obj) for obj in objs]
+        strs = ['%s' % (obj, ) for obj in objs]
         d = '\n'.join(strs)
         return d
 
@@ -222,8 +222,8 @@ class TreeNodeModel(models.Model):
                 if obj_cls != cls:
                     raise ValueError(
                         'obj can\'t be set as parent, '\
-                        'it is istance of {}, expected instance of {}.'.format(
-                        obj_cls.__name__, cls.__name__))
+                        'it is istance of %s, expected instance of %s.' % (
+                        obj_cls.__name__, cls.__name__, ))
                 if obj == self:
                     raise ValueError(
                         'obj can\'t be set as parent of itself.')
@@ -286,7 +286,7 @@ class TreeNodeModel(models.Model):
             objs = query_cache(cls)
         else:
             objs = list(cls.objects.all())
-        strs = ['{}'.format(obj) for obj in objs]
+        strs = ['%s' % (obj, ) for obj in objs]
         d = '\n'.join(strs)
         return d
 
@@ -353,8 +353,8 @@ class TreeNodeModel(models.Model):
     @classmethod
     def update_tree(cls):
 
-        debug_message_prefix = '[treenode] update {}.{} tree: '.format(
-            cls.__module__, cls.__name__)
+        debug_message_prefix = '[treenode] update %s.%s tree: ' % (
+            cls.__module__, cls.__name__, )
 
         with debug_performance(debug_message_prefix):
 
@@ -384,7 +384,7 @@ class TreeNodeModel(models.Model):
         alphabetical_key = alphabetical_key[0:priority_len]
         pk_val = min(self.pk, priority_max)
         pk_key = str(pk_val).zfill(priority_len)
-        s = '{}{}{}'.format(priority_key, alphabetical_key, pk_key)
+        s = '%s%s%s' % (priority_key, alphabetical_key, pk_key, )
         s = s.upper()
         return s
 

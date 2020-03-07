@@ -33,7 +33,9 @@ class debug_performance(object):
         queries = (debug_performance._get_queries() - self.__init_queries)
         timer = (debug_performance._get_timer() - self.__init_timer)
         if settings.DEBUG:
-            message = '\r{}executed {} {} in {}s.'.format(
-                self.__message_prefix, queries,
-                'query' if queries == 1 else 'queries', timer)
+            message = '\r%sexecuted %s %s in %ss.' % (
+                self.__message_prefix,
+                queries,
+                'query' if queries == 1 else 'queries',
+                timer, )
             print(message)
