@@ -6,6 +6,13 @@ from django.utils.safestring import mark_safe
 from .forms import TreeNodeForm
 
 
+class TreeNodeModelAdminInline(admin.TabularInline):
+    model = ExhibitorCategory
+
+    def get_queryset(self, request):
+        return self.model._default_manager.get_queryset().filter(tn_parent=self.extra)
+    
+
 class TreeNodeModelAdmin(admin.ModelAdmin):
 
     """
@@ -37,6 +44,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
     form = TreeNodeForm
     list_per_page = 1000
     ordering = ('tn_order', )
+    inlines = [TreeNodeModelAdminInline, ]
 
     def get_list_display(self, request):
         base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)
