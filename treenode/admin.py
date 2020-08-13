@@ -11,7 +11,7 @@ class TreeNodeModelAdminInline(admin.TabularInline):
 
     def get_formset(self, request, obj=None, **kwargs):
         self.instance = obj
-        return super().get_formset(request, obj, **kwargs)
+        return super(TreeNodeModelAdminInline, self).get_formset(request, obj, **kwargs)
 
     def get_queryset(self, request):
         return self.model.objects.get_queryset().filter(tn_parent=self.instance)
@@ -50,7 +50,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
     ordering = ('tn_order', )
 
     def get_inlines(self, request, obj):
-        inlines = super().get_inlines(request, obj)
+        inlines = super(TreeNodeModelAdmin, self).get_inlines(request, obj)
         if inlines and len(inlines):
             return inlines
 
@@ -75,8 +75,6 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             if len(base_list_display) >= 1 and base_list_display[0] == treenode_display_field:
                 base_list_display.pop(0)
             return (treenode_field_display, ) + tuple(base_list_display)
-
-        return base_list_display
 
     def _use_treenode_display_mode(self, request, obj):
         querystring = (request.GET.urlencode() or '')
