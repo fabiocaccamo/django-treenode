@@ -49,14 +49,13 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
     list_per_page = 1000
     ordering = ('tn_order', )
 
-    def get_inlines(self, request, obj):
-        inlines = super(TreeNodeModelAdmin, self).get_inlines(request, obj)
-        if inlines and len(inlines):
-            return inlines
+    def get_inline_instances(self, request, obj=None):
+        if not self.inlines or len(self.inlines) < 1:
+            class DefaultInline(TreeNodeModelAdminInline):
+                model = self.model
+            self.inlines = [DefaultInline, ]
 
-        class DefaultInline(TreeNodeModelAdminInline):
-            model = self.model
-        return [DefaultInline, ]
+        return super(TreeNodeModelAdmin, self).get_inline_instances(request, obj)
 
     def get_list_display(self, request):
         base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)
