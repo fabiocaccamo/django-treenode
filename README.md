@@ -353,6 +353,28 @@ obj.is_sibling_of(target_obj)
 cls.update_tree()
 ```
 
+## Testing
+```bash
+# create python virtual environment
+virtualenv testing_django_treenode
+
+# activate virtualenv
+cd testing_django_treenode && . bin/activate
+
+# clone repo
+git clone https://github.com/fabiocaccamo/django-treenode.git src && cd src
+
+# install dependencies
+pip install -r requirements.txt
+
+# run tests
+tox
+# or
+python setup.py test
+# or
+python -m django test --settings "tests.settings"
+```
+
 ## License
 Released under [MIT License](LICENSE.txt).
 
