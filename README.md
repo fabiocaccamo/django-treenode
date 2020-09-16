@@ -88,6 +88,23 @@ class CategoryAdmin(TreeNodeModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 ```
 
+---
+
+### `settings.py`
+You can use a custom cache backend by adding a `treenode` entry to `settings.CACHES`, otherwise the default cache backend will be used.
+
+```python
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '...',
+    },
+    'treenode': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+}
+```
+
 ## Usage
 
 ### Methods/Properties
