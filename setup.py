@@ -3,7 +3,7 @@
 
 from setuptools import setup, find_packages
 
-import os
+import os, sys
 
 exec(open('treenode/version.py').read())
 
@@ -15,7 +15,8 @@ long_description_file_path = os.path.join(package_path, 'README.md')
 long_description_content_type = 'text/markdown'
 long_description = ''
 try:
-    with open(long_description_file_path) as f:
+    long_description_file_options = {} if sys.version_info[0] < 3 else { 'encoding':'utf-8' }
+    with open(long_description_file_path, 'r', **long_description_file_options) as f:
         long_description = f.read()
 except IOError:
     pass
@@ -50,6 +51,7 @@ setup(
         'Framework :: Django :: 2.2',
         'Framework :: Django :: 3.0',
         'Framework :: Django :: 3.1',
+        'Framework :: Django :: 3.2',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
