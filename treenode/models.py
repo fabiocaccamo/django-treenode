@@ -189,10 +189,19 @@ class TreeNodeModel(models.Model):
     def get_display(self, indent=True, mark='— '):
         indentation = (mark * self.tn_ancestors_count) if indent else ''
         indentation = force_text(indentation)
+        text = self.get_display_text()
+        return indentation + text
+
+    def get_display_text(self):
+        """
+        Gets the text that will be indented in `get_display` method.
+        Returns the `treenode_display_field` value by default.
+        Override this method to return another field or a computed value. #27
+        """
         field_name = getattr(self, 'treenode_display_field', 'pk')
         text = getattr(self, field_name)
         text = force_text(text)
-        return indentation + text
+        return text
 
     def get_first_child(self, cache=True):
         return self.get_children(cache=cache)[0] \
