@@ -59,6 +59,8 @@ class Category(TreeNodeModel):
 
 The `TreeNodeModel` abstract class adds many fields (prefixed with `tn_` to prevent direct access) and public methods to your models.
 
+:warning: **If you are extending a model that already has some fields, please ensure that your model existing fields names don't clash with `TreeNodeModel` public [methods/proerties](#methodsproperties) names.**
+
 ---
 
 ### `admin.py`
