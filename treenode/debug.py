@@ -25,17 +25,20 @@ class debug_performance(object):
         return timeit.default_timer()
 
     def __enter__(self):
+        if not settings.DEBUG:
+            return None
         self.__init_queries = debug_performance._get_queries()
         self.__init_timer = debug_performance._get_timer()
         return None
 
     def __exit__(self, type_, value, traceback):
+        if not settings.DEBUG:
+            return
         queries = (debug_performance._get_queries() - self.__init_queries)
         timer = (debug_performance._get_timer() - self.__init_timer)
-        if settings.DEBUG:
-            message = '\r%sexecuted %s %s in %ss.' % (
-                self.__message_prefix,
-                queries,
-                'query' if queries == 1 else 'queries',
-                timer, )
-            print(message)
+        message = '\r%sexecuted %s %s in %ss.' % (
+            self.__message_prefix,
+            queries,
+            'query' if queries == 1 else 'queries',
+            timer, )
+        print(message)
