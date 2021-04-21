@@ -18,4 +18,4 @@ class TreeNodeForm(forms.ModelForm):
             exclude_pks += split_pks(obj.tn_descendants_pks)
         manager = obj.__class__.objects
         self.fields['tn_parent'].queryset = manager.prefetch_related(
-            'tn_children').exclude(pk__in=exclude_pks
+            'tn_children').exclude(pk__in=exclude_pks)
