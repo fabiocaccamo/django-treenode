@@ -2,12 +2,13 @@
 
 from __future__ import unicode_literals
 
+import uuid
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.utils.encoding import force_text
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
-
 from six import python_2_unicode_compatible
 
 from . import classproperty
@@ -372,7 +373,7 @@ class TreeNodeModel(models.Model):
 
             with transaction.atomic():
                 for obj_key, obj_data in objs_data.items():
-                    obj_pk = int(obj_key)
+                    obj_pk = obj_key
                     cls.objects.filter(pk=obj_pk).update(**obj_data)
 
             # update in-memory instances
@@ -391,7 +392,13 @@ class TreeNodeModel(models.Model):
         alphabetical_val = slugify(str(self))
         alphabetical_key = alphabetical_val.ljust(priority_len, str('z'))
         alphabetical_key = alphabetical_key[0:priority_len]
-        pk_val = min(self.pk, priority_max)
+        if isinstance(self.pk, int):
+            pk_val = min(self.pk, priority_max)
+        elif isinstance(self.pk, uuid.UUID):
+            pk_val = self.pk.int
+            pk_val = int(str(pk_val)[:priority_len])
+        else:
+            pk_val = 0
         pk_key = str(pk_val).zfill(priority_len)
         s = '%s%s%s' % (priority_key, alphabetical_key, pk_key, )
         s = s.upper()
