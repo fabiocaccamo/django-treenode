@@ -21,7 +21,6 @@ from .utils import join_pks, split_pks
 
 @python_2_unicode_compatible
 class TreeNodeModel(models.Model):
-
     """
     Usage:
 
@@ -86,10 +85,10 @@ class TreeNodeModel(models.Model):
         verbose_name=_('Level'), )
 
     tn_parent = models.ForeignKey('self',
-        related_name='tn_children',
-        on_delete=models.CASCADE,
-        blank=True, null=True,
-        verbose_name=_('Parent'), )
+                                  related_name='tn_children',
+                                  on_delete=models.CASCADE,
+                                  blank=True, null=True,
+                                  verbose_name=_('Parent'), )
 
     tn_priority = models.PositiveSmallIntegerField(
         default=0,
@@ -174,7 +173,7 @@ class TreeNodeModel(models.Model):
 
     def get_descendants_tree_display(self, cache=True):
         objs = self.get_descendants(cache=cache)
-        strs = ['%s' % (obj, ) for obj in objs]
+        strs = ['%s' % (obj,) for obj in objs]
         d = '\n'.join(strs)
         return d
 
@@ -231,9 +230,9 @@ class TreeNodeModel(models.Model):
                 cls = self.__class__
                 if obj_cls != cls:
                     raise ValueError(
-                        'obj can\'t be set as parent, '\
+                        'obj can\'t be set as parent, ' \
                         'it is istance of %s, expected instance of %s.' % (
-                        obj_cls.__name__, cls.__name__, ))
+                            obj_cls.__name__, cls.__name__,))
                 if obj == self:
                     raise ValueError(
                         'obj can\'t be set as parent of itself.')
@@ -265,7 +264,7 @@ class TreeNodeModel(models.Model):
     def get_roots(cls, cache=True):
         if cache:
             return [obj for obj in query_cache(cls) \
-                if obj.tn_ancestors_count == 0]
+                    if obj.tn_ancestors_count == 0]
         else:
             return list(cls.get_roots_queryset())
 
@@ -296,7 +295,7 @@ class TreeNodeModel(models.Model):
             objs = query_cache(cls)
         else:
             objs = list(cls.objects.all())
-        strs = ['%s' % (obj, ) for obj in objs]
+        strs = ['%s' % (obj,) for obj in objs]
         d = '\n'.join(strs)
         return d
 
@@ -314,19 +313,19 @@ class TreeNodeModel(models.Model):
         return (self.__class__ == obj.__class__ and \
                 self.pk and \
                 self.pk != obj.pk and \
-                self.pk in split_pks(obj.tn_ancestors_pks))
+                str(self.pk) in split_pks(obj.tn_ancestors_pks))
 
     def is_child_of(self, obj):
         return (self.__class__ == obj.__class__ and \
                 self.pk and \
                 self.pk != obj.pk and \
-                self.pk in split_pks(obj.tn_children_pks))
+                str(self.pk) in split_pks(obj.tn_children_pks))
 
     def is_descendant_of(self, obj):
         return (self.__class__ == obj.__class__ and \
                 self.pk and \
                 self.pk != obj.pk and \
-                self.pk in split_pks(obj.tn_descendants_pks))
+                str(self.pk) in split_pks(obj.tn_descendants_pks))
 
     def is_first_child(self):
         return (self.pk and \
@@ -345,7 +344,7 @@ class TreeNodeModel(models.Model):
                 self.pk and \
                 self.pk != obj.pk and \
                 obj.tn_ancestors_count > 0 and \
-                self.pk == split_pks(obj.tn_ancestors_pks)[-1])
+                str(self.pk) == split_pks(obj.tn_ancestors_pks)[-1])
 
     def is_root(self):
         return (self.pk and \
@@ -364,10 +363,9 @@ class TreeNodeModel(models.Model):
     def update_tree(cls):
 
         debug_message_prefix = '[treenode] update %s.%s tree: ' % (
-            cls.__module__, cls.__name__, )
+            cls.__module__, cls.__name__,)
 
         with debug_performance(debug_message_prefix):
-
             # update db
             objs_data = cls.__get_nodes_data()
 
@@ -400,7 +398,7 @@ class TreeNodeModel(models.Model):
         else:
             pk_val = 0
         pk_key = str(pk_val).zfill(priority_len)
-        s = '%s%s%s' % (priority_key, alphabetical_key, pk_key, )
+        s = '%s%s%s' % (priority_key, alphabetical_key, pk_key,)
         s = s.upper()
         return s
 
@@ -449,8 +447,8 @@ class TreeNodeModel(models.Model):
 
         objs_qs = cls.objects.select_related('tn_parent')
         objs_list = list(objs_qs)
-        objs_dict = {str(obj.pk):obj for obj in objs_list}
-        objs_data_dict = {str(obj.pk):obj.__get_node_data(objs_list, objs_dict) for obj in objs_list}
+        objs_dict = {str(obj.pk): obj for obj in objs_list}
+        objs_data_dict = {str(obj.pk): obj.__get_node_data(objs_list, objs_dict) for obj in objs_list}
         objs_data_sort = lambda obj: objs_data_dict[str(obj['pk'])]['tn_order_str']
         objs_data_list = list(objs_data_dict.values())
         objs_data_list.sort(key=objs_data_sort)
@@ -573,7 +571,7 @@ class TreeNodeModel(models.Model):
     def __get_nodes_tree(cls, instance=None, cache=True):
 
         def __get_node_tree(obj):
-            child_tree = { 'node':obj, 'tree':[] }
+            child_tree = {'node': obj, 'tree': []}
             if obj.tn_children_pks:
                 children_pks = split_pks(obj.tn_children_pks)
                 for child_pk in children_pks:
@@ -590,20 +588,20 @@ class TreeNodeModel(models.Model):
                 objs_list = query_cache(cls, pks=objs_pks)
             else:
                 objs_list = list(cls.objects.filter(pk__in=split_pks(objs_pks)))
-            objs_dict = { str(obj.pk):obj for obj in objs_list }
+            objs_dict = {str(obj.pk): obj for obj in objs_list}
             objs_tree = __get_node_tree(instance)['tree']
         else:
             if cache:
                 objs_list = query_cache(cls)
             else:
                 objs_list = list(cls.objects.all())
-            objs_dict = { str(obj.pk):obj for obj in objs_list }
+            objs_dict = {str(obj.pk): obj for obj in objs_list}
             objs_tree = [__get_node_tree(obj)
-                        for obj in objs_list if obj.tn_level == 1]
+                         for obj in objs_list if obj.tn_level == 1]
 
         return objs_tree
 
-    # Public properties
+    #  Public properties
     # All properties map a get_{{property}}() method.
 
     @property
@@ -704,5 +702,6 @@ class TreeNodeModel(models.Model):
 
     def __str__(self):
         return self.get_display(indent=True)
+
 
 connect_signals()

@@ -6,11 +6,11 @@ from django.utils.encoding import force_text
 
 from treenode.cache import clear_cache
 from treenode.utils import join_pks
+from .models import Category, CategoryUUID
 
-from .models import Category
 
-
-class TreeNodeModelsTestCase(TransactionTestCase):
+class TreeNodeModelsTestCaseBase:
+    CATEGORY_MODEL = None
 
     def setUp(self):
         pass
@@ -19,7 +19,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         pass
 
     def __create_cat(cls, name, parent=None, priority=0):
-        return Category.objects.create(
+        return cls.CATEGORY_MODEL.objects.create(
             name=name,
             tn_parent=parent,
             tn_priority=priority)
@@ -73,7 +73,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         f = cls.__create_cat(name='f')
 
     def __get_cat(self, name):
-        return Category.objects.get(name=name)
+        return self.CATEGORY_MODEL.objects.get(name=name)
 
     def test_cache(self):
         self.__create_cat_tree()
@@ -92,7 +92,8 @@ class TreeNodeModelsTestCase(TransactionTestCase):
             self.assertEqual(obj.get_children(cache=True), obj.get_children(cache=False))
             self.assertEqual(obj.get_descendants(cache=True), obj.get_descendants(cache=False))
             self.assertEqual(obj.get_descendants_tree(cache=True), obj.get_descendants_tree(cache=False))
-            self.assertEqual(obj.get_descendants_tree_display(cache=True), obj.get_descendants_tree_display(cache=False))
+            self.assertEqual(obj.get_descendants_tree_display(cache=True),
+                             obj.get_descendants_tree_display(cache=False))
             self.assertEqual(obj.get_root(cache=True), obj.get_root(cache=False))
             self.assertEqual(obj.get_roots(cache=True), obj.get_roots(cache=False))
             self.assertEqual(obj.get_siblings(cache=True), obj.get_siblings(cache=False))
@@ -114,12 +115,12 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         f = self.__get_cat(name='f')
         a.delete()
         a.delete()
-        self.assertEqual(Category.get_roots(), [b, c, d, e, f])
+        self.assertEqual(self.CATEGORY_MODEL.get_roots(), [b, c, d, e, f])
 
     def test_delete_tree(self):
         self.__create_cat_tree()
-        Category.delete_tree()
-        self.assertEqual(list(Category.objects.all()), [])
+        self.CATEGORY_MODEL.delete_tree()
+        self.assertEqual(list(self.CATEGORY_MODEL.objects.all()), [])
 
     def test_get_ancestors(self):
         self.__create_cat_tree()
@@ -202,7 +203,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         ae = self.__get_cat(name='ae')
         af = self.__get_cat(name='af')
         self.assertEqual(a.get_descendants(),
-            [aa, aaa, aaaa, ab, ac, aca, acaa, acab, acb, acc, ad, ae, af])
+                         [aa, aaa, aaaa, ab, ac, aca, acaa, acab, acb, acc, ad, ae, af])
         self.assertEqual(aa.get_descendants(), [aaa, aaaa])
         self.assertEqual(aaa.get_descendants(), [aaaa])
         self.assertEqual(aaaa.get_descendants(), [])
@@ -296,14 +297,14 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         i = self.__create_cat(name='ì', parent=e)
         o = self.__create_cat(name='ò', parent=i)
         u = self.__create_cat(name='ù', parent=o)
-        opts = { 'indent':False, 'mark':'- ' }
+        opts = {'indent': False, 'mark': '- '}
         self.assertEqual(a.get_display(**opts), force_text('à'))
         self.assertEqual(c.get_display(**opts), force_text('ç'))
         self.assertEqual(e.get_display(**opts), force_text('è'))
         self.assertEqual(i.get_display(**opts), force_text('ì'))
         self.assertEqual(o.get_display(**opts), force_text('ò'))
         self.assertEqual(u.get_display(**opts), force_text('ù'))
-        opts = { 'indent':True, 'mark':'- ' }
+        opts = {'indent': True, 'mark': '- '}
         self.assertEqual(a.get_display(**opts), force_text('à'))
         self.assertEqual(c.get_display(**opts), force_text('- ç'))
         self.assertEqual(e.get_display(**opts), force_text('- - è'))
@@ -503,14 +504,14 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         d = self.__get_cat(name='d')
         e = self.__get_cat(name='e')
         f = self.__get_cat(name='f')
-        self.assertEqual(Category.get_roots(), [a, b, c, d, e, f])
+        self.assertEqual(self.CATEGORY_MODEL.get_roots(), [a, b, c, d, e, f])
         f.set_priority(60)
         e.set_priority(50)
         d.set_priority(40)
         c.set_priority(30)
         b.set_priority(20)
         a.set_priority(10)
-        self.assertEqual(Category.get_roots(), [f, e, d, c, b, a])
+        self.assertEqual(self.CATEGORY_MODEL.get_roots(), [f, e, d, c, b, a])
         aa = self.__get_cat(name='aa')
         ab = self.__get_cat(name='ab')
         ac = self.__get_cat(name='ac')
@@ -545,7 +546,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         d = self.__get_cat(name='d')
         e = self.__get_cat(name='e')
         f = self.__get_cat(name='f')
-        self.assertEqual(Category.get_roots(), [a, b, c, d, e, f])
+        self.assertEqual(self.CATEGORY_MODEL.get_roots(), [a, b, c, d, e, f])
 
     def test_get_siblings(self):
         self.__create_cat_tree()
@@ -733,7 +734,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
                 'tree': [],
             },
         ]
-        self.assertEqual(tree, Category.get_tree())
+        self.assertEqual(tree, self.CATEGORY_MODEL.get_tree())
 
     def test_get_tree_display(self):
         # TODO
@@ -968,7 +969,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         with self.assertNumQueries(0):
             aaaa.get_ancestors()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             aaaa.get_ancestors()
         with self.assertNumQueries(1):
             aaaa.get_ancestors(cache=False)
@@ -979,7 +980,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         with self.assertNumQueries(0):
             a.get_children()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             a.get_children()
         with self.assertNumQueries(1):
             a.get_children(cache=False)
@@ -992,7 +993,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         with self.assertNumQueries(0):
             a.get_descendants()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             a.get_descendants()
         with self.assertNumQueries(1):
             a.get_descendants(cache=False)
@@ -1003,14 +1004,14 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         with self.assertNumQueries(0):
             a.get_descendants_tree()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             a.get_descendants_tree()
         with self.assertNumQueries(1):
             a.get_descendants_tree(cache=False)
         with self.assertNumQueries(0):
             a.get_descendants_tree_display()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             a.get_descendants_tree_display()
         with self.assertNumQueries(1):
             a.get_descendants_tree_display(cache=False)
@@ -1027,21 +1028,21 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         with self.assertNumQueries(0):
             a.get_root()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             a.get_root()
         with self.assertNumQueries(1):
             a.get_root(cache=False)
         with self.assertNumQueries(0):
-            Category.get_roots()
+            self.CATEGORY_MODEL.get_roots()
         with self.assertNumQueries(1):
-            clear_cache(Category)
-            Category.get_roots()
+            clear_cache(self.CATEGORY_MODEL)
+            self.CATEGORY_MODEL.get_roots()
         with self.assertNumQueries(1):
-            Category.get_roots(cache=False)
+            self.CATEGORY_MODEL.get_roots(cache=False)
         with self.assertNumQueries(0):
             a.get_siblings()
         with self.assertNumQueries(1):
-            clear_cache(Category)
+            clear_cache(self.CATEGORY_MODEL)
             a.get_siblings()
         with self.assertNumQueries(1):
             a.get_siblings(cache=False)
@@ -1050,19 +1051,19 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         with self.assertNumQueries(0):
             a.get_siblings_queryset()
         with self.assertNumQueries(0):
-            Category.get_tree()
+            self.CATEGORY_MODEL.get_tree()
         with self.assertNumQueries(1):
-            clear_cache(Category)
-            Category.get_tree()
+            clear_cache(self.CATEGORY_MODEL)
+            self.CATEGORY_MODEL.get_tree()
         with self.assertNumQueries(1):
-            Category.get_tree(cache=False)
+            self.CATEGORY_MODEL.get_tree(cache=False)
         with self.assertNumQueries(0):
-            Category.get_tree_display()
+            self.CATEGORY_MODEL.get_tree_display()
         with self.assertNumQueries(1):
-            clear_cache(Category)
-            Category.get_tree_display()
+            clear_cache(self.CATEGORY_MODEL)
+            self.CATEGORY_MODEL.get_tree_display()
         with self.assertNumQueries(1):
-            Category.get_tree_display(cache=False)
+            self.CATEGORY_MODEL.get_tree_display(cache=False)
         with self.assertNumQueries(0):
             a.is_ancestor_of(aa)
         with self.assertNumQueries(0):
@@ -1143,43 +1144,43 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         ad = self.__get_cat(name='ad')
         ae = self.__get_cat(name='ae')
         af = self.__get_cat(name='af')
-        Category.objects.filter(name='aa').delete()
+        self.CATEGORY_MODEL.objects.filter(name='aa').delete()
         self.assertEqual(a.tn_children_pks, join_pks([ab.pk, ac.pk, ad.pk, ae.pk, af.pk]))
         self.assertEqual(a.tn_children_count, 5)
         self.assertTrue(ab.is_first_child())
-        Category.objects.filter(name='ab').delete()
+        self.CATEGORY_MODEL.objects.filter(name='ab').delete()
         self.assertEqual(a.tn_children_pks, join_pks([ac.pk, ad.pk, ae.pk, af.pk]))
         self.assertEqual(a.tn_children_count, 4)
         self.assertTrue(ac.is_first_child())
-        Category.objects.filter(name='ac').delete()
+        self.CATEGORY_MODEL.objects.filter(name='ac').delete()
         self.assertEqual(a.tn_children_pks, join_pks([ad.pk, ae.pk, af.pk]))
         self.assertEqual(a.tn_children_count, 3)
         self.assertTrue(ad.is_first_child())
-        Category.objects.filter(name='ad').delete()
+        self.CATEGORY_MODEL.objects.filter(name='ad').delete()
         self.assertEqual(a.tn_children_pks, join_pks([ae.pk, af.pk]))
         self.assertEqual(a.tn_children_count, 2)
         self.assertTrue(ae.is_first_child())
-        Category.objects.filter(name='ae').delete()
+        self.CATEGORY_MODEL.objects.filter(name='ae').delete()
         self.assertEqual(a.tn_children_pks, join_pks([af.pk]))
         self.assertEqual(a.tn_children_count, 1)
         self.assertTrue(af.is_first_child())
-        Category.objects.filter(name='af').delete()
+        self.CATEGORY_MODEL.objects.filter(name='af').delete()
         self.assertEqual(a.tn_children_pks, join_pks([]))
         self.assertEqual(a.tn_children_count, 0)
-        Category.objects.filter(name='a').delete()
-        Category.objects.filter(name='b').delete()
-        Category.objects.filter(name='c').delete()
-        with self.assertRaises(Category.DoesNotExist):
+        self.CATEGORY_MODEL.objects.filter(name='a').delete()
+        self.CATEGORY_MODEL.objects.filter(name='b').delete()
+        self.CATEGORY_MODEL.objects.filter(name='c').delete()
+        with self.assertRaises(self.CATEGORY_MODEL.DoesNotExist):
             a = self.__get_cat(name='a')
-        with self.assertRaises(Category.DoesNotExist):
+        with self.assertRaises(self.CATEGORY_MODEL.DoesNotExist):
             aa = self.__get_cat(name='aa')
-        with self.assertRaises(Category.DoesNotExist):
+        with self.assertRaises(self.CATEGORY_MODEL.DoesNotExist):
             aaa = self.__get_cat(name='aaa')
-        with self.assertRaises(Category.DoesNotExist):
+        with self.assertRaises(self.CATEGORY_MODEL.DoesNotExist):
             aaa = self.__get_cat(name='aaaa')
-        with self.assertRaises(Category.DoesNotExist):
+        with self.assertRaises(self.CATEGORY_MODEL.DoesNotExist):
             b = self.__get_cat(name='b')
-        with self.assertRaises(Category.DoesNotExist):
+        with self.assertRaises(self.CATEGORY_MODEL.DoesNotExist):
             c = self.__get_cat(name='c')
         d = self.__get_cat(name='d')
         self.assertTrue(d.is_first_child())
@@ -1192,7 +1193,7 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         self.assertEqual(a.get_depth(), 0)
 
     def test_update_on_save(self):
-        a = Category(name='a')
+        a = self.CATEGORY_MODEL(name='a')
         a.save()
         self.assertEqual(a.get_level(), 1)
         self.assertEqual(a.get_depth(), 0)
@@ -1209,3 +1210,11 @@ class TreeNodeModelsTestCase(TransactionTestCase):
         cat_level_1_expected_descendants = cat_level_list
         self.assertEqual(len(cat_level_1_descendants), len(cat_level_1_expected_descendants))
         self.assertEqual(cat_level_1_descendants, cat_level_1_expected_descendants)
+
+
+class TreeNodeModelsIdTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
+    CATEGORY_MODEL = Category
+
+
+class TreeNodeModelsUUIDTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
+    CATEGORY_MODEL = CategoryUUID
