@@ -11,5 +11,5 @@ def join_pks(l):
 def split_pks(s):
     if not s:
         return []
-    l = [int(v) for v in s.split(PKS_SEPARATOR) if v]
+    l = [v for v in s.split(PKS_SEPARATOR) if v]
     return l
