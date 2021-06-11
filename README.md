@@ -135,6 +135,13 @@ obj.get_ancestors_count()
 obj.ancestors_count
 ```
 
+Get the **ancestors pks** list:
+```python
+obj.get_ancestors_pks()
+# or
+obj.ancestors_pks
+```
+
 Get the **ancestors queryset**:
 ```python
 obj.get_ancestors_queryset()
@@ -161,6 +168,13 @@ obj.get_children_count()
 obj.children_count
 ```
 
+Get the **children pks** list:
+```python
+obj.get_children_pks()
+# or
+obj.children_pks
+```
+
 Get the **children queryset**:
 ```python
 obj.get_children_queryset()
@@ -185,6 +199,13 @@ Get the **descendants count**:
 obj.get_descendants_count()
 # or
 obj.descendants_count
+```
+
+Get the **descendants pks** list:
+```python
+obj.get_descendants_pks()
+# or
+obj.descendants_pks
 ```
 
 Get the **descendants queryset**:
@@ -248,6 +269,13 @@ obj.get_parent()
 obj.parent
 ```
 
+Get the **parent node pk**:
+```python
+obj.get_parent_pk()
+# or
+obj.parent_pk
+```
+
 Set the **parent node**:
 ```python
 obj.set_parent(parent_obj)
@@ -270,6 +298,13 @@ Get the **root node** for the current node:
 obj.get_root()
 # or
 obj.root
+```
+
+Get the **root node pk** for the current node:
+```python
+obj.get_root_pk()
+# or
+obj.root_pk
 ```
 
 Get a **list with all root nodes**:
@@ -296,6 +331,13 @@ Get the **siblings count**:
 obj.get_siblings_count()
 # or
 obj.siblings_count
+```
+
+Get the **siblings pks** list:
+```python
+obj.get_siblings_pks()
+# or
+obj.siblings_pks
 ```
 
 Get the **siblings queryset**:
