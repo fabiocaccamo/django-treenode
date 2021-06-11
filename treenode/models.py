@@ -131,9 +131,12 @@ class TreeNodeModel(models.Model):
     def get_ancestors_count(self):
         return self.tn_ancestors_count
 
+    def get_ancestors_pks(self):
+        return split_pks(self.tn_ancestors_pks)
+
     def get_ancestors_queryset(self):
         return self.__class__.objects.filter(
-            pk__in=split_pks(self.tn_ancestors_pks))
+            pk__in=self.get_ancestors_pks())
 
     def get_breadcrumbs(self, attr=None, cache=True):
         objs = self.get_ancestors(cache=cache) + [self]
@@ -148,9 +151,12 @@ class TreeNodeModel(models.Model):
     def get_children_count(self):
         return self.tn_children_count
 
+    def get_children_pks(self):
+        return split_pks(self.tn_children_pks)
+
     def get_children_queryset(self):
         return self.__class__.objects.filter(
-            pk__in=split_pks(self.tn_children_pks))
+            pk__in=self.get_children_pks())
 
     def get_depth(self):
         return self.tn_depth
@@ -164,9 +170,12 @@ class TreeNodeModel(models.Model):
     def get_descendants_count(self):
         return self.tn_descendants_count
 
+    def get_descendants_pks(self):
+        return split_pks(self.tn_descendants_pks)
+
     def get_descendants_queryset(self):
         return self.__class__.objects.filter(
-            pk__in=split_pks(self.tn_descendants_pks))
+            pk__in=self.get_descendants_pks())
 
     def get_descendants_tree(self, cache=True):
         return self.__get_nodes_tree(instance=self, cache=cache)
@@ -223,6 +232,9 @@ class TreeNodeModel(models.Model):
     def get_parent(self):
         return self.tn_parent
 
+    def get_parent_pk(self):
+        return self.tn_parent_id
+
     def set_parent(self, obj):
         with no_signals():
             if obj:
@@ -253,12 +265,15 @@ class TreeNodeModel(models.Model):
         self.save()
 
     def get_root(self, cache=True):
-        root_pk = (split_pks(self.tn_ancestors_pks) + [self.pk])[0]
+        root_pk = self.get_root_pk()
         if cache:
             root_obj = query_cache(self.__class__, pk=root_pk)
         else:
             root_obj = self.__class__.objects.get(pk=root_pk)
         return root_obj
+
+    def get_root_pk(self):
+        return (split_pks(self.tn_ancestors_pks) + [self.pk])[0]
 
     @classmethod
     def get_roots(cls, cache=True):
@@ -281,9 +296,12 @@ class TreeNodeModel(models.Model):
     def get_siblings_count(self):
         return self.tn_siblings_count
 
+    def get_siblings_pks(self):
+        return split_pks(self.tn_siblings_pks)
+
     def get_siblings_queryset(self):
         return self.__class__.objects.filter(
-            pk__in=split_pks(self.tn_siblings_pks))
+            pk__in=self.get_siblings_pks())
 
     @classmethod
     def get_tree(cls, cache=True):
@@ -407,14 +425,14 @@ class TreeNodeModel(models.Model):
         obj_dict = {}
 
         # update ancestors
-        parent_pk = self.tn_parent_id
+        parent_pk = self.get_parent_pk()
 
         ancestors_list = []
         ancestor_pk = parent_pk
         while ancestor_pk:
             ancestor_obj = objs_dict.get(str(ancestor_pk))
             ancestors_list.insert(0, ancestor_obj)
-            ancestor_pk = ancestor_obj.tn_parent_id
+            ancestor_pk = ancestor_obj.get_parent_pk()
         ancestors_pks = [obj.pk for obj in ancestors_list]
         ancestors_count = len(ancestors_pks)
 
