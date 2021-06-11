@@ -631,6 +631,10 @@ class TreeNodeModel(models.Model):
         return self.get_ancestors_count()
 
     @property
+    def ancestors_pks(self):
+        return self.get_ancestors_pks()
+
+    @property
     def breadcrumbs(self):
         return self.get_breadcrumbs()
 
@@ -643,6 +647,10 @@ class TreeNodeModel(models.Model):
         return self.get_children_count()
 
     @property
+    def children_pks(self):
+        return self.get_children_pks()
+
+    @property
     def depth(self):
         return self.get_depth()
 
@@ -653,6 +661,10 @@ class TreeNodeModel(models.Model):
     @property
     def descendants_count(self):
         return self.get_descendants_count()
+
+    @property
+    def descendants_pks(self):
+        return self.get_descendants_pks()
 
     @property
     def descendants_tree(self):
@@ -687,6 +699,10 @@ class TreeNodeModel(models.Model):
         return self.get_parent()
 
     @property
+    def parent_pk(self):
+        return self.get_parent_pk()
+
+    @property
     def priority(self):
         return self.get_priority()
 
@@ -699,12 +715,20 @@ class TreeNodeModel(models.Model):
         return self.get_root()
 
     @property
+    def root_pk(self):
+        return self.get_root_pk()
+
+    @property
     def siblings(self):
         return self.get_siblings()
 
     @property
     def siblings_count(self):
         return self.get_siblings_count()
+
+    @property
+    def siblings_pks(self):
+        return self.get_siblings_pks()
 
     @classproperty
     def tree(cls):
