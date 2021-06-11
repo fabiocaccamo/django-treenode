@@ -58,6 +58,11 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
 
         return base_list_display
 
+    def get_queryset(self, request):
+        qs = super(TreeNodeModelAdmin, self).get_queryset(request)
+        qs = qs.select_related('tn_parent')
+        return qs
+
     def _use_treenode_display_mode(self, request, obj):
         querystring = (request.GET.urlencode() or '')
         return len(querystring) <= 2
