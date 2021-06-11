@@ -8,18 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  Added handling for `UUID` primary keys (thanks to @cperrin88). #31
 -  Reduced admin changelist queries.
 -  Added `TreeNodeModel` utility methods and properties to retrieve only pk(s):
-    - `get_ancestors_pks`
-    - `get_children_pks`
-    - `get_descendants_pks`
-    - `get_parent_pk`
-    - `get_root_pk`
-    - `get_siblings_pks`
-    - `ancestors_pks`
-    - `children_pks`
-    - `descendants_pks`
-    - `parent_pk`
-    - `root_pk`
-    - `siblings_pks`
+    - method `get_ancestors_pks()` / property `ancestors_pks`
+    - method `get_children_pks()` / property `children_pks`
+    - method `get_descendants_pks()` / property `descendants_pks`
+    - method `get_parent_pk()` / property `parent_pk`
+    - method `get_root_pk()` / property `root_pk`
+    - method `get_siblings_pks()` / property `siblings_pks`
 
 ## [0.16.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.16.0) - 2021-04-21
 -  Added `python 3.9` and `django 3.2` to `tox` and `travis`.
