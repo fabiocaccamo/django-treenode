@@ -390,13 +390,13 @@ class TreeNodeModel(models.Model):
         alphabetical_val = slugify(str(self))
         alphabetical_key = alphabetical_val.ljust(priority_len, str('z'))
         alphabetical_key = alphabetical_key[0:priority_len]
-        if isinstance(self.pk, int):
-            pk_val = min(self.pk, priority_max)
-        elif isinstance(self.pk, uuid.UUID):
+
+        if isinstance(self.pk, uuid.UUID):
             pk_val = self.pk.int
             pk_val = int(str(pk_val)[:priority_len])
         else:
-            pk_val = 0
+            pk_val = min(self.pk, priority_max)
+
         pk_key = str(pk_val).zfill(priority_len)
         s = '%s%s%s' % (priority_key, alphabetical_key, pk_key,)
         s = s.upper()
