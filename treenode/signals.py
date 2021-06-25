@@ -43,14 +43,22 @@ def post_delete_treenode(sender, instance, **kwargs):
 
 
 def connect_signals():
-    post_init.connect(
-        post_init_treenode, dispatch_uid='post_init_treenode')
-    post_migrate.connect(
-        post_migrate_treenode, dispatch_uid='post_migrate_treenode')
-    post_save.connect(
-        post_save_treenode, dispatch_uid='post_save_treenode')
-    post_delete.connect(
-        post_delete_treenode, dispatch_uid='post_delete_treenode')
+    #
+    # Try to handle loaddata and test arguments which dont want these signals
+    #
+    try:
+        action = sys.argv[1]
+    except Exception as e:
+        action = None
+    if action not in ('loaddata', 'test',):
+        post_init.connect(
+            post_init_treenode, dispatch_uid='post_init_treenode')
+        post_migrate.connect(
+            post_migrate_treenode, dispatch_uid='post_migrate_treenode')
+        post_save.connect(
+            post_save_treenode, dispatch_uid='post_save_treenode')
+        post_delete.connect(
+            post_delete_treenode, dispatch_uid='post_delete_treenode')
 
 
 def disconnect_signals():
