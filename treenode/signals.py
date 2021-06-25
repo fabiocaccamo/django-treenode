@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+import os
+import sys
 from django.db.models.signals import (
     post_delete, post_init, post_migrate, post_save, )
 
@@ -46,11 +47,14 @@ def connect_signals():
     #
     # Try to handle loaddata and test arguments which dont want these signals
     #
-    try:
-        action = sys.argv[1]
-    except Exception as e:
-        action = None
-    if action not in ('loaddata', 'test',):
+    if os.getenv('SKIP_SIGNALS'):
+        action = 'force_skip'
+    else:
+        try:
+            action = sys.argv[1]
+        except Exception as e:
+            action = None
+    if action not in ('force_skip', 'loaddata', 'test',):
         post_init.connect(
             post_init_treenode, dispatch_uid='post_init_treenode')
         post_migrate.connect(
