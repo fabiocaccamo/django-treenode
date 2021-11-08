@@ -215,7 +215,7 @@ class TreeNodeModel(models.Model):
             text = f'{self}'
         else:
             raise ValueError(
-                f'Neither __str__ nor treenode_display_field are defined for model')
+                'Neither __str__ nor treenode_display_field are defined for model')
         text = force_text(text)
         return text
 
