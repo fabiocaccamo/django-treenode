@@ -204,17 +204,18 @@ class TreeNodeModel(models.Model):
     def get_display_text(self):
         """
         Gets the text that will be indented in `get_display` method.
-        Returns the `treenode_display_field` value by default.
+        Returns the `treenode_display_field` value if specified,
+        otherwise falls back on the model's __str__().
         Override this method to return another field or a computed value. #27
         """
         if hasattr(self, 'treenode_display_field') and self.treenode_display_field is not None:
             field_name = getattr(self, 'treenode_display_field', 'pk')
             text = getattr(self, field_name)
         elif type(self).__str__ is not object.__str__:
-            text = f"{self}"
+            text = f'{self}'
         else:
             raise ValueError(
-                f"Neither __str__ nor treenode_display_field are defined for model")
+                f'Neither __str__ nor treenode_display_field are defined for model')
         text = force_text(text)
         return text
 
