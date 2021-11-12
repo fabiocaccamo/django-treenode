@@ -30,3 +30,29 @@ class CategoryUUID(TreeNodeModel):
         app_label = 'tests'
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+
+
+class CategoryStr(TreeNodeModel):
+
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta(TreeNodeModel.Meta):
+        app_label = 'tests'
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return f'{self.name}'
+
+class CategoryUUIDStr(TreeNodeModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta(TreeNodeModel.Meta):
+        app_label = 'tests'
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return f'{self.name}'
