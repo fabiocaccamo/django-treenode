@@ -6,7 +6,7 @@ from django.utils.encoding import force_text
 
 from treenode.cache import clear_cache
 from treenode.utils import join_pks
-from .models import Category, CategoryUUID
+from .models import Category, CategoryStr, CategoryUUID, CategoryUUIDStr
 
 
 class TreeNodeModelsTestCaseBase:
@@ -1224,3 +1224,11 @@ class TreeNodeModelsIdTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
 
 class TreeNodeModelsUUIDTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
     _category_model = CategoryUUID
+
+
+class TreeNodeModelsIdStrTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
+    _category_model = CategoryStr
+
+
+class TreeNodeModelsUUIDStrTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
+    _category_model = CategoryUUIDStr
