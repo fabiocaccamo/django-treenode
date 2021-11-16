@@ -214,8 +214,7 @@ class TreeNodeModel(models.Model):
         elif type(self).__str__  not in [object.__str__, TreeNodeModel.__str__] :
             text = f'{self}'
         else:
-            raise ValueError(
-                'Neither __str__ nor treenode_display_field are defined for model')
+            text = self.pk
         text = force_text(text)
         return text
 
