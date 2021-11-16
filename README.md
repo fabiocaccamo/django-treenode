@@ -142,7 +142,7 @@ obj.get_ancestors_pks()
 obj.ancestors_pks
 ```
 
-Get the **ancestors queryset**:
+Get the **ancestors queryset** (ordered from parent to root):
 ```python
 obj.get_ancestors_queryset()
 ```
