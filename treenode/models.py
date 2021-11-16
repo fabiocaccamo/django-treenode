@@ -211,7 +211,7 @@ class TreeNodeModel(models.Model):
         if hasattr(self, 'treenode_display_field') and self.treenode_display_field is not None:
             field_name = getattr(self, 'treenode_display_field', 'pk')
             text = getattr(self, field_name)
-        elif type(self).__str__ is not object.__str__:
+        elif type(self).__str__  not in [object.__str__, TreeNodeModel.__str__] :
             text = f'{self}'
         else:
             raise ValueError(
