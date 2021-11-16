@@ -3,14 +3,15 @@
 from django.conf import settings
 from django.test import TransactionTestCase
 from django.utils.encoding import force_text
-
 from treenode.cache import clear_cache
 from treenode.utils import join_pks
-from .models import Category, CategoryStr, CategoryUUID, CategoryUUIDStr
+
+from .models import (Category, CategoryPk, CategoryStr, CategoryUUID,
+                     CategoryUUIDStr)
 
 
 class TreeNodeModelsTestCaseBase:
-    _category_model = None
+    _category_model: object = None
 
     def setUp(self):
         pass
@@ -1217,6 +1218,37 @@ class TreeNodeModelsTestCaseBase:
         self.assertEqual(len(cat_level_1_descendants), len(cat_level_1_expected_descendants))
         self.assertEqual(cat_level_1_descendants, cat_level_1_expected_descendants)
 
+class TreeNodeModelsTestCasePk(TreeNodeModelsTestCaseBase):
+    def __create_cat(cls, name, parent=None, priority=0):
+        return cls._category_model.objects.create(
+            name=name,
+            tn_parent=parent,
+            tn_priority=priority)
+
+    def test_get_display(self):
+        a = self.__create_cat(name='à')
+        c = self.__create_cat(name='ç', parent=a)
+        e = self.__create_cat(name='è', parent=c)
+        i = self.__create_cat(name='ì', parent=e)
+        o = self.__create_cat(name='ò', parent=i)
+        u = self.__create_cat(name='ù', parent=o)
+        opts = {'indent': False, 'mark': '- '}
+        self.assertEqual(a.get_display(**opts), force_text(f'{a.pk}'))
+        self.assertEqual(c.get_display(**opts), force_text(f'{c.pk}'))
+        self.assertEqual(e.get_display(**opts), force_text(f'{e.pk}'))
+        self.assertEqual(i.get_display(**opts), force_text(f'{i.pk}'))
+        self.assertEqual(o.get_display(**opts), force_text(f'{o.pk}'))
+        self.assertEqual(u.get_display(**opts), force_text(f'{u.pk}'))
+        opts = {'indent': True, 'mark': '- '}
+        self.assertEqual(a.get_display(**opts), force_text(f'{a.pk}'))
+        self.assertEqual(c.get_display(**opts), force_text(f'- {c.pk}'))
+        self.assertEqual(e.get_display(**opts), force_text(f'- - {e.pk}'))
+        self.assertEqual(i.get_display(**opts), force_text(f'- - - {i.pk}'))
+        self.assertEqual(o.get_display(**opts), force_text(f'- - - - {o.pk}'))
+        self.assertEqual(u.get_display(**opts), force_text(f'- - - - - {u.pk}'))
+
+
+
 
 class TreeNodeModelsIdTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
     _category_model = Category
@@ -1232,3 +1264,7 @@ class TreeNodeModelsIdStrTestCase(TreeNodeModelsTestCaseBase, TransactionTestCas
 
 class TreeNodeModelsUUIDStrTestCase(TreeNodeModelsTestCaseBase, TransactionTestCase):
     _category_model = CategoryUUIDStr
+
+
+class TreeNodeModelsPkTestCase(TreeNodeModelsTestCasePk, TransactionTestCase):
+    _category_model = CategoryPk
