@@ -209,7 +209,7 @@ class TreeNodeModel(models.Model):
         Override this method to return another field or a computed value. #27
         """
         if hasattr(self, 'treenode_display_field') and self.treenode_display_field is not None:
-            field_name = getattr(self, 'treenode_display_field', 'pk')
+            field_name = getattr(self, 'treenode_display_field')
             text = getattr(self, field_name)
         elif type(self).__str__  not in [object.__str__, TreeNodeModel.__str__] :
             text = f'{self}'
