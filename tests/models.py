@@ -56,3 +56,14 @@ class CategoryUUIDStr(TreeNodeModel):
 
     def __str__(self):
         return f'{self.name}'
+
+class CategoryPk(TreeNodeModel):
+
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta(TreeNodeModel.Meta):
+        app_label = 'tests'
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+        
