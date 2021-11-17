@@ -6,7 +6,7 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from six import python_2_unicode_compatible
@@ -197,7 +197,7 @@ class TreeNodeModel(models.Model):
 
     def get_display(self, indent=True, mark='— '):
         indentation = (mark * self.tn_ancestors_count) if indent else ''
-        indentation = force_text(indentation)
+        indentation = force_str(indentation)
         text = self.get_display_text()
         return indentation + text
 
@@ -216,7 +216,7 @@ class TreeNodeModel(models.Model):
         else:
             raise ValueError(
                 'Neither __str__ nor treenode_display_field are defined for model')
-        text = force_text(text)
+        text = force_str(text)
         return text
 
     def get_first_child(self, cache=True):

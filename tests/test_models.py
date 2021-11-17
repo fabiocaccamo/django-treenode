@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.test import TransactionTestCase
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from treenode.cache import clear_cache
 from treenode.utils import join_pks
@@ -298,19 +298,19 @@ class TreeNodeModelsTestCaseBase:
         o = self.__create_cat(name='ò', parent=i)
         u = self.__create_cat(name='ù', parent=o)
         opts = {'indent': False, 'mark': '- '}
-        self.assertEqual(a.get_display(**opts), force_text('à'))
-        self.assertEqual(c.get_display(**opts), force_text('ç'))
-        self.assertEqual(e.get_display(**opts), force_text('è'))
-        self.assertEqual(i.get_display(**opts), force_text('ì'))
-        self.assertEqual(o.get_display(**opts), force_text('ò'))
-        self.assertEqual(u.get_display(**opts), force_text('ù'))
+        self.assertEqual(a.get_display(**opts), force_str('à'))
+        self.assertEqual(c.get_display(**opts), force_str('ç'))
+        self.assertEqual(e.get_display(**opts), force_str('è'))
+        self.assertEqual(i.get_display(**opts), force_str('ì'))
+        self.assertEqual(o.get_display(**opts), force_str('ò'))
+        self.assertEqual(u.get_display(**opts), force_str('ù'))
         opts = {'indent': True, 'mark': '- '}
-        self.assertEqual(a.get_display(**opts), force_text('à'))
-        self.assertEqual(c.get_display(**opts), force_text('- ç'))
-        self.assertEqual(e.get_display(**opts), force_text('- - è'))
-        self.assertEqual(i.get_display(**opts), force_text('- - - ì'))
-        self.assertEqual(o.get_display(**opts), force_text('- - - - ò'))
-        self.assertEqual(u.get_display(**opts), force_text('- - - - - ù'))
+        self.assertEqual(a.get_display(**opts), force_str('à'))
+        self.assertEqual(c.get_display(**opts), force_str('- ç'))
+        self.assertEqual(e.get_display(**opts), force_str('- - è'))
+        self.assertEqual(i.get_display(**opts), force_str('- - - ì'))
+        self.assertEqual(o.get_display(**opts), force_str('- - - - ò'))
+        self.assertEqual(u.get_display(**opts), force_str('- - - - - ù'))
 
     def test_get_first_child(self):
         self.__create_cat_tree()
