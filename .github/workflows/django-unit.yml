@@ -36,6 +36,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox tox-gh-actions
     - name: Test with tox  
-        env:
+      env:
           PSQL_PORT: ${{ job.services.postgres.ports[5432] }}
       run: tox
