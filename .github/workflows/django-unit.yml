@@ -38,4 +38,5 @@ jobs:
     - name: Test with tox  
       env:
           PSQL_PORT: ${{ job.services.postgres.ports[5432] }}
+          PSQL_HOST: 127.0.0.1
       run: tox
