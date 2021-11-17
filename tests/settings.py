@@ -30,8 +30,8 @@ database_config = {
         'NAME': 'treenode',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '',
-        'PORT': '',
+        'HOST': os.environ.get('PSQL_HOST', ''),
+        'PORT': os.environ.get('PSQL_PORT', ''),
     }
 }
 
