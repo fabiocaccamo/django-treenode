@@ -212,7 +212,7 @@ class TreeNodeModel(models.Model):
             field_name = getattr(self, 'treenode_display_field', 'pk')
             text = getattr(self, field_name)
         elif type(self).__str__ is not object.__str__:
-            text = f'{self}'
+            text = force_text(self)
         else:
             raise ValueError(
                 'Neither __str__ nor treenode_display_field are defined for model')
