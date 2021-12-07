@@ -2,13 +2,12 @@
 
 from __future__ import unicode_literals
 
-import uuid
-
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.utils.encoding import force_text
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+
 from six import python_2_unicode_compatible
 
 from . import classproperty
@@ -17,6 +16,8 @@ from .debug import debug_performance
 from .memory import clear_refs, update_refs
 from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
+
+import uuid
 
 
 @python_2_unicode_compatible
@@ -199,24 +200,23 @@ class TreeNodeModel(models.Model):
         indentation = (mark * self.tn_ancestors_count) if indent else ''
         indentation = force_text(indentation)
         text = self.get_display_text()
+        text = force_text(text)
         return indentation + text
 
     def get_display_text(self):
         """
         Gets the text that will be indented in `get_display` method.
         Returns the `treenode_display_field` value if specified,
-        otherwise falls back on the model's __str__().
+        otherwise falls back on the model's pk.
         Override this method to return another field or a computed value. #27
         """
+        text = ''
         if hasattr(self, 'treenode_display_field') and self.treenode_display_field is not None:
             field_name = getattr(self, 'treenode_display_field')
-            text = getattr(self, field_name)
-        elif type(self).__str__  not in [object.__str__, TreeNodeModel.__str__]:
-            text = f'{self}'
-        else:
+            text = getattr(self, field_name, '')
+        if not text and self.pk:
             text = self.pk
-        text = force_text(text)
-        return text
+        return force_text(text)
 
     def get_first_child(self, cache=True):
         return self.get_children(cache=cache)[0] \
@@ -625,7 +625,7 @@ class TreeNodeModel(models.Model):
 
         return objs_tree
 
-    #  Public properties
+    # Public properties
     # All properties map a get_{{property}}() method.
 
     @property
