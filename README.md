@@ -414,6 +414,21 @@ obj.is_sibling_of(target_obj)
 cls.update_tree()
 ```
 
+### Bulk Operations
+
+To perform bulk operations it is recommended to turn off signals, then triggering the tree update at the end:
+
+```python
+from treenode.signals import no_signals
+
+with no_signals():
+    # execute custom bulk operations
+    pass
+
+# trigger tree update only once
+YourModel.update_tree()
+```
+
 ## Testing
 ```bash
 # create python virtual environment
