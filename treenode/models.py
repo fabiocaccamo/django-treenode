@@ -95,7 +95,7 @@ class TreeNodeModel(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(9999)],
         verbose_name=_('Priority'), )
 
-    tn_order = models.PositiveSmallIntegerField(
+    tn_order = models.PositiveIntegerField(
         default=0, editable=False,
         verbose_name=_('Order'), )
 
