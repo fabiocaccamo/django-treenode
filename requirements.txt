@@ -1,5 +1,2 @@
-coverage
-codecov
 django
 six
-tox
