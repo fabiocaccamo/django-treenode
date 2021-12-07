@@ -427,6 +427,7 @@ git clone https://github.com/fabiocaccamo/django-treenode.git src && cd src
 
 # install dependencies
 pip install -r requirements.txt
+pip install -r requirements-test.txt
 
 # run tests
 tox
