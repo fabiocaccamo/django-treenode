@@ -7,7 +7,7 @@
 [![](https://badges.pufler.dev/visits/fabiocaccamo/django-treenode?label=visitors&color=blue)](https://badges.pufler.dev)
 [![](https://img.shields.io/pypi/l/django-treenode.svg?color=blue)](https://github.com/fabiocaccamo/django-treenode/blob/master/LICENSE.txt)
 
-[![](https://img.shields.io/travis/fabiocaccamo/django-treenode?logo=travis&label=build)](https://travis-ci.org/fabiocaccamo/django-treenode)
+[![](https://img.shields.io/github/workflow/status/fabiocaccamo/django-treenode/Python%20package?label=build&logo=github)](https://github.com/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codecov/c/gh/fabiocaccamo/django-treenode?logo=codecov)](https://codecov.io/gh/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codacy/grade/0c79c196e5c9411babbaf5e8e5f7469c?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
 [![](https://requires.io/github/fabiocaccamo/django-treenode/requirements.svg?branch=master)](https://requires.io/github/fabiocaccamo/django-treenode/requirements/?branch=master)
@@ -142,7 +142,7 @@ obj.get_ancestors_pks()
 obj.ancestors_pks
 ```
 
-Get the **ancestors queryset**:
+Get the **ancestors queryset** (ordered from parent to root):
 ```python
 obj.get_ancestors_queryset()
 ```
@@ -427,6 +427,7 @@ git clone https://github.com/fabiocaccamo/django-treenode.git src && cd src
 
 # install dependencies
 pip install -r requirements.txt
+pip install -r requirements-test.txt
 
 # run tests
 tox
@@ -456,6 +457,8 @@ Released under [MIT License](LICENSE.txt).
 - [`python-benedict`](https://github.com/fabiocaccamo/python-benedict) - dict subclass with keylist/keypath support, I/O shortcuts (base64, csv, json, pickle, plist, query-string, toml, xml, yaml) and many utilities. 📘
 
 - [`python-codicefiscale`](https://github.com/fabiocaccamo/python-codicefiscale) - encode/decode Italian fiscal codes - codifica/decodifica del Codice Fiscale. 🇮🇹 💳
+
+- [`python-fontbro`](https://github.com/fabiocaccamo/python-fontbro) - friendly font operations. 🧢
 
 - [`python-fsutil`](https://github.com/fabiocaccamo/python-fsutil) - file-system utilities for lazy devs. 🧟‍♂️
 
