@@ -41,4 +41,4 @@ class debug_performance(object):
             queries,
             'query' if queries == 1 else 'queries',
             timer, )
-        print(message)
+        logger.debug(message)
