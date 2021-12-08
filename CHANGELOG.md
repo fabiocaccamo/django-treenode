@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.18.0) - 2021-12-08
+-  Added django 4.0 compatibility.
+-  Added `cascade` option to `delete` method. #40
+-  Added documentation for bulk operations. #41 #42 #45
+-  Removed console verbose logging. #36
+-  Removed display fallback to str method due to recursion error.
+-  Fixed order field too small for big trees. #44
+-  Fixed tests auto-field warning.
+
 ## [0.17.1](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.17.1) - 2021-12-07
 -  Replaced travis CI with GitHub workflow.
 -  Added python 3.10 support.
