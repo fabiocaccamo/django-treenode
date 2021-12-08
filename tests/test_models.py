@@ -122,6 +122,20 @@ class TreeNodeModelTestCaseBase:
         a.delete()
         self.assertEqual(self._category_model.get_roots(), [b, c, d, e, f])
 
+    def test_delete_without_cascade(self):
+        self.__create_cat_tree()
+        b = self.__get_cat(name='b')
+        b.delete(cascade=False)
+        a = self.__get_cat(name='a')
+        ba = self.__get_cat(name='ba')
+        bb = self.__get_cat(name='bb')
+        bc = self.__get_cat(name='bc')
+        c = self.__get_cat(name='c')
+        d = self.__get_cat(name='d')
+        e = self.__get_cat(name='e')
+        f = self.__get_cat(name='f')
+        self.assertEqual(self._category_model.get_roots(), [a, ba, bb, bc, c, d, e, f])
+
     def test_delete_tree(self):
         self.__create_cat_tree()
         self._category_model.delete_tree()

@@ -111,9 +111,10 @@ CACHES = {
 
 ### Methods/Properties
 
-**Delete a node** and all its descendants:
+**Delete a node** if `cascade=True` (default behaviour), children and descendants will be deleted too,
+otherwise children's parent will be set to `None` (then children become roots):
 ```python
-obj.delete()
+obj.delete(cascade=True)
 ```
 
 **Delete the whole tree** for the current node class:

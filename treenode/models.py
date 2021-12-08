@@ -110,8 +110,11 @@ class TreeNodeModel(models.Model):
 
     # Public methods
 
-    def delete(self, using=None, keep_parents=False):
+    def delete(self, using=None, keep_parents=False, cascade=True):
         with no_signals():
+            if not cascade:
+                children_qs = self.get_children_queryset()
+                children_qs.update(tn_parent=None)
             self.__class__.objects.filter(pk=self.pk).delete()
         self.update_tree()
 
