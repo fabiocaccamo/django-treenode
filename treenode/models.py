@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
-from django.utils.encoding import force_text
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
@@ -12,6 +11,7 @@ from six import python_2_unicode_compatible
 
 from . import classproperty
 from .cache import clear_cache, query_cache, update_cache
+from .compat import force_str
 from .debug import debug_performance
 from .memory import clear_refs, update_refs
 from .signals import connect_signals, no_signals
@@ -201,9 +201,9 @@ class TreeNodeModel(models.Model):
 
     def get_display(self, indent=True, mark='— '):
         indentation = (mark * self.tn_ancestors_count) if indent else ''
-        indentation = force_text(indentation)
+        indentation = force_str(indentation)
         text = self.get_display_text()
-        text = force_text(text)
+        text = force_str(text)
         return indentation + text
 
     def get_display_text(self):
@@ -219,7 +219,7 @@ class TreeNodeModel(models.Model):
             text = getattr(self, field_name, '')
         if not text and self.pk:
             text = self.pk
-        return force_text(text)
+        return force_str(text)
 
     def get_first_child(self, cache=True):
         return self.get_children(cache=cache)[0] \

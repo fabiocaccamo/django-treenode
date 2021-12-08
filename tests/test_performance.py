@@ -2,11 +2,8 @@
 
 from django.conf import settings
 from django.test import TransactionTestCase
-# from django.utils.encoding import force_text
 
-# from treenode.cache import clear_cache
 from treenode.debug import debug_performance
-# from treenode.utils import join_pks, split_pks
 from treenode.signals import no_signals
 
 from .models import Category
