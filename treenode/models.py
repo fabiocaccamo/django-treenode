@@ -51,7 +51,7 @@ class TreeNodeModel(models.Model):
         blank=True, default='', editable=False,
         verbose_name=_('Ancestors pks'), )
 
-    tn_ancestors_count = models.PositiveSmallIntegerField(
+    tn_ancestors_count = models.PositiveIntegerField(
         default=0, editable=False,
         verbose_name=_('Ancestors count'), )
 
@@ -59,11 +59,11 @@ class TreeNodeModel(models.Model):
         blank=True, default='', editable=False,
         verbose_name=_('Children pks'), )
 
-    tn_children_count = models.PositiveSmallIntegerField(
+    tn_children_count = models.PositiveIntegerField(
         default=0, editable=False,
         verbose_name=_('Children count'), )
 
-    tn_depth = models.PositiveSmallIntegerField(
+    tn_depth = models.PositiveIntegerField(
         default=0, editable=False,
         validators=[MinValueValidator(0), MaxValueValidator(10)],
         verbose_name=_('Depth'), )
@@ -72,15 +72,15 @@ class TreeNodeModel(models.Model):
         blank=True, default='', editable=False,
         verbose_name=_('Descendants pks'), )
 
-    tn_descendants_count = models.PositiveSmallIntegerField(
+    tn_descendants_count = models.PositiveIntegerField(
         default=0, editable=False,
         verbose_name=_('Descendants count'), )
 
-    tn_index = models.PositiveSmallIntegerField(
+    tn_index = models.PositiveIntegerField(
         default=0, editable=False,
         verbose_name=_('Index'), )
 
-    tn_level = models.PositiveSmallIntegerField(
+    tn_level = models.PositiveIntegerField(
         default=1, editable=False,
         validators=[MinValueValidator(1), MaxValueValidator(10)],
         verbose_name=_('Level'), )
@@ -91,7 +91,7 @@ class TreeNodeModel(models.Model):
                                   blank=True, null=True,
                                   verbose_name=_('Parent'), )
 
-    tn_priority = models.PositiveSmallIntegerField(
+    tn_priority = models.PositiveIntegerField(
         default=0,
         validators=[MinValueValidator(0), MaxValueValidator(9999)],
         verbose_name=_('Priority'), )
@@ -104,7 +104,7 @@ class TreeNodeModel(models.Model):
         blank=True, default='', editable=False,
         verbose_name=_('Siblings pks'), )
 
-    tn_siblings_count = models.PositiveSmallIntegerField(
+    tn_siblings_count = models.PositiveIntegerField(
         default=0, editable=False,
         verbose_name=_('Siblings count'), )
 
