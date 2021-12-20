@@ -397,9 +397,10 @@ class TreeNodeModel(models.Model):
             objs_data = cls.__get_nodes_data()
 
             with transaction.atomic():
+                obj_manager = cls.objects
                 for obj_key, obj_data in objs_data.items():
                     obj_pk = obj_key
-                    cls.objects.filter(pk=obj_pk).update(**obj_data)
+                    obj_manager.filter(pk=obj_pk).update(**obj_data)
 
             # update in-memory instances
             update_refs(cls, objs_data)
@@ -553,41 +554,19 @@ class TreeNodeModel(models.Model):
             obj_data.pop('tn_parent_pk', None)
             obj_data.pop('tn_order_str', None)
 
-            if obj_data['tn_ancestors_count'] == obj.tn_ancestors_count:
-                obj_data.pop('tn_ancestors_count')
-
-            if obj_data['tn_ancestors_pks'] == obj.tn_ancestors_pks:
-                obj_data.pop('tn_ancestors_pks', None)
-
-            if obj_data['tn_children_count'] == obj.tn_children_count:
-                obj_data.pop('tn_children_count', None)
-
-            if obj_data['tn_children_pks'] == obj.tn_children_pks:
-                obj_data.pop('tn_children_pks', None)
-
-            if obj_data['tn_depth'] == obj.tn_depth:
-                obj_data.pop('tn_depth', None)
-
-            if obj_data['tn_descendants_count'] == obj.tn_descendants_count:
-                obj_data.pop('tn_descendants_count', None)
-
-            if obj_data['tn_descendants_pks'] == obj.tn_descendants_pks:
-                obj_data.pop('tn_descendants_pks', None)
-
-            if obj_data['tn_index'] == obj.tn_index:
-                obj_data.pop('tn_index', None)
-
-            if obj_data['tn_level'] == obj.tn_level:
-                obj_data.pop('tn_level', None)
-
-            if obj_data['tn_order'] == obj.tn_order:
-                obj_data.pop('tn_order', None)
-
-            if obj_data['tn_siblings_count'] == obj.tn_siblings_count:
-                obj_data.pop('tn_siblings_count', None)
-
-            if obj_data['tn_siblings_pks'] == obj.tn_siblings_pks:
-                obj_data.pop('tn_siblings_pks', None)
+            keys = [
+                'tn_ancestors_count', 'tn_ancestors_pks',
+                'tn_children_count', 'tn_children_pks',
+                'tn_depth',
+                'tn_descendants_count', 'tn_descendants_pks',
+                'tn_index',
+                'tn_level',
+                'tn_order',
+                'tn_siblings_count', 'tn_siblings_pks',
+            ]
+            for key in keys:
+                if obj_data[key] == getattr(obj, key, None):
+                    obj_data.pop(key, None)
 
             if len(obj_data) == 0:
                 objs_data_dict.pop(obj_key, None)
@@ -599,14 +578,14 @@ class TreeNodeModel(models.Model):
 
         def __get_node_tree(obj):
             child_tree = {'node': obj, 'tree': []}
+            child_tree_append = child_tree['tree'].append
             if obj.tn_children_pks:
                 children_pks = split_pks(obj.tn_children_pks)
                 for child_pk in children_pks:
                     child_key = str(child_pk)
                     child_obj = objs_dict.get(child_key)
                     if child_obj:
-                        child_tree['tree'].append(
-                            __get_node_tree(child_obj))
+                        child_tree_append(__get_node_tree(child_obj))
             return child_tree
 
         if instance:
