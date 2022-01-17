@@ -488,8 +488,7 @@ class TreeNodeModel(models.Model):
         # index objects by parent pk
         for obj_data in objs_data_list:
             obj_parent_key = str(obj_data['tn_parent_pk'])
-            if not obj_parent_key in objs_pks_by_parent:
-                objs_pks_by_parent[obj_parent_key] = []
+            objs_pks_by_parent.setdefault(obj_parent_key, [])
             objs_pks_by_parent[obj_parent_key].append(obj_data['pk'])
 
             # update global order with normalized value
