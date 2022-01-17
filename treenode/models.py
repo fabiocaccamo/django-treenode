@@ -398,8 +398,7 @@ class TreeNodeModel(models.Model):
 
             with transaction.atomic():
                 obj_manager = cls.objects
-                for obj_key, obj_data in objs_data.items():
-                    obj_pk = obj_key
+                for obj_pk, obj_data in objs_data.items():
                     obj_manager.filter(pk=obj_pk).update(**obj_data)
 
             # update in-memory instances
