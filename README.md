@@ -7,7 +7,7 @@
 [![](https://badges.pufler.dev/visits/fabiocaccamo/django-treenode?label=visitors&color=blue)](https://badges.pufler.dev)
 [![](https://img.shields.io/pypi/l/django-treenode.svg?color=blue)](https://github.com/fabiocaccamo/django-treenode/blob/master/LICENSE.txt)
 
-[![](https://img.shields.io/github/workflow/status/fabiocaccamo/django-treenode/Python%20package?label=build&logo=github)](https://github.com/fabiocaccamo/django-treenode)
+[![](https://img.shields.io/github/workflow/status/fabiocaccamo/django-treenode/Test%20package?label=build&logo=github)](https://github.com/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codecov/c/gh/fabiocaccamo/django-treenode?logo=codecov)](https://codecov.io/gh/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codacy/grade/0c79c196e5c9411babbaf5e8e5f7469c?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
 
