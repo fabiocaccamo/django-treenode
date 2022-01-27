@@ -2,7 +2,7 @@
 [![](https://img.shields.io/pypi/djversions/django-treenode?color=0C4B33&logo=django&logoColor=white&label=django)](https://www.djangoproject.com/)
 
 [![](https://img.shields.io/pypi/v/django-treenode.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/django-treenode/)
-[![](https://pepy.tech/badge/django-treenode)](https://pepy.tech/project/django-treenode)
+[![](https://pepy.tech/badge/django-treenode/month)](https://pepy.tech/project/django-treenode)
 [![](https://img.shields.io/github/stars/fabiocaccamo/django-treenode?logo=github)](https://github.com/fabiocaccamo/django-treenode/)
 [![](https://badges.pufler.dev/visits/fabiocaccamo/django-treenode?label=visitors&color=blue)](https://badges.pufler.dev)
 [![](https://img.shields.io/pypi/l/django-treenode.svg?color=blue)](https://github.com/fabiocaccamo/django-treenode/blob/master/LICENSE.txt)
@@ -10,7 +10,6 @@
 [![](https://img.shields.io/github/workflow/status/fabiocaccamo/django-treenode/Python%20package?label=build&logo=github)](https://github.com/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codecov/c/gh/fabiocaccamo/django-treenode?logo=codecov)](https://codecov.io/gh/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codacy/grade/0c79c196e5c9411babbaf5e8e5f7469c?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
-[![](https://requires.io/github/fabiocaccamo/django-treenode/requirements.svg?branch=master)](https://requires.io/github/fabiocaccamo/django-treenode/requirements/?branch=master)
 
 # django-treenode
 Probably the best abstract model / admin for your **tree** based stuff.
