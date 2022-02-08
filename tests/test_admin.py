@@ -8,7 +8,6 @@ from django.test import TestCase
 
 
 class TreeNodeAdminTestCase(TestCase):
-
     def setUp(self):
         pass
 
@@ -20,7 +19,7 @@ class TreeNodeAdminTestCase(TestCase):
         self.assertTrue(result != None)
 
     def test_staticfiles(self):
-        if 'treenode' not in settings.INSTALLED_APPS:
+        if "treenode" not in settings.INSTALLED_APPS:
             return
-        self.assertStaticFile('treenode/css/treenode.css')
-        self.assertStaticFile('treenode/js/treenode.js')
+        self.assertStaticFile("treenode/css/treenode.css")
+        self.assertStaticFile("treenode/js/treenode.js")

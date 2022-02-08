@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-PKS_SEPARATOR = ','
+PKS_SEPARATOR = ","
+
 
 def join_pks(l):
     if not l:
-        return ''
+        return ""
     s = PKS_SEPARATOR.join([str(v) for v in l])
     return s
+
 
 def split_pks(s):
     if not s:

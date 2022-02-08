@@ -9,8 +9,7 @@ from .utils import split_pks
 
 
 def _get_cache():
-    return caches['treenode'] \
-        if 'treenode' in settings.CACHES else cache
+    return caches["treenode"] if "treenode" in settings.CACHES else cache
 
 
 def _get_cached_collection(key, dict_cls):
@@ -23,15 +22,15 @@ def _get_cached_collection(key, dict_cls):
 
 
 def _get_cached_collections():
-    l = _get_cached_collection('treenode_list', list)
-    d = _get_cached_collection('treenode_dict', dict)
-    return (l, d, )
+    l = _get_cached_collection("treenode_list", list)
+    d = _get_cached_collection("treenode_dict", dict)
+    return (l, d)
 
 
 def _set_cached_collections(l, d):
     c = _get_cache()
-    c.set('treenode_list', l)
-    c.set('treenode_dict', d)
+    c.set("treenode_list", l)
+    c.set("treenode_dict", d)
 
 
 def clear_cache(cls):
@@ -57,5 +56,5 @@ def query_cache(cls, pk=None, pks=None):
 def update_cache(cls):
     l, d = _get_cached_collections()
     l[cls] = list(cls.objects.all())
-    d[cls] = {str(obj.pk):obj for obj in l[cls]}
+    d[cls] = {str(obj.pk): obj for obj in l[cls]}
     _set_cached_collections(l, d)

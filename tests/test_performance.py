@@ -10,7 +10,6 @@ from .models import Category
 
 
 class TreeNodePerformanceTestCase(TransactionTestCase):
-
     def setUp(self):
         pass
 
@@ -19,16 +18,16 @@ class TreeNodePerformanceTestCase(TransactionTestCase):
 
     def test_performance(self):
         settings.DEBUG = True
-        debug_message_args = (Category.__module__, Category.__name__, )
-        debug_message_prefix = '[treenode] create %s.%s tree: ' % debug_message_args
+        debug_message_args = (
+            Category.__module__,
+            Category.__name__,
+        )
+        debug_message_prefix = "[treenode] create %s.%s tree: " % debug_message_args
         with debug_performance(debug_message_prefix):
             with no_signals():
                 for i in range(2000):
                     # cat_obj = Category.objects.create(
-                    Category.objects.create(
-                        name=str(i),
-                        tn_parent=None,
-                        tn_priority=0)
+                    Category.objects.create(name=str(i), tn_parent=None, tn_priority=0)
                     # cat_parent_obj = cat_obj
                     # for j in range(10):
                     #     subcat_obj = Category.objects.create(

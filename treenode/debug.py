@@ -11,8 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class debug_performance(object):
-
-    def __init__(self, message_prefix=''):
+    def __init__(self, message_prefix=""):
         super(debug_performance, self).__init__()
         self.__message_prefix = message_prefix
 
@@ -34,11 +33,12 @@ class debug_performance(object):
     def __exit__(self, type_, value, traceback):
         if not settings.DEBUG:
             return
-        queries = (debug_performance._get_queries() - self.__init_queries)
-        timer = (debug_performance._get_timer() - self.__init_timer)
-        message = '\r%sexecuted %s %s in %ss.' % (
+        queries = debug_performance._get_queries() - self.__init_queries
+        timer = debug_performance._get_timer() - self.__init_timer
+        message = "\r%sexecuted %s %s in %ss." % (
             self.__message_prefix,
             queries,
-            'query' if queries == 1 else 'queries',
-            timer, )
+            "query" if queries == 1 else "queries",
+            timer,
+        )
         logger.debug(message)

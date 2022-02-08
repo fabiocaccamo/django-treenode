@@ -10,6 +10,7 @@
 [![](https://img.shields.io/github/workflow/status/fabiocaccamo/django-treenode/Test%20package?label=build&logo=github)](https://github.com/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codecov/c/gh/fabiocaccamo/django-treenode?logo=codecov)](https://codecov.io/gh/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codacy/grade/0c79c196e5c9411babbaf5e8e5f7469c?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
+[![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # django-treenode
 Probably the best abstract model / admin for your **tree** based stuff.
@@ -47,13 +48,13 @@ class Category(TreeNodeModel):
 
     # the field used to display the model instance
     # default value 'pk'
-    treenode_display_field = 'name'
+    treenode_display_field = "name"
 
     name = models.CharField(max_length=50)
 
     class Meta(TreeNodeModel.Meta):
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 ```
 
 The `TreeNodeModel` abstract class adds many fields (prefixed with `tn_` to prevent direct access) and public methods to your models.
@@ -96,12 +97,12 @@ You can use a custom cache backend by adding a `treenode` entry to `settings.CAC
 
 ```python
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '...',
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "...",
     },
-    'treenode': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    "treenode": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     },
 }
 ```
