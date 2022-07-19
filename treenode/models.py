@@ -174,7 +174,7 @@ class TreeNodeModel(models.Model):
         return self.__class__.objects.filter(pk__in=self.get_ancestors_pks())
 
     def get_breadcrumbs(self, attr=None, cache=True):
-        objs = self.get_ancestors(cache=cache) + [self]
+        objs = (self.get_ancestors(cache=cache) if self.tn_parent_id else []) + [self]
         return [getattr(obj, attr) for obj in objs] if attr else objs
 
     def get_children(self, cache=True):
