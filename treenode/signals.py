@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models.signals import (
-    post_delete,
-    post_init,
-    post_migrate,
-    post_save,
-)
-
 from inspect import isclass
+
+from django.db.models.signals import post_delete, post_init, post_migrate, post_save
 
 from .memory import set_ref
 

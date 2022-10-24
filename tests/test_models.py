@@ -7,11 +7,7 @@ from treenode.cache import clear_cache
 from treenode.compat import force_str
 from treenode.utils import join_pks
 
-from .models import (
-    Category,
-    CategoryWithUUIDPk,
-    CategoryWithoutDisplayField,
-)
+from .models import Category, CategoryWithoutDisplayField, CategoryWithUUIDPk
 
 
 class TreeNodeModelTestCaseBase:

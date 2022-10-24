@@ -22,14 +22,14 @@ def _get_cached_collection(key, dict_cls):
 
 
 def _get_cached_collections():
-    l = _get_cached_collection("treenode_list", list)
+    ls = _get_cached_collection("treenode_list", list)
     d = _get_cached_collection("treenode_dict", dict)
-    return (l, d)
+    return (ls, d)
 
 
-def _set_cached_collections(l, d):
+def _set_cached_collections(ls, d):
     c = _get_cache()
-    c.set("treenode_list", l)
+    c.set("treenode_list", ls)
     c.set("treenode_dict", d)
 
 
@@ -45,9 +45,9 @@ def query_cache(cls, pk=None, pks=None):
     if not l[cls] or not d[cls]:
         update_cache(cls)
         l, d = _get_cached_collections()
-    if pk != None:
+    if pk is not None:
         return d[cls].get(str(pk))
-    elif pks != None:
+    elif pks is not None:
         return [d[cls].get(str(pk)) for pk in split_pks(pks)]
     else:
         return list(l[cls])

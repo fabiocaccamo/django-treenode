@@ -3,15 +3,15 @@
 PKS_SEPARATOR = ","
 
 
-def join_pks(l):
-    if not l:
+def join_pks(ls):
+    if not ls:
         return ""
-    s = PKS_SEPARATOR.join([str(v) for v in l])
+    s = PKS_SEPARATOR.join([str(v) for v in ls])
     return s
 
 
 def split_pks(s):
     if not s:
         return []
-    l = [v for v in s.split(PKS_SEPARATOR) if v]
-    return l
+    ls = [v for v in s.split(PKS_SEPARATOR) if v]
+    return ls

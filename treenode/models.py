@@ -2,11 +2,12 @@
 
 from __future__ import unicode_literals
 
+import uuid
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
-
 from six import python_2_unicode_compatible
 
 from . import classproperty
@@ -16,8 +17,6 @@ from .debug import debug_performance
 from .memory import clear_refs, update_refs
 from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
-
-import uuid
 
 
 @python_2_unicode_compatible
@@ -521,7 +520,9 @@ class TreeNodeModel(models.Model):
         objs_data_dict = {
             str(obj.pk): obj.__get_node_data(objs_list, objs_dict) for obj in objs_list
         }
-        objs_data_sort = lambda obj: objs_data_dict[str(obj["pk"])]["tn_order_str"]
+        objs_data_sort = lambda obj: objs_data_dict[str(obj["pk"])][  # noqa: E731
+            "tn_order_str"
+        ]
         objs_data_list = list(objs_data_dict.values())
         objs_data_list.sort(key=objs_data_sort)
         objs_pks_by_parent = {}
@@ -581,9 +582,10 @@ class TreeNodeModel(models.Model):
                         obj_depth = max(obj_depth, obj_child_data["tn_depth"] + 1)
 
                 if obj_descendants_pks:
-                    obj_descendants_sort = lambda obj_pk: objs_data_dict[str(obj_pk)][
-                        "tn_order"
-                    ]
+
+                    obj_descendants_sort = lambda obj_pk: objs_data_dict[  # noqa: E731
+                        str(obj_pk)
+                    ]["tn_order"]
                     obj_descendants_pks.sort(key=obj_descendants_sort)
                     obj_data["tn_descendants_pks"] = obj_descendants_pks
                     obj_data["tn_descendants_count"] = len(

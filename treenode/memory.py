@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from collections import defaultdict
-
 import weakref
-
+from collections import defaultdict
 
 __refs__ = defaultdict(weakref.WeakSet)
 

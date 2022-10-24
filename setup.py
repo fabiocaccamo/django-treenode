@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+import os
+import sys
 
-import os, sys
+from setuptools import find_packages, setup
 
 exec(open("treenode/version.py").read())
 

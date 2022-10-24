@@ -2,11 +2,11 @@
 
 from __future__ import unicode_literals
 
+import uuid
+
 from django.db import models
 
 from treenode.models import TreeNodeModel
-
-import uuid
 
 
 class Category(TreeNodeModel):

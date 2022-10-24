@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.test import TestCase
-
 import re
+
+from django.test import TestCase
 
 from treenode.version import __version__
 

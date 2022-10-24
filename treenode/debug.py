@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
-from django.db import connection
-
 import logging
 import timeit
 
+from django.conf import settings
+from django.db import connection
 
 logger = logging.getLogger(__name__)
 
