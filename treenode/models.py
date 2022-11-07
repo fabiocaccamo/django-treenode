@@ -445,8 +445,8 @@ class TreeNodeModel(models.Model):
         priority_val = priority_max - min(self.tn_priority, priority_max)
         priority_key = str(priority_val).zfill(priority_len)
         alphabetical_val = slugify(str(self))
-        alphabetical_key = alphabetical_val.ljust(priority_len, str("z"))
-        alphabetical_key = alphabetical_key[0:priority_len]
+        alphabetical_key = alphabetical_val.ljust(priority_len, "z")
+        alphabetical_key = alphabetical_key[:priority_len]
 
         if isinstance(self.pk, uuid.UUID):
             pk_val = self.pk.int
