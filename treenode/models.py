@@ -306,7 +306,11 @@ class TreeNodeModel(models.Model):
 
     def get_root(self, cache=True):
         root_pk = self.get_root_pk()
-        return query_cache(self.__class__, pk=root_pk) if cache else self.__class__.objects.get(pk=root_pk)
+        return (
+            query_cache(self.__class__, pk=root_pk)
+            if cache
+            else self.__class__.objects.get(pk=root_pk)
+        )
 
     def get_root_pk(self):
         return (split_pks(self.tn_ancestors_pks) + [self.pk])[0]
@@ -416,7 +420,9 @@ class TreeNodeModel(models.Model):
     @classmethod
     def update_tree(cls):
 
-        debug_message_prefix = f"[treenode] update {cls.__module__}.{cls.__name__} tree: "
+        debug_message_prefix = (
+            f"[treenode] update {cls.__module__}.{cls.__name__} tree: "
+        )
 
         with debug_performance(debug_message_prefix):
             # update db
