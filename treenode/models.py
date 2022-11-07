@@ -647,10 +647,7 @@ class TreeNodeModel(models.Model):
             objs_dict = {str(obj.pk): obj for obj in objs_list}
             objs_tree = __get_node_tree(instance)["tree"]
         else:
-            if cache:
-                objs_list = query_cache(cls)
-            else:
-                objs_list = list(cls.objects.all())
+            objs_list = query_cache(cls) if cache else list(cls.objects.all())
             objs_dict = {str(obj.pk): obj for obj in objs_list}
             objs_tree = [__get_node_tree(obj) for obj in objs_list if obj.tn_level == 1]
 
