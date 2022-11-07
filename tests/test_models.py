@@ -1258,9 +1258,7 @@ class TreeNodeModelTestCaseBase:
         cat_level_list = []
         cat_level_parent = None
         for i in range(1, 120):
-            cat_level = self.__create_cat(
-                name="Cat Level {}".format(i), parent=cat_level_parent
-            )
+            cat_level = self.__create_cat(name=f"Cat Level {i}", parent=cat_level_parent)
             cat_level_list.append(cat_level)
             cat_level_parent = cat_level
         cat_level_1 = cat_level_list.pop(0)
