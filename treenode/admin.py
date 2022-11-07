@@ -50,16 +50,10 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
 
         if len(base_list_display) == 1 and base_list_display[0] == "__str__":
             return (treenode_field_display,)
-        else:
-            treenode_display_field = getattr(self.model, "treenode_display_field")
-            if (
-                len(base_list_display) >= 1
-                and base_list_display[0] == treenode_display_field
-            ):
-                base_list_display.pop(0)
-            return (treenode_field_display,) + tuple(base_list_display)
-
-        return base_list_display
+        treenode_display_field = getattr(self.model, "treenode_display_field")
+        if base_list_display and base_list_display[0] == treenode_display_field:
+            base_list_display.pop(0)
+        return (treenode_field_display,) + tuple(base_list_display)
 
     def get_queryset(self, request):
         qs = super(TreeNodeModelAdmin, self).get_queryset(request)
