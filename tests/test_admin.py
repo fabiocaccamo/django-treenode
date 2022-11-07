@@ -16,7 +16,7 @@ class TreeNodeAdminTestCase(TestCase):
 
     def assertStaticFile(self, path):
         result = finders.find(path)
-        self.assertTrue(result != None)
+        self.assertFalse(result is None)
 
     def test_staticfiles(self):
         if "treenode" not in settings.INSTALLED_APPS:
