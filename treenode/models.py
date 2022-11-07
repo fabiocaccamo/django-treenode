@@ -307,11 +307,7 @@ class TreeNodeModel(models.Model):
 
     def get_root(self, cache=True):
         root_pk = self.get_root_pk()
-        if cache:
-            root_obj = query_cache(self.__class__, pk=root_pk)
-        else:
-            root_obj = self.__class__.objects.get(pk=root_pk)
-        return root_obj
+        return query_cache(self.__class__, pk=root_pk) if cache else self.__class__.objects.get(pk=root_pk)
 
     def get_root_pk(self):
         return (split_pks(self.tn_ancestors_pks) + [self.pk])[0]
@@ -348,13 +344,9 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def get_tree_display(cls, cache=True):
-        if cache:
-            objs = query_cache(cls)
-        else:
-            objs = list(cls.objects.all())
-        strs = ["%s" % (obj,) for obj in objs]
-        d = "\n".join(strs)
-        return d
+        objs = query_cache(cls) if cache else list(cls.objects.all())
+        strs = [f"{obj}" for obj in objs]
+        return "\n".join(strs)
 
     # @classmethod
     # def get_tree_dump(cls, cache=True, indent=2, default=None):
