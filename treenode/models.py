@@ -214,9 +214,8 @@ class TreeNodeModel(models.Model):
 
     def get_descendants_tree_display(self, cache=True):
         objs = self.get_descendants(cache=cache)
-        strs = ["%s" % (obj,) for obj in objs]
-        d = "\n".join(strs)
-        return d
+        strs = [f"{obj}" for obj in objs]
+        return "\n".join(strs)
 
     # def get_descendants_tree_dump(self, indent=2, default=None):
     #     data = self.get_descendants_tree()
@@ -417,10 +416,7 @@ class TreeNodeModel(models.Model):
     @classmethod
     def update_tree(cls):
 
-        debug_message_prefix = "[treenode] update %s.%s tree: " % (
-            cls.__module__,
-            cls.__name__,
-        )
+        debug_message_prefix = f"[treenode] update {cls.__module__}.{cls.__name__} tree: "
 
         with debug_performance(debug_message_prefix):
             # update db
@@ -455,11 +451,7 @@ class TreeNodeModel(models.Model):
             pk_val = min(self.pk, priority_max)
 
         pk_key = str(pk_val).zfill(priority_len)
-        s = "%s%s%s" % (
-            priority_key,
-            alphabetical_key,
-            pk_key,
-        )
+        s = f"{priority_key}{alphabetical_key}{pk_key}"
         s = s.upper()
         return s
 
