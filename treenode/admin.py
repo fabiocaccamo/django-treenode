@@ -90,10 +90,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             return self._get_treenode_field_default_display(obj)
 
     def _get_treenode_field_display_with_accordion(self, obj):
-        tn_namespace = "%s.%s" % (
-            obj.__module__,
-            obj.__class__.__name__,
-        )
+        tn_namespace = f"{obj.__module__}.{obj.__class__.__name__}"
         tn_namespace_key = tn_namespace.lower().replace(".", "_")
         return mark_safe(
             '<span class="treenode"'
