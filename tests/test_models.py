@@ -19,11 +19,13 @@ class TreeNodeModelTestCaseBase:
     def tearDown(self):
         pass
 
+    @classmethod
     def __create_cat(cls, name, parent=None, priority=0):
         return cls._category_model.objects.create(
             name=name, tn_parent=parent, tn_priority=priority
         )
 
+    @classmethod
     def __create_cat_tree(cls):
         """
         a
