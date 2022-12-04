@@ -1,14 +1,9 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
-from six import python_2_unicode_compatible
 
 from . import classproperty
 from .cache import clear_cache, query_cache, update_cache
@@ -19,7 +14,6 @@ from .signals import connect_signals, no_signals
 from .utils import join_pks, split_pks
 
 
-@python_2_unicode_compatible
 class TreeNodeModel(models.Model):
     """
     Usage:

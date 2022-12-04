@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 class classproperty(object):
     def __init__(self, getter):
         self.getter = getter

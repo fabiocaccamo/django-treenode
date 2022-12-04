@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import django
 
 if django.VERSION >= (3, 0):

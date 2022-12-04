@@ -1,2 +1,1 @@
-django
-six
+django >= 2.2

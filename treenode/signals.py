@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from inspect import isclass
 
 from django.db.models.signals import post_delete, post_init, post_migrate, post_save

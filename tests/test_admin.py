@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.test import TestCase
