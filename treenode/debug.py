@@ -30,12 +30,9 @@ class debug_performance(object):
     def __exit__(self, type_, value, traceback):
         if not settings.DEBUG:
             return
+        prefix = self.__message_prefix
         queries = debug_performance._get_queries() - self.__init_queries
+        queries_label = "query" if queries == 1 else "queries"
         timer = debug_performance._get_timer() - self.__init_timer
-        message = "\r%sexecuted %s %s in %ss." % (
-            self.__message_prefix,
-            queries,
-            "query" if queries == 1 else "queries",
-            timer,
-        )
+        message = f"\r{prefix}executed {queries} {queries_label} in {timer}s."
         logger.debug(message)

@@ -16,22 +16,21 @@ class TreeNodePerformanceTestCase(TransactionTestCase):
 
     def test_performance(self):
         settings.DEBUG = True
-        debug_message_args = (
-            Category.__module__,
-            Category.__name__,
+        message_prefix = (
+            f"[treenode] create {Category.__module__}.{Category.__name__} tree: "
         )
-        debug_message_prefix = "[treenode] create %s.%s tree: " % debug_message_args
-        with debug_performance(debug_message_prefix):
+        with debug_performance(message_prefix=message_prefix):
             with no_signals():
                 for i in range(2000):
                     # cat_obj = Category.objects.create(
-                    Category.objects.create(name=str(i), tn_parent=None, tn_priority=0)
+                    Category.objects.create(name=f"{i}", tn_parent=None, tn_priority=0)
                     # cat_parent_obj = cat_obj
                     # for j in range(10):
                     #     subcat_obj = Category.objects.create(
-                    #         name='%s - %s' % (str(cat_obj), str(j), ),
+                    #         name=f"{cat_obj} - {j}",
                     #         tn_parent=cat_parent_obj,
-                    #         tn_priority=0)
+                    #         tn_priority=0,
+                    #     )
                     #     cat_parent_obj = subcat_obj
 
         Category.update_tree()

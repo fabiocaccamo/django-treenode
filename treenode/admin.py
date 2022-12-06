@@ -88,45 +88,37 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             return self._get_treenode_field_default_display(obj)
 
     def _get_treenode_field_display_with_accordion(self, obj):
-        tn_namespace = "%s.%s" % (
-            obj.__module__,
-            obj.__class__.__name__,
-        )
+        tn_namespace = f"{obj.__module__}.{obj.__class__.__name__}"
         tn_namespace_key = tn_namespace.lower().replace(".", "_")
+        obj_parent_id = obj.tn_parent_id if obj.tn_parent_id else ""
+        obj_display = obj.get_display(indent=False)
         return mark_safe(
-            '<span class="treenode"'
-            ' data-treenode-type="%s"'
-            ' data-treenode-pk="%s"'
-            ' data-treenode-accordion="1"'
-            ' data-treenode-depth="%s"'
-            ' data-treenode-level="%s"'
-            ' data-treenode-parent="%s">%s</span>'
-            % (
-                tn_namespace_key,
-                str(obj.pk),
-                str(obj.tn_depth),
-                str(obj.tn_level),
-                str(obj.tn_parent_id or ""),
-                obj.get_display(indent=False),
-            )
+            f'<span class="treenode"'
+            f' data-treenode-type="{tn_namespace_key}"'
+            f' data-treenode-pk="{obj.pk}"'
+            f' data-treenode-accordion="1"'
+            f' data-treenode-depth="{obj.tn_depth}"'
+            f' data-treenode-level="{obj.tn_level}"'
+            f' data-treenode-parent="{obj_parent_id}">{obj_display}</span>'
         )
 
     def _get_treenode_field_display_with_breadcrumbs(self, obj):
         obj_display = ""
         for obj_ancestor in obj.get_ancestors():
             obj_ancestor_display = obj_ancestor.get_display(indent=False)
-            obj_display += '<span class="treenode-breadcrumbs">%s</span>' % (
-                obj_ancestor_display,
+            obj_display += (
+                f'<span class="treenode-breadcrumbs">{obj_ancestor_display}</span>'
             )
+
         obj_display += obj.get_display(indent=False)
-        return mark_safe('<span class="treenode">%s</span>' % (obj_display,))
+        return mark_safe(f'<span class="treenode">{obj_display}</span>')
 
     def _get_treenode_field_display_with_indentation(self, obj):
         obj_display = (
             '<span class="treenode-indentation">&mdash;</span>' * obj.ancestors_count
         )
         obj_display += obj.get_display(indent=False)
-        return mark_safe('<span class="treenode">%s</span>' % (obj_display,))
+        return mark_safe(f'<span class="treenode">{obj_display}</span>')
 
     class Media:
         css = {"all": ("treenode/css/treenode.css",)}
