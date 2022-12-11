@@ -78,7 +78,7 @@ jobs:
       env:
         DATABASE_ENGINE: ${{ matrix.database }}
       run: |
-        coverage run --append --source=treenode setup.py test
+        coverage run --append --source=treenode runtests.py
         coverage xml -o ./coverage.xml
 
     - name: Upload coverage to Codecov

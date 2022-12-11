@@ -86,5 +86,4 @@ setup(
         "Topic :: Software Development :: Build Tools",
     ],
     license="MIT",
-    test_suite="runtests.runtests",
 )

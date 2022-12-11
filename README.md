@@ -448,7 +448,7 @@ pip install -r requirements.txt -r requirements-test.txt
 # run tests
 tox
 # or
-python setup.py test
+python runtests.py
 # or
 python -m django test --settings "tests.settings"
 ```
