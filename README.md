@@ -4,7 +4,6 @@
 [![](https://img.shields.io/pypi/v/django-treenode.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/django-treenode/)
 [![](https://pepy.tech/badge/django-treenode/month)](https://pepy.tech/project/django-treenode)
 [![](https://img.shields.io/github/stars/fabiocaccamo/django-treenode?logo=github)](https://github.com/fabiocaccamo/django-treenode/)
-[![](https://badges.pufler.dev/visits/fabiocaccamo/django-treenode?label=visitors&color=blue)](https://badges.pufler.dev)
 [![](https://img.shields.io/pypi/l/django-treenode.svg?color=blue)](https://github.com/fabiocaccamo/django-treenode/blob/master/LICENSE.txt)
 
 [![](https://results.pre-commit.ci/badge/github/fabiocaccamo/django-treenode/master.svg)](https://results.pre-commit.ci/latest/github/fabiocaccamo/django-treenode/master)
