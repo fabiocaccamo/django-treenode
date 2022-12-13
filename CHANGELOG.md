@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.19.0) - 2022-12-14
+-  Add `Python 3.11` and `django 4.1` support.
+-  Drop `Python < 3.8` and `Django < 2.2` support. #67
+-  Add `pre-commit`.
+-  Bump requirements and actions.
+-  Replace `str.format` with `f-strings`.
+-  Replace `setup.py test` in favor of `runtests.py`.
+
 ## [0.18.2](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.18.2) - 2022-07-19
 -  Improved `get_breadcrumbs` performance.
 
