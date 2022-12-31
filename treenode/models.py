@@ -208,7 +208,7 @@ class TreeNodeModel(models.Model):
 
     def get_descendants_tree_display(self, cache=True):
         objs = self.get_descendants(cache=cache)
-        strs = ["%s" % (obj,) for obj in objs]
+        strs = ["{}".format(obj) for obj in objs]
         d = "\n".join(strs)
         return d
 
@@ -346,7 +346,7 @@ class TreeNodeModel(models.Model):
             objs = query_cache(cls)
         else:
             objs = list(cls.objects.all())
-        strs = ["%s" % (obj,) for obj in objs]
+        strs = ["{}".format(obj) for obj in objs]
         d = "\n".join(strs)
         return d
 
@@ -419,7 +419,7 @@ class TreeNodeModel(models.Model):
     @classmethod
     def update_tree(cls):
 
-        debug_message_prefix = "[treenode] update %s.%s tree: " % (
+        debug_message_prefix = "[treenode] update {}.{} tree: ".format(
             cls.__module__,
             cls.__name__,
         )
@@ -447,7 +447,7 @@ class TreeNodeModel(models.Model):
         priority_val = priority_max - min(self.tn_priority, priority_max)
         priority_key = str(priority_val).zfill(priority_len)
         alphabetical_val = slugify(str(self))
-        alphabetical_key = alphabetical_val.ljust(priority_len, str("z"))
+        alphabetical_key = alphabetical_val.ljust(priority_len, "z")
         alphabetical_key = alphabetical_key[0:priority_len]
 
         if isinstance(self.pk, uuid.UUID):
@@ -457,7 +457,7 @@ class TreeNodeModel(models.Model):
             pk_val = min(self.pk, priority_max)
 
         pk_key = str(pk_val).zfill(priority_len)
-        s = "%s%s%s" % (
+        s = "{}{}{}".format(
             priority_key,
             alphabetical_key,
             pk_key,

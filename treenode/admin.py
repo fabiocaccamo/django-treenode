@@ -37,7 +37,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
     ordering = ("tn_order",)
 
     def get_list_display(self, request):
-        base_list_display = super(TreeNodeModelAdmin, self).get_list_display(request)
+        base_list_display = super().get_list_display(request)
         base_list_display = list(base_list_display)
 
         def treenode_field_display(obj):
@@ -60,7 +60,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         return base_list_display
 
     def get_queryset(self, request):
-        qs = super(TreeNodeModelAdmin, self).get_queryset(request)
+        qs = super().get_queryset(request)
         qs = qs.select_related("tn_parent")
         return qs
 

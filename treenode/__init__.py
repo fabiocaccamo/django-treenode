@@ -1,4 +1,4 @@
-class classproperty(object):
+class classproperty:
     def __init__(self, getter):
         self.getter = getter
 

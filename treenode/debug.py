@@ -7,9 +7,9 @@ from django.db import connection
 logger = logging.getLogger(__name__)
 
 
-class debug_performance(object):
+class debug_performance:
     def __init__(self, message_prefix=""):
-        super(debug_performance, self).__init__()
+        super().__init__()
         self.__message_prefix = message_prefix
 
     @staticmethod
