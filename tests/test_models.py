@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.test import TransactionTestCase
+from django.utils.encoding import force_str
 
 from treenode.cache import clear_cache
-from treenode.compat import force_str
 from treenode.utils import join_pks
 
 from .models import Category, CategoryWithoutDisplayField, CategoryWithUUIDPk

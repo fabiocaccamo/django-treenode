@@ -44,7 +44,6 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             return self._get_treenode_field_display(request, obj)
 
         treenode_field_display.short_description = self.model._meta.verbose_name
-        treenode_field_display.allow_tags = True
 
         if len(base_list_display) == 1 and base_list_display[0] == "__str__":
             return (treenode_field_display,)

@@ -2,12 +2,12 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
+from django.utils.encoding import force_str
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from . import classproperty
 from .cache import clear_cache, query_cache, update_cache
-from .compat import force_str
 from .debug import debug_performance
 from .memory import clear_refs, update_refs
 from .signals import connect_signals, no_signals
