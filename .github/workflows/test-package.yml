@@ -63,7 +63,7 @@ jobs:
 
     - name: Upgrade pip version
       run: |
-        pip install pip --upgrade
+        python -m pip install --upgrade pip
 
     - name: Install django
       run: |
@@ -79,6 +79,7 @@ jobs:
         DATABASE_ENGINE: ${{ matrix.database }}
       run: |
         coverage run --append --source=treenode runtests.py
+        coverage report --show-missing
         coverage xml -o ./coverage.xml
 
     - name: Upload coverage to Codecov
