@@ -6,7 +6,6 @@ from treenode.models import TreeNodeModel
 
 
 class Category(TreeNodeModel):
-
     treenode_display_field = "name"
 
     name = models.CharField(max_length=50, unique=True)
@@ -18,7 +17,6 @@ class Category(TreeNodeModel):
 
 
 class CategoryWithUUIDPk(TreeNodeModel):
-
     treenode_display_field = "name"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -31,7 +29,6 @@ class CategoryWithUUIDPk(TreeNodeModel):
 
 
 class CategoryWithoutDisplayField(TreeNodeModel):
-
     name = models.CharField(max_length=50, unique=True)
 
     class Meta(TreeNodeModel.Meta):

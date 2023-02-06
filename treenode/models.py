@@ -418,7 +418,6 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def update_tree(cls):
-
         debug_message_prefix = (
             f"[treenode] update {cls.__module__}.{cls.__name__} tree: "
         )
@@ -461,7 +460,6 @@ class TreeNodeModel(models.Model):
         return s
 
     def __get_node_data(self, objs_list, objs_dict):
-
         obj_dict = {}
 
         # update ancestors
@@ -502,7 +500,6 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def __get_nodes_data(cls):
-
         objs_qs = cls.objects.select_related("tn_parent")
         objs_list = list(objs_qs)
         objs_dict = {str(obj.pk): obj for obj in objs_list}
@@ -539,7 +536,6 @@ class TreeNodeModel(models.Model):
         for obj_data in sorted(
             objs_data_list, key=lambda obj: obj["tn_level"], reverse=True
         ):
-
             # update children
             children_parent_key = str(obj_data["pk"])
             obj_data["tn_children_pks"] = list(
@@ -571,7 +567,6 @@ class TreeNodeModel(models.Model):
                         obj_depth = max(obj_depth, obj_child_data["tn_depth"] + 1)
 
                 if obj_descendants_pks:
-
                     obj_descendants_sort = lambda obj_pk: objs_data_dict[  # noqa: E731
                         str(obj_pk)
                     ]["tn_order"]
