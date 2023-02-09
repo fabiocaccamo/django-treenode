@@ -11,17 +11,17 @@ class TreeNodeUtilsTestCase(TestCase):
         pass
 
     def test_join_pks(self):
-        s = join_pks(None)
-        self.assertEqual(s, "")
-        s = join_pks([])
-        self.assertEqual(s, "")
-        s = join_pks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        self.assertEqual(s, "0,1,2,3,4,5,6,7,8,9,10")
+        pks_str = join_pks(None)
+        self.assertEqual(pks_str, "")
+        pks_str = join_pks([])
+        self.assertEqual(pks_str, "")
+        pks_str = join_pks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        self.assertEqual(pks_str, "0,1,2,3,4,5,6,7,8,9,10")
 
     def test_split_pks(self):
-        l = split_pks(None)
-        self.assertEqual(l, [])
-        l = split_pks("")
-        self.assertEqual(l, [])
-        l = split_pks("0,1,2,3,4,5,6,7,8,9,10")
-        self.assertEqual(l, [str(i) for i in range(11)])
+        pks_list = split_pks(None)
+        self.assertEqual(pks_list, [])
+        pks_list = split_pks("")
+        self.assertEqual(pks_list, [])
+        pks_list = split_pks("0,1,2,3,4,5,6,7,8,9,10")
+        self.assertEqual(pks_list, [str(i) for i in range(11)])
