@@ -90,7 +90,9 @@ class TreeNodeModelTestCaseBase:
             self.assertEqual(
                 obj.get_ancestors(cache=True), obj.get_ancestors(cache=False)
             )
-            self.assertEqual(obj.get_children(cache=True), obj.get_children(cache=False))
+            self.assertEqual(
+                obj.get_children(cache=True), obj.get_children(cache=False)
+            )
             self.assertEqual(
                 obj.get_descendants(cache=True), obj.get_descendants(cache=False)
             )
@@ -104,7 +106,9 @@ class TreeNodeModelTestCaseBase:
             )
             self.assertEqual(obj.get_root(cache=True), obj.get_root(cache=False))
             self.assertEqual(obj.get_roots(cache=True), obj.get_roots(cache=False))
-            self.assertEqual(obj.get_siblings(cache=True), obj.get_siblings(cache=False))
+            self.assertEqual(
+                obj.get_siblings(cache=True), obj.get_siblings(cache=False)
+            )
             self.assertEqual(obj.get_tree(cache=True), obj.get_tree(cache=False))
             self.assertEqual(
                 obj.get_tree_display(cache=True), obj.get_tree_display(cache=False)
@@ -1251,7 +1255,9 @@ class TreeNodeModelTestCaseBase:
         cat_level_list = []
         cat_level_parent = None
         for i in range(1, 120):
-            cat_level = self.__create_cat(name=f"Cat Level {i}", parent=cat_level_parent)
+            cat_level = self.__create_cat(
+                name=f"Cat Level {i}", parent=cat_level_parent
+            )
             cat_level_list.append(cat_level)
             cat_level_parent = cat_level
         cat_level_1 = cat_level_list.pop(0)

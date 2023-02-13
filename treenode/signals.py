@@ -11,7 +11,9 @@ def __is_treenode_signal(sender):
     # return isinstance(instance, TreeNodeModel) and \
     #         instance.__class__ != TreeNodeModel
     return (
-        isclass(sender) and issubclass(sender, TreeNodeModel) and sender != TreeNodeModel
+        isclass(sender)
+        and issubclass(sender, TreeNodeModel)
+        and sender != TreeNodeModel
     )
 
 
