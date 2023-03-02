@@ -48,7 +48,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         if len(base_list_display) == 1 and base_list_display[0] == "__str__":
             return (treenode_field_display,)
         else:
-            treenode_display_field = getattr(self.model, "treenode_display_field")
+            treenode_display_field = self.model.treenode_display_field
             if (
                 len(base_list_display) >= 1
                 and base_list_display[0] == treenode_display_field
@@ -92,7 +92,7 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         obj_parent_id = obj.tn_parent_id if obj.tn_parent_id else ""
         obj_display = obj.get_display(indent=False)
         return mark_safe(
-            f'<span class="treenode"'
+            f'<span class="treenode"'  # noqa: B907
             f' data-treenode-type="{tn_namespace_key}"'
             f' data-treenode-pk="{obj.pk}"'
             f' data-treenode-accordion="1"'

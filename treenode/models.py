@@ -240,7 +240,7 @@ class TreeNodeModel(models.Model):
             hasattr(self, "treenode_display_field")
             and self.treenode_display_field is not None
         ):
-            field_name = getattr(self, "treenode_display_field")
+            field_name = self.treenode_display_field
             text = getattr(self, field_name, "")
         if not text and self.pk:
             text = self.pk
@@ -736,7 +736,7 @@ class TreeNodeModel(models.Model):
         return self.get_priority()
 
     @classproperty
-    def roots(cls):
+    def roots(cls):  # noqa: B902
         return cls.get_roots()
 
     @property
@@ -760,11 +760,11 @@ class TreeNodeModel(models.Model):
         return self.get_siblings_pks()
 
     @classproperty
-    def tree(cls):
+    def tree(cls):  # noqa: B902
         return cls.get_tree()
 
     @classproperty
-    def tree_display(cls):
+    def tree_display(cls):  # noqa: B902
         return cls.get_tree_display()
 
     class Meta:
