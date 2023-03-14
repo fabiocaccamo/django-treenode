@@ -27,6 +27,32 @@ jobs:
     outputs:
       matrix: ${{ steps.create_matrix.outputs.matrix }}
 
+  lint:
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        cache: 'pip'
+
+    - name: Install tools needed
+      run: |
+        sudo apt install gettext
+        python -m pip install --upgrade pip
+        pip install tox
+
+    - name: Check migrations
+      run: |
+        tox -e migrations
+
+    - name: Check translations
+      run: |
+        tox -e translations
+
   test:
 
     needs: prepare
