@@ -32,27 +32,27 @@ def _set_cached_collections(ls, d):
 
 
 def clear_cache(cls):
-    l, d = _get_cached_collections()
-    del l[cls][:]
+    ls, d = _get_cached_collections()
+    del ls[cls][:]
     d[cls].clear()
-    _set_cached_collections(l, d)
+    _set_cached_collections(ls, d)
 
 
 def query_cache(cls, pk=None, pks=None):
-    l, d = _get_cached_collections()
-    if not l[cls] or not d[cls]:
+    ls, d = _get_cached_collections()
+    if not ls[cls] or not d[cls]:
         update_cache(cls)
-        l, d = _get_cached_collections()
+        ls, d = _get_cached_collections()
     if pk is not None:
         return d[cls].get(str(pk))
     elif pks is not None:
         return [d[cls].get(str(pk)) for pk in split_pks(pks)]
     else:
-        return list(l[cls])
+        return list(ls[cls])
 
 
 def update_cache(cls):
-    l, d = _get_cached_collections()
-    l[cls] = list(cls.objects.all())
-    d[cls] = {str(obj.pk): obj for obj in l[cls]}
-    _set_cached_collections(l, d)
+    ls, d = _get_cached_collections()
+    ls[cls] = list(cls.objects.all())
+    d[cls] = {str(obj.pk): obj for obj in ls[cls]}
+    _set_cached_collections(ls, d)
