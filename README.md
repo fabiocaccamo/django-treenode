@@ -111,17 +111,71 @@ CACHES = {
 
 ### Methods/Properties
 
+-   [`delete`](#delete)
+-   [`delete_tree`](#delete_tree)
+-   [`get_ancestors`](#get_ancestors)
+-   [`get_ancestors_count`](#get_ancestors_count)
+-   [`get_ancestors_pks`](#get_ancestors_pks)
+-   [`get_ancestors_queryset`](#get_ancestors_queryset)
+-   [`get_breadcrumbs`](#get_breadcrumbs)
+-   [`get_children`](#get_children)
+-   [`get_children_count`](#get_children_count)
+-   [`get_children_pks`](#get_children_pks)
+-   [`get_children_queryset`](#get_children_queryset)
+-   [`get_depth`](#get_depth)
+-   [`get_descendants`](#get_descendants)
+-   [`get_descendants_count`](#get_descendants_count)
+-   [`get_descendants_pks`](#get_descendants_pks)
+-   [`get_descendants_queryset`](#get_descendants_queryset)
+-   [`get_descendants_tree`](#get_descendants_tree)
+-   [`get_descendants_tree_display`](#get_descendants_tree_display)
+-   [`get_first_child`](#get_first_child)
+-   [`get_index`](#get_index)
+-   [`get_last_child`](#get_last_child)
+-   [`get_level`](#get_level)
+-   [`get_order`](#get_order)
+-   [`get_parent`](#get_parent)
+-   [`get_parent_pk`](#get_parent_pk)
+-   [`set_parent`](#set_parent)
+-   [`get_priority`](#get_priority)
+-   [`set_priority`](#set_priority)
+-   [`get_root`](#get_root)
+-   [`get_root_pk`](#get_root_pk)
+-   [`get_roots`](#get_roots)
+-   [`get_roots_queryset`](#get_roots_queryset)
+-   [`get_siblings`](#get_siblings)
+-   [`get_siblings_count`](#get_siblings_count)
+-   [`get_siblings_pks`](#get_siblings_pks)
+-   [`get_siblings_queryset`](#get_siblings_queryset)
+-   [`get_tree`](#get_tree)
+-   [`get_tree_display`](#get_tree_display)
+-   [`is_ancestor_of`](#is_ancestor_of)
+-   [`is_child_of`](#is_child_of)
+-   [`is_descendant_of`](#is_descendant_of)
+-   [`is_first_child`](#is_first_child)
+-   [`is_last_child`](#is_last_child)
+-   [`is_leaf`](#is_leaf)
+-   [`is_parent_of`](#is_parent_of)
+-   [`is_root`](#is_root)
+-   [`is_root_of`](#is_root_of)
+-   [`is_sibling_of`](#is_sibling_of)
+-   [`update_tree`](#update_tree)
+
+
+#### `delete`
 **Delete a node** if `cascade=True` (default behaviour), children and descendants will be deleted too,
 otherwise children's parent will be set to `None` (then children become roots):
 ```python
 obj.delete(cascade=True)
 ```
 
+#### `delete_tree`
 **Delete the whole tree** for the current node class:
 ```python
 cls.delete_tree()
 ```
 
+#### `get_ancestors`
 Get a **list with all ancestors** (ordered from root to parent):
 ```python
 obj.get_ancestors()
@@ -129,6 +183,7 @@ obj.get_ancestors()
 obj.ancestors
 ```
 
+#### `get_ancestors_count`
 Get the **ancestors count**:
 ```python
 obj.get_ancestors_count()
@@ -136,6 +191,7 @@ obj.get_ancestors_count()
 obj.ancestors_count
 ```
 
+#### `get_ancestors_pks`
 Get the **ancestors pks** list:
 ```python
 obj.get_ancestors_pks()
@@ -143,11 +199,13 @@ obj.get_ancestors_pks()
 obj.ancestors_pks
 ```
 
+#### `get_ancestors_queryset`
 Get the **ancestors queryset** (ordered from parent to root):
 ```python
 obj.get_ancestors_queryset()
 ```
 
+#### `get_breadcrumbs`
 Get the **breadcrumbs** to current node (included):
 ```python
 obj.get_breadcrumbs(attr=None)
@@ -155,6 +213,7 @@ obj.get_breadcrumbs(attr=None)
 obj.breadcrumbs
 ```
 
+#### `get_children`
 Get a **list containing all children**:
 ```python
 obj.get_children()
@@ -162,6 +221,7 @@ obj.get_children()
 obj.children
 ```
 
+#### `get_children_count`
 Get the **children count**:
 ```python
 obj.get_children_count()
@@ -169,6 +229,7 @@ obj.get_children_count()
 obj.children_count
 ```
 
+#### `get_children_pks`
 Get the **children pks** list:
 ```python
 obj.get_children_pks()
@@ -176,11 +237,13 @@ obj.get_children_pks()
 obj.children_pks
 ```
 
+#### `get_children_queryset`
 Get the **children queryset**:
 ```python
 obj.get_children_queryset()
 ```
 
+#### `get_depth`
 Get the **node depth** (how many levels of descendants):
 ```python
 obj.get_depth()
@@ -188,6 +251,7 @@ obj.get_depth()
 obj.depth
 ```
 
+#### `get_descendants`
 Get a **list containing all descendants**:
 ```python
 obj.get_descendants()
@@ -195,6 +259,7 @@ obj.get_descendants()
 obj.descendants
 ```
 
+#### `get_descendants_count`
 Get the **descendants count**:
 ```python
 obj.get_descendants_count()
@@ -202,6 +267,7 @@ obj.get_descendants_count()
 obj.descendants_count
 ```
 
+#### `get_descendants_pks`
 Get the **descendants pks** list:
 ```python
 obj.get_descendants_pks()
@@ -209,11 +275,13 @@ obj.get_descendants_pks()
 obj.descendants_pks
 ```
 
+#### `get_descendants_queryset`
 Get the **descendants queryset**:
 ```python
 obj.get_descendants_queryset()
 ```
 
+#### `get_descendants_tree`
 Get a **n-dimensional** `dict` representing the **model tree**:
 ```python
 obj.get_descendants_tree()
@@ -221,6 +289,7 @@ obj.get_descendants_tree()
 obj.descendants_tree
 ```
 
+#### `get_descendants_tree_display`
 Get a **multiline** `string` representing the **model tree**:
 ```python
 obj.get_descendants_tree_display()
@@ -228,6 +297,7 @@ obj.get_descendants_tree_display()
 obj.descendants_tree_display
 ```
 
+#### `get_first_child`
 Get the **first child node**:
 ```python
 obj.get_first_child()
@@ -235,6 +305,7 @@ obj.get_first_child()
 obj.first_child
 ```
 
+#### `get_index`
 Get the **node index** (index in node.parent.children list):
 ```python
 obj.get_index()
@@ -242,6 +313,7 @@ obj.get_index()
 obj.index
 ```
 
+#### `get_last_child`
 Get the **last child node**:
 ```python
 obj.get_last_child()
@@ -249,6 +321,7 @@ obj.get_last_child()
 obj.last_child
 ```
 
+#### `get_level`
 Get the **node level** (starting from 1):
 ```python
 obj.get_level()
@@ -256,6 +329,7 @@ obj.get_level()
 obj.level
 ```
 
+#### `get_order`
 Get the **order value** used for ordering:
 ```python
 obj.get_order()
@@ -263,6 +337,7 @@ obj.get_order()
 obj.order
 ```
 
+#### `get_parent`
 Get the **parent node**:
 ```python
 obj.get_parent()
@@ -270,6 +345,7 @@ obj.get_parent()
 obj.parent
 ```
 
+#### `get_parent_pk`
 Get the **parent node pk**:
 ```python
 obj.get_parent_pk()
@@ -277,11 +353,13 @@ obj.get_parent_pk()
 obj.parent_pk
 ```
 
+#### `set_parent`
 Set the **parent node**:
 ```python
 obj.set_parent(parent_obj)
 ```
 
+#### `get_priority`
 Get the **node priority**:
 ```python
 obj.get_priority()
@@ -289,11 +367,13 @@ obj.get_priority()
 obj.priority
 ```
 
+#### `set_priority`
 Set the **node priority**:
 ```python
 obj.set_priority(100)
 ```
 
+#### `get_root`
 Get the **root node** for the current node:
 ```python
 obj.get_root()
@@ -301,6 +381,7 @@ obj.get_root()
 obj.root
 ```
 
+#### `get_root_pk`
 Get the **root node pk** for the current node:
 ```python
 obj.get_root_pk()
@@ -308,6 +389,7 @@ obj.get_root_pk()
 obj.root_pk
 ```
 
+#### `get_roots`
 Get a **list with all root nodes**:
 ```python
 cls.get_roots()
@@ -315,11 +397,13 @@ cls.get_roots()
 cls.roots
 ```
 
+#### `get_roots_queryset`
 Get **root nodes queryset**:
 ```python
 cls.get_roots_queryset()
 ```
 
+#### `get_siblings`
 Get a **list with all the siblings**:
 ```python
 obj.get_siblings()
@@ -327,6 +411,7 @@ obj.get_siblings()
 obj.siblings
 ```
 
+#### `get_siblings_count`
 Get the **siblings count**:
 ```python
 obj.get_siblings_count()
@@ -334,6 +419,7 @@ obj.get_siblings_count()
 obj.siblings_count
 ```
 
+#### `get_siblings_pks`
 Get the **siblings pks** list:
 ```python
 obj.get_siblings_pks()
@@ -341,11 +427,13 @@ obj.get_siblings_pks()
 obj.siblings_pks
 ```
 
+#### `get_siblings_queryset`
 Get the **siblings queryset**:
 ```python
 obj.get_siblings_queryset()
 ```
 
+#### `get_tree`
 Get a **n-dimensional** `dict` representing the **model tree**:
 ```python
 cls.get_tree()
@@ -353,6 +441,7 @@ cls.get_tree()
 cls.tree
 ```
 
+#### `get_tree_display`
 Get a **multiline** `string` representing the **model tree**:
 ```python
 cls.get_tree_display()
@@ -360,56 +449,67 @@ cls.get_tree_display()
 cls.tree_display
 ```
 
+#### `is_ancestor_of`
 Return `True` if the current node **is ancestor** of target_obj:
 ```python
 obj.is_ancestor_of(target_obj)
 ```
 
+#### `is_child_of`
 Return `True` if the current node **is child** of target_obj:
 ```python
 obj.is_child_of(target_obj)
 ```
 
+#### `is_descendant_of`
 Return `True` if the current node **is descendant** of target_obj:
 ```python
 obj.is_descendant_of(target_obj)
 ```
 
+#### `is_first_child`
 Return `True` if the current node is the **first child**:
 ```python
 obj.is_first_child()
 ```
 
+#### `is_last_child`
 Return `True` if the current node is the **last child**:
 ```python
 obj.is_last_child()
 ```
 
+#### `is_leaf`
 Return `True` if the current node is **leaf** (it has not children):
 ```python
 obj.is_leaf()
 ```
 
+#### `is_parent_of`
 Return `True` if the current node **is parent** of target_obj:
 ```python
 obj.is_parent_of(target_obj)
 ```
 
+#### `is_root`
 Return `True` if the current node **is root**:
 ```python
 obj.is_root()
 ```
 
+#### `is_root_of`
 Return `True` if the current node **is root** of target_obj:
 ```python
 obj.is_root_of(target_obj)
 ```
 
+#### `is_sibling_of`
 Return `True` if the current node **is sibling** of target_obj:
 ```python
 obj.is_sibling_of(target_obj)
 ```
 
+#### `update_tree`
 **Update tree** manually, useful after **bulk updates**:
 ```python
 cls.update_tree()
@@ -429,6 +529,13 @@ with no_signals():
 # trigger tree update only once
 YourModel.update_tree()
 ```
+
+## FAQ
+
+### Custom tree serialization
+> How can I serialize a tree using a custom data structure?
+
+This has been discussed [here](https://github.com/fabiocaccamo/django-treenode/discussions/89#discussioncomment-5521654).
 
 ## Testing
 ```bash
