@@ -3,6 +3,7 @@ import uuid
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.utils.encoding import force_str
+from django.utils.html import conditional_escape
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
@@ -225,7 +226,7 @@ class TreeNodeModel(models.Model):
         indentation = (mark * self.tn_ancestors_count) if indent else ""
         indentation = force_str(indentation)
         text = self.get_display_text()
-        text = force_str(text)
+        text = conditional_escape(force_str(text))
         return indentation + text
 
     def get_display_text(self):
@@ -275,11 +276,8 @@ class TreeNodeModel(models.Model):
                 if obj_cls != cls:
                     raise ValueError(
                         "obj can't be set as parent, "
-                        "it is istance of %s, expected instance of %s."
-                        % (
-                            obj_cls.__name__,
-                            cls.__name__,
-                        )
+                        f"it is istance of {obj_cls.__name__}, "
+                        f"expected instance of {cls.__name__}."
                     )
                 if obj == self:
                     raise ValueError("obj can't be set as parent of itself.")
@@ -452,7 +450,10 @@ class TreeNodeModel(models.Model):
             pk_val = self.pk.int
             pk_val = int(str(pk_val)[:priority_len])
         else:
-            pk_val = min(self.pk, priority_max)
+            try:
+                pk_val = min(self.pk, priority_max)
+            except TypeError:
+                pk_val = str(self.pk)
 
         pk_key = str(pk_val).zfill(priority_len)
         s = f"{priority_key}{alphabetical_key}{pk_key}"
@@ -772,7 +773,7 @@ class TreeNodeModel(models.Model):
         ordering = ["tn_order"]
 
     def __str__(self):
-        return self.get_display(indent=True)
+        return conditional_escape(self.get_display(indent=True))
 
 
 connect_signals()

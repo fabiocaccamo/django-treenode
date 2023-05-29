@@ -5,7 +5,12 @@ from django.utils.encoding import force_str
 from treenode.cache import clear_cache
 from treenode.utils import join_pks
 
-from .models import Category, CategoryWithoutDisplayField, CategoryWithUUIDPk
+from .models import (
+    Category,
+    CategoryWithoutDisplayField,
+    CategoryWithStringPk,
+    CategoryWithUUIDPk,
+)
 
 
 # flake8: noqa
@@ -1271,6 +1276,10 @@ class TreeNodeModelTestCaseBase:
 
 class ModelTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = Category
+
+
+class ModelWithStringPkTestCase(TreeNodeModelTestCaseBase):
+    _category_model = CategoryWithStringPk
 
 
 class ModelWithUUIDPkTestCase(TreeNodeModelTestCaseBase):
