@@ -450,7 +450,10 @@ class TreeNodeModel(models.Model):
             pk_val = self.pk.int
             pk_val = int(str(pk_val)[:priority_len])
         else:
-            pk_val = min(self.pk, priority_max)
+            try:
+                pk_val = min(self.pk, priority_max)
+            except TypeError:
+                pk_val = str(self.pk)
 
         pk_key = str(pk_val).zfill(priority_len)
         s = f"{priority_key}{alphabetical_key}{pk_key}"
