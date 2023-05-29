@@ -276,11 +276,8 @@ class TreeNodeModel(models.Model):
                 if obj_cls != cls:
                     raise ValueError(
                         "obj can't be set as parent, "
-                        "it is istance of %s, expected instance of %s."
-                        % (
-                            obj_cls.__name__,
-                            cls.__name__,
-                        )
+                        f"it is istance of {obj_cls.__name__}, "
+                        f"expected instance of {cls.__name__}."
                     )
                 if obj == self:
                     raise ValueError("obj can't be set as parent of itself.")
