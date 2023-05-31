@@ -24,9 +24,9 @@ def post_init_treenode(sender, instance, **kwargs):
 
 
 def post_migrate_treenode(sender, **kwargs):
-    if not __is_treenode_model(sender):
-        return
-    sender.update_tree()
+    for sender_model in sender.get_models():
+        if __is_treenode_model(sender_model):
+            sender_model.update_tree()
 
 
 def post_save_treenode(sender, instance, **kwargs):
