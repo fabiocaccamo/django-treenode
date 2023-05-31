@@ -5,7 +5,7 @@ from django.db.models.signals import post_delete, post_init, post_migrate, post_
 from .memory import set_ref
 
 
-def __is_treenode_signal(sender):
+def __is_treenode_model(sender):
     from .models import TreeNodeModel
 
     # return isinstance(instance, TreeNodeModel) and \
@@ -18,26 +18,26 @@ def __is_treenode_signal(sender):
 
 
 def post_init_treenode(sender, instance, **kwargs):
-    if not __is_treenode_signal(sender):
+    if not __is_treenode_model(sender):
         return
     set_ref(sender, instance)
 
 
 def post_migrate_treenode(sender, **kwargs):
-    if not __is_treenode_signal(sender):
+    if not __is_treenode_model(sender):
         return
     sender.update_tree()
 
 
 def post_save_treenode(sender, instance, **kwargs):
-    if not __is_treenode_signal(sender):
+    if not __is_treenode_model(sender):
         return
     set_ref(sender, instance)
     sender.update_tree()
 
 
 def post_delete_treenode(sender, instance, **kwargs):
-    if not __is_treenode_signal(sender):
+    if not __is_treenode_model(sender):
         return
     sender.update_tree()
 
