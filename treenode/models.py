@@ -470,6 +470,10 @@ class TreeNodeModel(models.Model):
         ancestor_pk = parent_pk
         while ancestor_pk:
             ancestor_obj = objs_dict.get(str(ancestor_pk))
+            if not ancestor_obj:
+                # this may happen loading fixtures, when the current object
+                # references a parent object that has not been created yet
+                break
             ancestors_list.insert(0, ancestor_obj)
             ancestor_pk = ancestor_obj.get_parent_pk()
         ancestors_pks = [obj.pk for obj in ancestors_list]

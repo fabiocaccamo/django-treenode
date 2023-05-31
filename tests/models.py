@@ -18,6 +18,17 @@ class Category(TreeNodeModel):
         verbose_name_plural = "Categories"
 
 
+class CategoryFixtures(TreeNodeModel):
+    treenode_display_field = "name"
+
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta(TreeNodeModel.Meta):
+        app_label = "tests"
+        verbose_name = "Category Fixtures"
+        verbose_name_plural = "Categories Fixtures"
+
+
 class CategoryWithStringPk(TreeNodeModel):
     treenode_display_field = "name"
 
