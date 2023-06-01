@@ -785,8 +785,32 @@ class TreeNodeModelTestCaseBase:
         self.assertEqual(tree, self._category_model.get_tree())
 
     def test_get_tree_display(self):
-        # TODO
-        pass
+        self.__create_cat_tree()
+        expected_tree_display = """
+a
+— aa
+— — aaa
+— — — aaaa
+— ab
+— ac
+— — aca
+— — — acaa
+— — — acab
+— — acb
+— — acc
+— ad
+— ae
+— af
+b
+— ba
+— bb
+— bc
+c
+d
+e
+f
+""".strip()
+        self.assertEqual(self._category_model.get_tree_display(), expected_tree_display)
 
     def test_is_ancestor_of(self):
         self.__create_cat_tree()
