@@ -4,4 +4,4 @@ __description__ = "probably the best abstract model/admin for your tree based st
 __email__ = "fabio.caccamo@gmail.com"
 __license__ = "MIT"
 __title__ = "django-treenode"
-__version__ = "0.20.0"
+__version__ = "0.20.1"

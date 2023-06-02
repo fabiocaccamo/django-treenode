@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.1](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.20.1) - 2023-06-02
+-   Fix `AttributeError: 'NoneType' object has no attribute 'get_parent_pk'` when loading fixtures. #88
+-   Fix model tree update when receiving `post_migrate` signal.
+
 ## [0.20.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.20.0) - 2023-05-29
 -   Add `pyupgrade` (`Python >= 3.8`) to `pre-commit` config.
 -   Add `Django 4.2` support and drop `Django 2.2` support.
