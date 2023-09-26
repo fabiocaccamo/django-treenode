@@ -1,7 +1,7 @@
 import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models, transaction, router
+from django.db import models, router, transaction
 from django.utils.encoding import force_str
 from django.utils.html import conditional_escape
 from django.utils.text import slugify
