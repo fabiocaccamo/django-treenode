@@ -1,9 +1,9 @@
 name: Pre-commit auto-update
 
 on:
-  # every day at midnight
+  # every month
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 1 * *"
   # on demand
   workflow_dispatch:
 
@@ -11,7 +11,7 @@ jobs:
   auto-update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'

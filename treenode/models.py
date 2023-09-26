@@ -1,7 +1,7 @@
 import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models, transaction
+from django.db import models, router, transaction
 from django.utils.encoding import force_str
 from django.utils.html import conditional_escape
 from django.utils.text import slugify
@@ -147,7 +147,7 @@ class TreeNodeModel(models.Model):
     @classmethod
     def delete_tree(cls):
         with no_signals():
-            with transaction.atomic():
+            with transaction.atomic(using=router.db_for_write(TreeNodeModel)):
                 cls.objects.all().delete()
             clear_refs(cls)
             clear_cache(cls)
@@ -424,7 +424,7 @@ class TreeNodeModel(models.Model):
             # update db
             objs_data = cls.__get_nodes_data()
 
-            with transaction.atomic():
+            with transaction.atomic(using=router.db_for_write(TreeNodeModel)):
                 obj_manager = cls.objects
                 for obj_pk, obj_data in objs_data.items():
                     obj_manager.filter(pk=obj_pk).update(**obj_data)
