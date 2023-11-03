@@ -2,15 +2,14 @@ from django.conf import settings
 from django.test import TransactionTestCase
 from django.utils.encoding import force_str
 
-from treenode.cache import clear_cache
-from treenode.utils import join_pks
-
-from .models import (
+from tests.models import (
     Category,
     CategoryWithoutDisplayField,
     CategoryWithStringPk,
     CategoryWithUUIDPk,
 )
+from treenode.cache import clear_cache
+from treenode.utils import join_pks
 
 
 # flake8: noqa

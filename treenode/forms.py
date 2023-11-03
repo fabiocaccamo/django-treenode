@@ -1,6 +1,6 @@
 from django import forms
 
-from .utils import split_pks
+from treenode.utils import split_pks
 
 
 class TreeNodeForm(forms.ModelForm):

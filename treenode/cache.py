@@ -3,7 +3,7 @@ from collections import defaultdict
 from django.conf import settings
 from django.core.cache import cache, caches
 
-from .utils import split_pks
+from treenode.utils import split_pks
 
 
 def _get_cache():

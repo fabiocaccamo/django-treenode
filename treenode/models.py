@@ -7,12 +7,12 @@ from django.utils.html import conditional_escape
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from . import classproperty
-from .cache import clear_cache, query_cache, update_cache
-from .debug import debug_performance
-from .memory import clear_refs, update_refs
-from .signals import connect_signals, no_signals
-from .utils import join_pks, split_pks
+from treenode import classproperty
+from treenode.cache import clear_cache, query_cache, update_cache
+from treenode.debug import debug_performance
+from treenode.memory import clear_refs, update_refs
+from treenode.signals import connect_signals, no_signals
+from treenode.utils import join_pks, split_pks
 
 
 class TreeNodeModel(models.Model):

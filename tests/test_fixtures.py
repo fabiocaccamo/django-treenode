@@ -1,7 +1,7 @@
 from django.core.management import call_command
 from django.test import TestCase
 
-from .models import CategoryFixtures
+from tests.models import CategoryFixtures
 
 
 class TreeNodeFixturesTestCase(TestCase):

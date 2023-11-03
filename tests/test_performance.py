@@ -1,10 +1,9 @@
 from django.conf import settings
 from django.test import TransactionTestCase
 
+from tests.models import Category
 from treenode.debug import debug_performance
 from treenode.signals import no_signals
-
-from .models import Category
 
 
 class TreeNodePerformanceTestCase(TransactionTestCase):
