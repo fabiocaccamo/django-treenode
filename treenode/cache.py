@@ -52,7 +52,8 @@ def query_cache(cls, pk=None, pks=None):
 
 
 def update_cache(cls):
+    objs = list(cls.objects.all())
     ls, d = _get_cached_collections()
-    ls[cls] = list(cls.objects.all())
-    d[cls] = {str(obj.pk): obj for obj in ls[cls]}
+    ls[cls] = objs
+    d[cls] = {str(obj.pk): obj for obj in objs}
     _set_cached_collections(ls, d)
