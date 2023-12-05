@@ -49,7 +49,6 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
 ]
 dynamic = ["version"]
-license = "MIT"
 maintainers = [
     { name = "Fabio Caccamo", email = "fabio.caccamo@gmail.com" },
 ]
