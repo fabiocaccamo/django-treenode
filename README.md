@@ -10,7 +10,8 @@
 [![](https://img.shields.io/github/actions/workflow/status/fabiocaccamo/django-treenode/test-package.yml?branch=main&label=build&logo=github)](https://github.com/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codecov/c/gh/fabiocaccamo/django-treenode?logo=codecov)](https://codecov.io/gh/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/codacy/grade/0c79c196e5c9411babbaf5e8e5f7469c?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
-[![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![](https://img.shields.io/badge/code%20style-black-000000.svg?logo=python&logoColor=black)](https://github.com/psf/black)
+[![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 # django-treenode
 Probably the best abstract model / admin for your **tree** based stuff.
