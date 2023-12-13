@@ -504,16 +504,17 @@ class TreeNodeModel(models.Model):
         return obj_dict
 
     @classmethod
-    def __get_nodes_data(cls):
+    def __get_nodes_data(cls):  # noqa: C901
         objs_qs = cls.objects.select_related("tn_parent")
         objs_list = list(objs_qs)
         objs_dict = {str(obj.pk): obj for obj in objs_list}
         objs_data_dict = {
             str(obj.pk): obj.__get_node_data(objs_list, objs_dict) for obj in objs_list
         }
-        objs_data_sort = lambda obj: objs_data_dict[str(obj["pk"])][  # noqa: E731
-            "tn_order_str"
-        ]
+
+        def objs_data_sort(obj):
+            return objs_data_dict[str(obj["pk"])]["tn_order_str"]
+
         objs_data_list = list(objs_data_dict.values())
         objs_data_list.sort(key=objs_data_sort)
         objs_pks_by_parent = {}
@@ -572,9 +573,10 @@ class TreeNodeModel(models.Model):
                         obj_depth = max(obj_depth, obj_child_data["tn_depth"] + 1)
 
                 if obj_descendants_pks:
-                    obj_descendants_sort = lambda obj_pk: objs_data_dict[  # noqa: E731
-                        str(obj_pk)
-                    ]["tn_order"]
+
+                    def obj_descendants_sort(obj_pk):
+                        return objs_data_dict[str(obj_pk)]["tn_order"]
+
                     obj_descendants_pks.sort(key=obj_descendants_sort)
                     obj_data["tn_descendants_pks"] = obj_descendants_pks
                     obj_data["tn_descendants_count"] = len(
