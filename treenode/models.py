@@ -153,6 +153,15 @@ class TreeNodeModel(models.Model):
             clear_refs(cls)
             clear_cache(cls)
 
+    @classmethod
+    def _get_all(cls, cache=True):
+        if cache:
+            try:
+                return query_cache(cls)
+            except CacheError:
+                pass
+        return list(cls.objects.all())
+
     def get_ancestors(self, cache=True):
         if cache:
             try:
@@ -650,18 +659,11 @@ class TreeNodeModel(models.Model):
             return child_tree
 
         if instance:
-            objs_pks = instance.tn_descendants_pks
-            if cache:
-                objs_list = query_cache(cls, pks=objs_pks)
-            else:
-                objs_list = list(cls.objects.filter(pk__in=split_pks(objs_pks)))
+            objs_list = instance.get_descendants(cache=cache)
             objs_dict = {str(obj.pk): obj for obj in objs_list}
             objs_tree = __get_node_tree(instance)["tree"]
         else:
-            if cache:
-                objs_list = query_cache(cls)
-            else:
-                objs_list = list(cls.objects.all())
+            objs_list = cls._get_all(cache=cache)
             objs_dict = {str(obj.pk): obj for obj in objs_list}
             objs_tree = [__get_node_tree(obj) for obj in objs_list if obj.tn_level == 1]
 
