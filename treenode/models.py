@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from treenode import classproperty
 from treenode.cache import clear_cache, query_cache, update_cache
 from treenode.debug import debug_performance
+from treenode.exceptions import CacheError
 from treenode.memory import clear_refs, update_refs
 from treenode.signals import connect_signals, no_signals
 from treenode.utils import join_pks, split_pks
@@ -154,9 +155,11 @@ class TreeNodeModel(models.Model):
 
     def get_ancestors(self, cache=True):
         if cache:
-            return query_cache(self.__class__, pks=self.tn_ancestors_pks)
-        else:
-            return list(self.get_ancestors_queryset())
+            try:
+                return query_cache(self.__class__, pks=self.tn_ancestors_pks)
+            except CacheError:
+                pass
+        return list(self.get_ancestors_queryset())
 
     def get_ancestors_count(self):
         return self.tn_ancestors_count
@@ -173,9 +176,11 @@ class TreeNodeModel(models.Model):
 
     def get_children(self, cache=True):
         if cache:
-            return query_cache(self.__class__, pks=self.tn_children_pks)
-        else:
-            return list(self.get_children_queryset())
+            try:
+                return query_cache(self.__class__, pks=self.tn_children_pks)
+            except CacheError:
+                pass
+        return list(self.get_children_queryset())
 
     def get_children_count(self):
         return self.tn_children_count
@@ -191,9 +196,11 @@ class TreeNodeModel(models.Model):
 
     def get_descendants(self, cache=True):
         if cache:
-            return query_cache(self.__class__, pks=self.tn_descendants_pks)
-        else:
-            return list(self.get_descendants_queryset())
+            try:
+                return query_cache(self.__class__, pks=self.tn_descendants_pks)
+            except CacheError:
+                pass
+        return list(self.get_descendants_queryset())
 
     def get_descendants_count(self):
         return self.tn_descendants_count
@@ -300,10 +307,11 @@ class TreeNodeModel(models.Model):
     def get_root(self, cache=True):
         root_pk = self.get_root_pk()
         if cache:
-            root_obj = query_cache(self.__class__, pk=root_pk)
-        else:
-            root_obj = self.__class__.objects.get(pk=root_pk)
-        return root_obj
+            try:
+                return query_cache(self.__class__, pk=root_pk)
+            except CacheError:
+                pass
+        return self.__class__.objects.get(pk=root_pk)
 
     def get_root_pk(self):
         return (split_pks(self.tn_ancestors_pks) + [self.pk])[0]
@@ -311,9 +319,11 @@ class TreeNodeModel(models.Model):
     @classmethod
     def get_roots(cls, cache=True):
         if cache:
-            return [obj for obj in query_cache(cls) if obj.tn_ancestors_count == 0]
-        else:
-            return list(cls.get_roots_queryset())
+            try:
+                return [obj for obj in query_cache(cls) if obj.tn_ancestors_count == 0]
+            except CacheError:
+                pass
+        return list(cls.get_roots_queryset())
 
     @classmethod
     def get_roots_queryset(cls):
@@ -321,9 +331,11 @@ class TreeNodeModel(models.Model):
 
     def get_siblings(self, cache=True):
         if cache:
-            return query_cache(self.__class__, pks=self.tn_siblings_pks)
-        else:
-            return list(self.get_siblings_queryset())
+            try:
+                return query_cache(self.__class__, pks=self.tn_siblings_pks)
+            except CacheError:
+                pass
+        return list(self.get_siblings_queryset())
 
     def get_siblings_count(self):
         return self.tn_siblings_count
@@ -340,10 +352,7 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def get_tree_display(cls, cache=True):
-        if cache:
-            objs = query_cache(cls)
-        else:
-            objs = list(cls.objects.all())
+        objs = cls._get_all(cache=cache)
         strs = [f"{obj}" for obj in objs]
         d = "\n".join(strs)
         return d
@@ -433,7 +442,10 @@ class TreeNodeModel(models.Model):
             update_refs(cls, objs_data)
 
             # update cache instances
-            update_cache(cls)
+            try:
+                update_cache(cls)
+            except CacheError:
+                pass
 
     # Private methods
 

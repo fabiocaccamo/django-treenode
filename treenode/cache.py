@@ -1,13 +1,21 @@
+import logging
 from collections import defaultdict
 
 from django.conf import settings
-from django.core.cache import cache, caches
+from django.core.cache import cache as default_cache, caches
 
+from treenode.exceptions import CacheError
 from treenode.utils import split_pks
+
+logger = logging.getLogger(__name__)
 
 
 def _get_cache():
-    return caches["treenode"] if "treenode" in settings.CACHES else cache
+    return caches["treenode"] if "treenode" in settings.CACHES else default_cache
+
+
+def _get_cache_name():
+    return "treenode" if "treenode" in settings.CACHES else "default"
 
 
 def _get_cached_collection(key, dict_cls):
@@ -57,3 +65,14 @@ def update_cache(cls):
     ls[cls] = objs
     d[cls] = {str(obj.pk): obj for obj in objs}
     _set_cached_collections(ls, d)
+    # ensure cache has been updated correctly
+    if len(objs):
+        ls, d = _get_cached_collections()
+        if not ls[cls] or not d[cls]:
+            cn = _get_cache_name()
+            msg = (
+                f"Unable to update cache '{cn}', "
+                "please check 'settings.CACHES' configuration."
+            )
+            logger.warning(msg)
+            raise CacheError(msg)

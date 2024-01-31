@@ -81,3 +81,16 @@ MEDIA_URL = "/media/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "treenode/public/static/")
 STATIC_URL = "/static/"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "django-treenode-default",
+        "TIMEOUT": 60,
+    },
+    "treenode": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "django-treenode",
+        "TIMEOUT": 60,
+    },
+}

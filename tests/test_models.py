@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.test import override_settings
 from django.test import TransactionTestCase
 from django.utils.encoding import force_str
 
@@ -92,13 +93,16 @@ class TreeNodeModelTestCaseBase:
         objs = [a, aa, aaa, aaaa, b, c, d, e, f]
         for obj in objs:
             self.assertEqual(
-                obj.get_ancestors(cache=True), obj.get_ancestors(cache=False)
+                obj.get_ancestors(cache=True),
+                obj.get_ancestors(cache=False),
             )
             self.assertEqual(
-                obj.get_children(cache=True), obj.get_children(cache=False)
+                obj.get_children(cache=True),
+                obj.get_children(cache=False),
             )
             self.assertEqual(
-                obj.get_descendants(cache=True), obj.get_descendants(cache=False)
+                obj.get_descendants(cache=True),
+                obj.get_descendants(cache=False),
             )
             self.assertEqual(
                 obj.get_descendants_tree(cache=True),
@@ -108,15 +112,100 @@ class TreeNodeModelTestCaseBase:
                 obj.get_descendants_tree_display(cache=True),
                 obj.get_descendants_tree_display(cache=False),
             )
-            self.assertEqual(obj.get_root(cache=True), obj.get_root(cache=False))
-            self.assertEqual(obj.get_roots(cache=True), obj.get_roots(cache=False))
             self.assertEqual(
-                obj.get_siblings(cache=True), obj.get_siblings(cache=False)
+                obj.get_root(cache=True),
+                obj.get_root(cache=False),
             )
-            self.assertEqual(obj.get_tree(cache=True), obj.get_tree(cache=False))
             self.assertEqual(
-                obj.get_tree_display(cache=True), obj.get_tree_display(cache=False)
+                obj.get_roots(cache=True),
+                obj.get_roots(cache=False),
             )
+            self.assertEqual(
+                obj.get_siblings(cache=True),
+                obj.get_siblings(cache=False),
+            )
+            self.assertEqual(
+                obj.get_tree(cache=True),
+                obj.get_tree(cache=False),
+            )
+            self.assertEqual(
+                obj.get_tree_display(cache=True),
+                obj.get_tree_display(cache=False),
+            )
+
+    @override_settings(
+        CACHES={
+            "treenode": {
+                "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+                "LOCATION": "django-treenode-dummy",
+                "TIMEOUT": 0,
+            },
+        }
+    )
+    def test_cache_not_working(self):
+        with self.assertLogs(level="WARNING"):
+            self.__create_cat_tree()
+        a = self.__get_cat(name="a")
+        aa = self.__get_cat(name="aa")
+        aaa = self.__get_cat(name="aaa")
+        aaaa = self.__get_cat(name="aaaa")
+        b = self.__get_cat(name="b")
+        c = self.__get_cat(name="c")
+        e = self.__get_cat(name="d")
+        d = self.__get_cat(name="e")
+        f = self.__get_cat(name="f")
+        objs = [a, aa, aaa, aaaa, b, c, d, e, f]
+        for obj in objs:
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_ancestors(cache=True),
+                    obj.get_ancestors(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_children(cache=True),
+                    obj.get_children(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_descendants(cache=True),
+                    obj.get_descendants(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_descendants_tree(cache=True),
+                    obj.get_descendants_tree(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_descendants_tree_display(cache=True),
+                    obj.get_descendants_tree_display(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_root(cache=True),
+                    obj.get_root(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_roots(cache=True),
+                    obj.get_roots(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_siblings(cache=True),
+                    obj.get_siblings(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_tree(cache=True),
+                    obj.get_tree(cache=False),
+                )
+            with self.assertLogs(level="WARNING"):
+                self.assertEqual(
+                    obj.get_tree_display(cache=True),
+                    obj.get_tree_display(cache=False),
+                )
 
     def test_debug_performance(self):
         settings.DEBUG = True
