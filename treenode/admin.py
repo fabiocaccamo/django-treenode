@@ -5,7 +5,6 @@ from treenode.forms import TreeNodeForm
 
 
 class TreeNodeModelAdmin(admin.ModelAdmin):
-
     """
     Usage:
 
