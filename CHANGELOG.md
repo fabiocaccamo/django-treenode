@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.1](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.22.1) - 2023-09-20
+-   Increase `tn_priority` max value to `9999999999` to allow nodes sorting by timestamp. (by [@simensol](https://github.com/simensol) in #166)
+-   Bump test requirements.
+-   Bump `pre-commit` hooks.
+
 ## [0.22.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.22.0) - 2023-01-31
 -   Ensure cache has been updated, otherwise log a warning.
 -   Fix tree methods not working if cache is not configured correctly.
