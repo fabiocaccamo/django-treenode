@@ -112,7 +112,7 @@ class TreeNodeModel(models.Model):
 
     tn_priority = models.PositiveIntegerField(
         default=0,
-        validators=[MinValueValidator(0), MaxValueValidator(9999)],
+        validators=[MinValueValidator(0), MaxValueValidator(9999999999)],
         verbose_name=_("Priority"),
     )
 
