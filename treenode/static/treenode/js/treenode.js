@@ -156,6 +156,8 @@
 
                 // create accordion button and move level tabs before it
                 var rowAnchor = scope.closest('a');
+                // When list_display_links = None there is no encapsulating A tag
+                if (!rowAnchor.length) rowAnchor = scope;
 
                 var rowToggleButtonHTML = '';
                 rowToggleButtonHTML += '<a class="treenode-accordion-button" href="#">';
