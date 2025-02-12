@@ -2,7 +2,8 @@ import logging
 from collections import defaultdict
 
 from django.conf import settings
-from django.core.cache import cache as default_cache, caches
+from django.core.cache import cache as default_cache
+from django.core.cache import caches
 
 from treenode.exceptions import CacheError
 from treenode.utils import split_pks
