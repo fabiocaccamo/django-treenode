@@ -87,7 +87,7 @@ exclude = '''
 [tool.ruff]
 ignore = []
 line-length = 88
-select = ["B", "B9", "C", "E", "F", "W"]
+select = ["B", "B9", "C", "E", "F", "I", "W"]
 
 [tool.ruff.mccabe]
 max-complexity = 12
