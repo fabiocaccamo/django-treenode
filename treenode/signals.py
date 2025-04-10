@@ -30,10 +30,9 @@ def post_init_treenode(sender, instance, **kwargs):
 
 def post_migrate_treenode(sender, **kwargs):
     for sender_model in sender.get_models():
-        if __is_treenode_model(sender_model) and \
-             __table_exists(
-                 table_name=sender_model._meta.db_table,
-                 connection_name=kwargs['using']):
+        if __is_treenode_model(sender_model) and __table_exists(
+            table_name=sender_model._meta.db_table, connection_name=kwargs["using"]
+        ):
             sender_model.update_tree()
 
 
