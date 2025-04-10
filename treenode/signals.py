@@ -1,8 +1,13 @@
 from inspect import isclass
 
+from django.db import connections
 from django.db.models.signals import post_delete, post_init, post_migrate, post_save
 
 from treenode.memory import set_ref
+
+
+def __table_exists(table_name: str, connection_name: str) -> bool:
+    return table_name in connections[connection_name].introspection.table_names()
 
 
 def __is_treenode_model(sender):
@@ -25,7 +30,10 @@ def post_init_treenode(sender, instance, **kwargs):
 
 def post_migrate_treenode(sender, **kwargs):
     for sender_model in sender.get_models():
-        if __is_treenode_model(sender_model):
+        if __is_treenode_model(sender_model) and \
+             __table_exists(
+                 table_name=sender_model._meta.db_table,
+                 connection_name=kwargs['using']):
             sender_model.update_tree()
 
 
