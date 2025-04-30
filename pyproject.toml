@@ -86,11 +86,13 @@ exclude = '''
 '''
 
 [tool.ruff]
-ignore = []
 line-length = 88
+
+[tool.ruff.lint]
+ignore = []
 select = ["B", "B9", "C", "E", "F", "I", "W"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 12
 
 [tool.setuptools.packages.find]
