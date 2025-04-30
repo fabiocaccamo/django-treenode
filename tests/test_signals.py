@@ -30,10 +30,17 @@ class TreeNodeDropTableTestCase(TestCase):
         with self.assertRaises((OperationalError, ProgrammingError)):
             list(ModelToBeDestroyed.objects.all())
 
+        # clear the failed transaction state before emitting post_migrate
+        connection.rollback()
+
         # emit a post_migrate signal as done after migration to zero
-        with self.assertNotRaises(OperationalError):
+        with self.assertNotRaises((OperationalError, ProgrammingError)):
             emit_post_migrate_signal(
                 verbosity=1,
                 interactive=False,
                 db=connection.alias,
             )
+
+        # verify the table is still gone
+        with self.assertRaises((OperationalError, ProgrammingError)):
+            list(ModelToBeDestroyed.objects.all())
