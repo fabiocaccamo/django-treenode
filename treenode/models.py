@@ -404,7 +404,9 @@ class TreeNodeModel(models.Model):
         return self.pk and self.tn_index == 0
 
     def is_last_child(self):
-        return self.pk and self.tn_index == self.tn_siblings_count
+        if not self.tn_parent_id:
+            return False
+        return self.tn_index == self.tn_parent.tn_children_count - 1
 
     def is_leaf(self):
         return self.pk and self.tn_children_count == 0
@@ -571,12 +573,17 @@ class TreeNodeModel(models.Model):
             obj_data["tn_children_count"] = len(obj_data["tn_children_pks"])
 
             # update siblings
-            siblings_parent_key = str(obj_data["tn_parent_pk"])
-            obj_data["tn_siblings_pks"] = list(
-                objs_pks_by_parent.get(siblings_parent_key, [])
-            )
-            obj_data["tn_siblings_pks"].remove(obj_data["pk"])
-            obj_data["tn_siblings_count"] = len(obj_data["tn_siblings_pks"])
+            if obj_data["tn_parent_pk"] is not None:
+                siblings_parent_key = str(obj_data["tn_parent_pk"])
+                obj_data["tn_siblings_pks"] = list(
+                    objs_pks_by_parent.get(siblings_parent_key, [])
+                )
+                if obj_data["pk"] in obj_data["tn_siblings_pks"]:
+                    obj_data["tn_siblings_pks"].remove(obj_data["pk"])
+                obj_data["tn_siblings_count"] = len(obj_data["tn_siblings_pks"])
+            else:
+                obj_data["tn_siblings_pks"] = []
+                obj_data["tn_siblings_count"] = 0
 
             # update descendants and depth
             if obj_data["tn_children_count"] > 0:
