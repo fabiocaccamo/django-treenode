@@ -1,6 +1,10 @@
 PKS_SEPARATOR = ","
 
 
+def contains_pk(ls, pk):
+    return str(pk) in split_pks(ls)
+
+
 def join_pks(ls):
     if not ls:
         return ""

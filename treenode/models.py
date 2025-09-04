@@ -13,7 +13,7 @@ from treenode.debug import debug_performance
 from treenode.exceptions import CacheError
 from treenode.memory import clear_refs, update_refs
 from treenode.signals import connect_signals, no_signals
-from treenode.utils import join_pks, split_pks
+from treenode.utils import contains_pk, join_pks, split_pks
 
 
 class TreeNodeModel(models.Model):
@@ -299,7 +299,7 @@ class TreeNodeModel(models.Model):
                     raise ValueError("obj can't be set as parent of itself.")
                 if not obj.pk:
                     obj.save()
-                if obj.pk in split_pks(self.tn_descendants_pks):
+                if contains_pk(self.tn_descendants_pks, obj.pk):
                     obj.tn_parent = self.tn_parent
                     obj.save()
             self.tn_parent = obj
@@ -381,7 +381,7 @@ class TreeNodeModel(models.Model):
             self.__class__ == obj.__class__
             and self.pk
             and self.pk != obj.pk
-            and str(self.pk) in split_pks(obj.tn_ancestors_pks)
+            and contains_pk(obj.tn_ancestors_pks, self.pk)
         )
 
     def is_child_of(self, obj):
@@ -389,7 +389,7 @@ class TreeNodeModel(models.Model):
             self.__class__ == obj.__class__
             and self.pk
             and self.pk != obj.pk
-            and str(self.pk) in split_pks(obj.tn_children_pks)
+            and contains_pk(obj.tn_children_pks, self.pk)
         )
 
     def is_descendant_of(self, obj):
@@ -397,7 +397,7 @@ class TreeNodeModel(models.Model):
             self.__class__ == obj.__class__
             and self.pk
             and self.pk != obj.pk
-            and str(self.pk) in split_pks(obj.tn_descendants_pks)
+            and contains_pk(obj.tn_descendants_pks, self.pk)
         )
 
     def is_first_child(self):
@@ -652,8 +652,7 @@ class TreeNodeModel(models.Model):
             if obj.tn_children_pks:
                 children_pks = split_pks(obj.tn_children_pks)
                 for child_pk in children_pks:
-                    child_key = str(child_pk)
-                    child_obj = objs_dict.get(child_key)
+                    child_obj = objs_dict.get(child_pk)
                     if child_obj:
                         child_tree_append(__get_node_tree(child_obj))
             return child_tree
