@@ -526,6 +526,16 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def __get_nodes_data(cls):  # noqa: C901
+        circular_refs = cls.objects.filter(
+            models.Q(pk=models.F("tn_parent_id"))
+            | models.Q(
+                tn_parent_id__tn_parent_id=models.F("pk"), tn_parent_id__isnull=False
+            )
+        )
+
+        if circular_refs.exists():
+            raise ValueError("Circular reference detected")
+
         objs_qs = cls.objects.select_related("tn_parent")
         objs_list = list(objs_qs)
         objs_dict = {str(obj.pk): obj for obj in objs_list}
