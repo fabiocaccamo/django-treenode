@@ -2,6 +2,7 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, router, transaction
+from django.db.models import F, Q
 from django.utils.encoding import force_str
 from django.utils.html import conditional_escape
 from django.utils.text import slugify
@@ -527,9 +528,10 @@ class TreeNodeModel(models.Model):
     @classmethod
     def __get_nodes_data(cls):  # noqa: C901
         circular_refs = cls.objects.filter(
-            models.Q(pk=models.F("tn_parent_id"))
-            | models.Q(
-                tn_parent_id__tn_parent_id=models.F("pk"), tn_parent_id__isnull=False
+            Q(pk=F("tn_parent_id"))
+            | Q(
+                tn_parent_id__tn_parent_id=F("pk"),
+                tn_parent_id__isnull=False,
             )
         )
 
