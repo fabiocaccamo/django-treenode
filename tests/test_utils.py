@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from treenode.utils import join_pks, split_pks
+from treenode.utils import contains_pk, join_pks, split_pks
 
 
 class TreeNodeUtilsTestCase(TestCase):
@@ -9,6 +9,15 @@ class TreeNodeUtilsTestCase(TestCase):
 
     def tearDown(self):
         pass
+
+    def test_contains_pk(self):
+        self.assertEqual(contains_pk(None, 1), False)
+        self.assertEqual(contains_pk("", 1), False)
+        self.assertEqual(contains_pk("0", 1), False)
+        self.assertEqual(contains_pk("1", 1), True)
+        self.assertEqual(contains_pk("0,1", 1), True)
+        self.assertEqual(contains_pk("0,1,2", 1), True)
+        self.assertEqual(contains_pk("0,2,3", 1), False)
 
     def test_join_pks(self):
         pks_str = join_pks(None)
