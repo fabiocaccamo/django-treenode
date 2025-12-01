@@ -2,6 +2,7 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, router, transaction
+from django.db.models import F, Q
 from django.utils.encoding import force_str
 from django.utils.html import conditional_escape
 from django.utils.text import slugify
@@ -10,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from treenode import classproperty
 from treenode.cache import clear_cache, query_cache, update_cache
 from treenode.debug import debug_performance
-from treenode.exceptions import CacheError
+from treenode.exceptions import CacheError, CircularReferenceError
 from treenode.memory import clear_refs, update_refs
 from treenode.signals import connect_signals, no_signals
 from treenode.utils import contains_pk, join_pks, split_pks
@@ -526,6 +527,16 @@ class TreeNodeModel(models.Model):
 
     @classmethod
     def __get_nodes_data(cls):  # noqa: C901
+        circular_refs = cls.objects.filter(
+            Q(pk=F("tn_parent_id"))
+            | Q(
+                tn_parent_id__tn_parent_id=F("pk"),
+                tn_parent_id__isnull=False,
+            )
+        )
+        if circular_refs.exists():
+            raise CircularReferenceError()
+
         objs_qs = cls.objects.select_related("tn_parent")
         objs_list = list(objs_qs)
         objs_dict = {str(obj.pk): obj for obj in objs_list}
