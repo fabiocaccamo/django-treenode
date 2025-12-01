@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from tests.models import Category
+from treenode.exceptions import CircularReferenceError
 
 
 class TreeNodeParentValidationTestCase(TestCase):
@@ -156,12 +157,10 @@ class TreeNodeParentValidationTestCase(TestCase):
         Category.delete_tree()
         a = Category.objects.create(name="A")
 
-        with self.assertRaises(ValueError) as context:
+        with self.assertRaises(CircularReferenceError):
             a.tn_parent = a
             a.save()
             Category.update_tree()
-
-        self.assertIn("Circular reference detected", str(context.exception))
 
     def test_mutual_reference_circular_dependency_detection(self):
         Category.delete_tree()
@@ -169,12 +168,10 @@ class TreeNodeParentValidationTestCase(TestCase):
         b = Category.objects.create(name="B", tn_parent=a)
         Category.update_tree()
 
-        with self.assertRaises(ValueError) as context:
+        with self.assertRaises(CircularReferenceError):
             a.tn_parent = b
             a.save()
             Category.update_tree()
-
-        self.assertIn("Circular reference detected", str(context.exception))
 
     def test_valid_parent_child_relationship_validation(self):
         Category.delete_tree()
@@ -184,7 +181,7 @@ class TreeNodeParentValidationTestCase(TestCase):
 
         try:
             Category.update_tree()
-        except ValueError:
+        except CircularReferenceError:
             self.fail(
                 "Valid parent-child relationships should not raise "
                 "circular reference error"
@@ -203,10 +200,8 @@ class TreeNodeParentValidationTestCase(TestCase):
         a = Category.objects.create(name="A")
         b = Category.objects.create(name="B", tn_parent=a)
 
-        # Bypass post_save signal
+        # bypass post_save signal
         Category.objects.filter(pk=a.pk).update(tn_parent=b)
 
-        with self.assertRaises(ValueError) as context:
+        with self.assertRaises(CircularReferenceError):
             Category.update_tree()
-
-        self.assertIn("Circular reference detected", str(context.exception))

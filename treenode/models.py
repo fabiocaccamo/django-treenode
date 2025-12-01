@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from treenode import classproperty
 from treenode.cache import clear_cache, query_cache, update_cache
 from treenode.debug import debug_performance
-from treenode.exceptions import CacheError
+from treenode.exceptions import CacheError, CircularReferenceError
 from treenode.memory import clear_refs, update_refs
 from treenode.signals import connect_signals, no_signals
 from treenode.utils import contains_pk, join_pks, split_pks
@@ -534,9 +534,8 @@ class TreeNodeModel(models.Model):
                 tn_parent_id__isnull=False,
             )
         )
-
         if circular_refs.exists():
-            raise ValueError("Circular reference detected")
+            raise CircularReferenceError()
 
         objs_qs = cls.objects.select_related("tn_parent")
         objs_list = list(objs_qs)
