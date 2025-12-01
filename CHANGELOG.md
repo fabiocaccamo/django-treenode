@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.3](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.23.3) - 2025-12-01
+-   Add circular reference detection to prevent infinite recursion. (by [InzGIBA](https://github.com/InzGIBA) in #199)
+-   Fix `RuntimeError` during parallel test execution with proxy models. #207
+-   Bump test requirements.
+-   Bump `pre-commit` hooks.
+
 ## [0.23.2](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.23.2) - 2025-09-04
 -   Fix `set_parent` not properly finding descendants. #196
 -   Bump test requirements.
