@@ -1,8 +1,10 @@
 import random
 import string
 import uuid
+from abc import ABCMeta, abstractmethod
 
 from django.db import models
+from django.db.models.base import ModelBase
 
 from treenode.models import TreeNodeModel
 
@@ -66,3 +68,27 @@ class CategoryWithoutDisplayField(TreeNodeModel):
         app_label = "tests"
         verbose_name = "Category"
         verbose_name_plural = "Categories"
+
+
+class _ABCMetaModelBase(ABCMeta, ModelBase):
+    """Metaclass combining Python's ABCMeta with Django's ModelBase."""
+
+    pass
+
+
+class AbstractCategoryProxy(Category, metaclass=_ABCMetaModelBase):
+    """
+    A Django proxy model that is also a Python ABC.
+
+    Used to reproduce issue #215: post_migrate_treenode calls update_tree()
+    on this model even though it cannot be instantiated.
+    """
+
+    class Meta:
+        app_label = "tests"
+        proxy = True
+
+    @abstractmethod
+    def my_method(self):
+        """Subclasses must implement this."""
+        ...

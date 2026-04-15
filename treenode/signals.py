@@ -1,4 +1,4 @@
-from inspect import isclass
+from inspect import isabstract, isclass
 
 from django.db import connections
 from django.db.models.signals import post_delete, post_init, post_migrate, post_save
@@ -19,6 +19,7 @@ def __is_treenode_model(sender):
         isclass(sender)
         and issubclass(sender, TreeNodeModel)
         and sender != TreeNodeModel
+        and not isabstract(sender)
     )
 
 

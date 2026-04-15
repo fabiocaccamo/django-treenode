@@ -39,3 +39,43 @@ class TreeNodeDropTableTestCase(TransactionTestCase):
         # verify the table is still gone
         with self.assertRaises((OperationalError, ProgrammingError)):
             list(ModelToBeDestroyed.objects.all())
+
+
+class TreeNodeAbstractProxyTestCase(TransactionTestCase):
+    """
+    Regression test for issue #215.
+
+    post_migrate_treenode calls update_tree() on every model that passes
+    __is_treenode_model().  That check uses only isclass() / issubclass() and
+    therefore also matches proxy models that are Python ABCs (i.e. they carry
+    unimplemented @abstractmethod declarations).  When the underlying table is
+    non-empty, Django tries to materialise rows as instances of the abstract
+    class, which raises TypeError.
+
+    This test verifies the inspect.isabstract() guard in
+    __is_treenode_model(): without that guard, post_migrate_treenode would
+    still call update_tree() for abstract proxy models and raise TypeError.
+    """
+
+    @contextmanager
+    def assertNotRaises(self, exc_type):
+        try:
+            yield None
+        except exc_type as error:
+            raise self.failureException(f"{error} raised") from error
+
+    def test_post_migrate_does_not_raise_for_abstract_proxy_model(self):
+        # Populate the underlying table so that update_tree() actually tries
+        # to materialise model instances (empty querysets never trigger the bug).
+        Category.objects.create(name="root")
+
+        # Emitting post_migrate must not raise TypeError for abstract proxy
+        # models registered in the app.  Without the fix this will fail with:
+        #   TypeError: Can't instantiate abstract class AbstractCategoryProxy
+        #   without an implementation for abstract method 'my_method'
+        with self.assertNotRaises(TypeError):
+            emit_post_migrate_signal(
+                verbosity=0,
+                interactive=False,
+                db=connection.alias,
+            )
