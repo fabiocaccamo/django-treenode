@@ -52,8 +52,9 @@ class TreeNodeAbstractProxyTestCase(TransactionTestCase):
     non-empty, Django tries to materialise rows as instances of the abstract
     class, which raises TypeError.
 
-    The test intentionally fails until __is_treenode_model adds an
-    inspect.isabstract() guard (the fix proposed in issue #215).
+    This test verifies the inspect.isabstract() guard in
+    __is_treenode_model(): without that guard, post_migrate_treenode would
+    still call update_tree() for abstract proxy models and raise TypeError.
     """
 
     @contextmanager
