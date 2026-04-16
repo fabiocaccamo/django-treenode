@@ -12,6 +12,7 @@
 [![](https://img.shields.io/codacy/grade/0c79c196e5c9411babbaf5e8e5f7469c?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/django-treenode)
 [![](https://img.shields.io/badge/code%20style-black-000000.svg?logo=python&logoColor=black)](https://github.com/psf/black)
 [![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/fabiocaccamo/django-treenode/badge)](https://securityscorecards.dev/viewer/?uri=github.com/fabiocaccamo/django-treenode)
 
 # django-treenode
 Probably the best abstract model / admin for your **tree** based stuff.
