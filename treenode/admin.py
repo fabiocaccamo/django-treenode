@@ -117,14 +117,18 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
             ),
         )
         obj_display = mark_safe(obj.get_display(indent=False))
-        return format_html('<span class="treenode">{}{}</span>', ancestors_html, obj_display)
+        return format_html(
+            '<span class="treenode">{}{}</span>', ancestors_html, obj_display
+        )
 
     def _get_treenode_field_display_with_indentation(self, obj):
         indentation = mark_safe(
             '<span class="treenode-indentation">&mdash;</span>' * obj.ancestors_count
         )
         obj_display = mark_safe(obj.get_display(indent=False))
-        return format_html('<span class="treenode">{}{}</span>', indentation, obj_display)
+        return format_html(
+            '<span class="treenode">{}{}</span>', indentation, obj_display
+        )
 
     class Media:
         css = {"all": ("treenode/css/treenode.css",)}
