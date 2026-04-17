@@ -111,7 +111,10 @@ class TreeNodeModelAdmin(admin.ModelAdmin):
         ancestors_html = format_html_join(
             "",
             '<span class="treenode-breadcrumbs">{}</span>',
-            [(mark_safe(ancestor.get_display(indent=False)),) for ancestor in obj.get_ancestors()],
+            (
+                (mark_safe(ancestor.get_display(indent=False)),)
+                for ancestor in obj.get_ancestors()
+            ),
         )
         obj_display = mark_safe(obj.get_display(indent=False))
         return format_html('<span class="treenode">{}{}</span>', ancestors_html, obj_display)
