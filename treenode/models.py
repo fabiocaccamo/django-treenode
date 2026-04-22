@@ -145,6 +145,9 @@ class TreeNodeModel(models.Model):
             "display_text": self.get_display_text(),
         }
 
+    def _update_treenode_fields_snapshot(self):
+        self._tn_snapshot = self._get_treenode_fields_snapshot()
+
     def _has_treenode_fields_changed(self, update_fields):
         if update_fields is not None:
             structural_fields = {"tn_parent", "tn_parent_id", "tn_priority"}

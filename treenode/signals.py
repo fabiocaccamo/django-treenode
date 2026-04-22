@@ -25,7 +25,7 @@ def post_init_treenode(sender, instance, **kwargs):
     if not __is_treenode_model(sender):
         return
     set_ref(sender, instance)
-    instance._tn_snapshot = instance._get_treenode_fields_snapshot()
+    instance._update_treenode_fields_snapshot()
 
 
 def post_migrate_treenode(sender, **kwargs):
@@ -47,7 +47,7 @@ def post_save_treenode(sender, instance, created, **kwargs):
             return
 
     sender.update_tree()
-    instance._tn_snapshot = instance._get_treenode_fields_snapshot()
+    instance._update_treenode_fields_snapshot()
 
 
 def post_delete_treenode(sender, instance, **kwargs):
