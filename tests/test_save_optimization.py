@@ -7,7 +7,7 @@ treenode_display_field), update_tree is not called.
 
 When a full save() is issued without update_fields, update_tree is not called
 if tn_parent_id, tn_priority and the display-field value are all unchanged
-compared to the snapshot captured at post_init time.
+compared to the snapshot captured at post_init / post_save time.
 """
 
 from unittest.mock import patch
