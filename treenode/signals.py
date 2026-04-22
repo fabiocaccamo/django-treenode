@@ -13,8 +13,6 @@ def __table_exists(table_name: str, connection_name: str) -> bool:
 def __is_treenode_model(sender):
     from .models import TreeNodeModel
 
-    # return isinstance(instance, TreeNodeModel) and \
-    #         instance.__class__ != TreeNodeModel
     return (
         isclass(sender)
         and issubclass(sender, TreeNodeModel)
@@ -23,19 +21,19 @@ def __is_treenode_model(sender):
     )
 
 
-def __structural_fields_snapshot(sender, instance):
-    fields = {"tn_parent_id": instance.tn_parent_id, "tn_priority": instance.tn_priority}
-    display_field = getattr(sender, "treenode_display_field", None)
-    if display_field:
-        fields[display_field] = getattr(instance, display_field, None)
-    return fields
+def __get_treenode_fields_snapshot(instance):
+    return {
+        "tn_parent_id": instance.tn_parent_id,
+        "tn_priority": instance.tn_priority,
+        "display_text": instance.get_display_text(),
+    }
 
 
 def post_init_treenode(sender, instance, **kwargs):
     if not __is_treenode_model(sender):
         return
     set_ref(sender, instance)
-    instance._tn_snapshot = __structural_fields_snapshot(sender, instance)
+    instance._tn_snapshot = __get_treenode_fields_snapshot(instance)
 
 
 def post_migrate_treenode(sender, **kwargs):
