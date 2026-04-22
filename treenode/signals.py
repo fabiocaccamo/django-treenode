@@ -21,32 +21,11 @@ def __is_treenode_model(sender):
     )
 
 
-def __get_treenode_fields_snapshot(instance):
-    return {
-        "tn_parent_id": instance.tn_parent_id,
-        "tn_priority": instance.tn_priority,
-        "display_text": instance.get_display_text(),
-    }
-
-
-def __has_treenode_fields_changed(sender, instance, update_fields):
-    if update_fields is not None:
-        structural_fields = {"tn_parent", "tn_parent_id", "tn_priority"}
-        display_field = getattr(sender, "treenode_display_field", None)
-        if display_field:
-            structural_fields.add(display_field)
-        return bool(structural_fields.intersection(update_fields))
-    fields_snapshot = getattr(instance, "_tn_snapshot", None)
-    if fields_snapshot is None:
-        return True
-    return fields_snapshot != __get_treenode_fields_snapshot(instance)
-
-
 def post_init_treenode(sender, instance, **kwargs):
     if not __is_treenode_model(sender):
         return
     set_ref(sender, instance)
-    instance._tn_snapshot = __get_treenode_fields_snapshot(instance)
+    instance._tn_snapshot = instance._get_treenode_fields_snapshot()
 
 
 def post_migrate_treenode(sender, **kwargs):
@@ -64,11 +43,11 @@ def post_save_treenode(sender, instance, created, **kwargs):
 
     if not created:
         update_fields = kwargs.get("update_fields")
-        if not __has_treenode_fields_changed(sender, instance, update_fields):
+        if not instance._has_treenode_fields_changed(update_fields):
             return
 
     sender.update_tree()
-    instance._tn_snapshot = __get_treenode_fields_snapshot(instance)
+    instance._tn_snapshot = instance._get_treenode_fields_snapshot()
 
 
 def post_delete_treenode(sender, instance, **kwargs):

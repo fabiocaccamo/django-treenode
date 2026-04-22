@@ -138,6 +138,25 @@ class TreeNodeModel(models.Model):
 
     # Public methods
 
+    def _get_treenode_fields_snapshot(self):
+        return {
+            "tn_parent_id": self.tn_parent_id,
+            "tn_priority": self.tn_priority,
+            "display_text": self.get_display_text(),
+        }
+
+    def _has_treenode_fields_changed(self, update_fields):
+        if update_fields is not None:
+            structural_fields = {"tn_parent", "tn_parent_id", "tn_priority"}
+            display_field = getattr(self.__class__, "treenode_display_field", None)
+            if display_field:
+                structural_fields.add(display_field)
+            return bool(structural_fields.intersection(update_fields))
+        fields_snapshot = getattr(self, "_tn_snapshot", None)
+        if fields_snapshot is None:
+            return True
+        return fields_snapshot != self._get_treenode_fields_snapshot()
+
     def delete(self, using=None, keep_parents=False, cascade=True):
         with no_signals():
             if not cascade:
