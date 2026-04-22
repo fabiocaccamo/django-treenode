@@ -16,6 +16,21 @@ from treenode.memory import clear_refs, update_refs
 from treenode.signals import connect_signals, no_signals
 from treenode.utils import contains_pk, join_pks, split_pks
 
+TN_FIELDS = (
+    "tn_ancestors_count",
+    "tn_ancestors_pks",
+    "tn_children_count",
+    "tn_children_pks",
+    "tn_depth",
+    "tn_descendants_count",
+    "tn_descendants_pks",
+    "tn_index",
+    "tn_level",
+    "tn_order",
+    "tn_siblings_count",
+    "tn_siblings_pks",
+)
+
 
 class TreeNodeModel(models.Model):
     """
@@ -441,12 +456,15 @@ class TreeNodeModel(models.Model):
 
         with debug_performance(debug_message_prefix):
             # update db
-            objs_data = cls.__get_nodes_data()
+            objs_data, dirty_instances = cls.__get_nodes_data()
 
             with transaction.atomic(using=router.db_for_write(cls)):
-                obj_manager = cls.objects
-                for obj_pk, obj_data in objs_data.items():
-                    obj_manager.filter(pk=obj_pk).update(**obj_data)
+                if dirty_instances:
+                    cls.objects.bulk_update(
+                        dirty_instances,
+                        fields=TN_FIELDS,
+                        batch_size=500,
+                    )
 
             # update in-memory instances
             update_refs(cls, objs_data)
@@ -616,6 +634,8 @@ class TreeNodeModel(models.Model):
                     )
                     obj_data["tn_depth"] = obj_depth
 
+        dirty_instances = []
+
         for obj_data in objs_data_list:
             obj = obj_data["instance"]
             obj_key = str(obj_data["pk"])
@@ -626,34 +646,30 @@ class TreeNodeModel(models.Model):
             obj_data["tn_descendants_pks"] = join_pks(obj_data["tn_descendants_pks"])
             obj_data["tn_siblings_pks"] = join_pks(obj_data["tn_siblings_pks"])
 
-            # clean data
+            # clean bookkeeping keys
             obj_data.pop("instance", None)
             obj_data.pop("pk", None)
             obj_data.pop("tn_parent_pk", None)
             obj_data.pop("tn_order_str", None)
 
-            keys = [
-                "tn_ancestors_count",
-                "tn_ancestors_pks",
-                "tn_children_count",
-                "tn_children_pks",
-                "tn_depth",
-                "tn_descendants_count",
-                "tn_descendants_pks",
-                "tn_index",
-                "tn_level",
-                "tn_order",
-                "tn_siblings_count",
-                "tn_siblings_pks",
-            ]
-            for key in keys:
-                if obj_data[key] == getattr(obj, key, None):
-                    obj_data.pop(key, None)
+            # identify which tn_ fields actually changed
+            changed_keys = {
+                key for key in TN_FIELDS if obj_data[key] != getattr(obj, key, None)
+            }
 
-            if len(obj_data) == 0:
+            if changed_keys:
+                # apply all new values to the instance so bulk_update can write them
+                for key in TN_FIELDS:
+                    setattr(obj, key, obj_data[key])
+                dirty_instances.append(obj)
+                # only keep changed keys in obj_data (for update_refs)
+                for key in TN_FIELDS:
+                    if key not in changed_keys:
+                        obj_data.pop(key, None)
+            else:
                 objs_data_dict.pop(obj_key, None)
 
-        return objs_data_dict
+        return objs_data_dict, dirty_instances
 
     @classmethod
     def __get_nodes_tree(cls, instance=None, cache=True):
