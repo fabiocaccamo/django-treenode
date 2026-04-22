@@ -7,11 +7,9 @@ from tests.models import Category
 from treenode.admin import TreeNodeModelAdmin
 
 
+@admin.register(Category)
 class CategoryAdmin(TreeNodeModelAdmin):
     pass
-
-
-admin.site.register(Category, CategoryAdmin)
 
 
 class TreeNodeAdminTestCase(TestCase):
