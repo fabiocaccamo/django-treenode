@@ -148,6 +148,10 @@ class TreeNodeModel(models.Model):
     def _update_treenode_fields_snapshot(self):
         self._tn_snapshot = self._get_treenode_fields_snapshot()
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self._update_treenode_fields_snapshot()
+
     def _has_treenode_fields_changed(self, update_fields):
         if update_fields is not None:
             structural_fields = {"tn_parent", "tn_parent_id", "tn_priority"}

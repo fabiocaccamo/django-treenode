@@ -47,7 +47,6 @@ def post_save_treenode(sender, instance, created, **kwargs):
             return
 
     sender.update_tree()
-    instance._update_treenode_fields_snapshot()
 
 
 def post_delete_treenode(sender, instance, **kwargs):
