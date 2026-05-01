@@ -1,1 +1,1 @@
-django >= 4.2
+django >= 6.0.4
