@@ -4,7 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, router, transaction
 from django.db.models import F, Q
 from django.utils.encoding import force_str
-from django.utils.html import conditional_escape
+from django.utils.html import conditional_escape, mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
@@ -244,7 +244,7 @@ class TreeNodeModel(models.Model):
         indentation = force_str(indentation)
         text = self.get_display_text()
         text = conditional_escape(force_str(text))
-        return indentation + text
+        return mark_safe(indentation + text)
 
     def get_display_text(self):
         """
