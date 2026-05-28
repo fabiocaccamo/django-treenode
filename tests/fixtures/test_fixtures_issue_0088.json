@@ -1,0 +1,401 @@
+[
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 1,
+    "fields": {
+      "tn_ancestors_pks": "",
+      "tn_ancestors_count": 0,
+      "tn_children_pks": "2",
+      "tn_children_count": 1,
+      "tn_depth": 4,
+      "tn_descendants_pks": "2,3,4,5",
+      "tn_descendants_count": 4,
+      "tn_index": 1,
+      "tn_level": 1,
+      "tn_parent": null,
+      "tn_priority": 1,
+      "tn_order": 4,
+      "tn_siblings_pks": "9,28,31,6",
+      "tn_siblings_count": 4,
+      "name": "Category pk=1"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 2,
+    "fields": {
+      "tn_ancestors_pks": "1",
+      "tn_ancestors_count": 1,
+      "tn_children_pks": "3",
+      "tn_children_count": 1,
+      "tn_depth": 3,
+      "tn_descendants_pks": "3,4,5",
+      "tn_descendants_count": 3,
+      "tn_index": 0,
+      "tn_level": 2,
+      "tn_parent": 1,
+      "tn_priority": 2,
+      "tn_order": 5,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=2"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 3,
+    "fields": {
+      "tn_ancestors_pks": "1,2",
+      "tn_ancestors_count": 2,
+      "tn_children_pks": "4",
+      "tn_children_count": 1,
+      "tn_depth": 2,
+      "tn_descendants_pks": "4,5",
+      "tn_descendants_count": 2,
+      "tn_index": 0,
+      "tn_level": 3,
+      "tn_parent": 2,
+      "tn_priority": 3,
+      "tn_order": 6,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=3"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 4,
+    "fields": {
+      "tn_ancestors_pks": "1,2,3",
+      "tn_ancestors_count": 3,
+      "tn_children_pks": "5",
+      "tn_children_count": 1,
+      "tn_depth": 1,
+      "tn_descendants_pks": "5",
+      "tn_descendants_count": 1,
+      "tn_index": 0,
+      "tn_level": 4,
+      "tn_parent": 3,
+      "tn_priority": 4,
+      "tn_order": 7,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=4"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 5,
+    "fields": {
+      "tn_ancestors_pks": "1,2,3,4",
+      "tn_ancestors_count": 4,
+      "tn_children_pks": "",
+      "tn_children_count": 0,
+      "tn_depth": 0,
+      "tn_descendants_pks": "",
+      "tn_descendants_count": 0,
+      "tn_index": 0,
+      "tn_level": 5,
+      "tn_parent": 4,
+      "tn_priority": 5,
+      "tn_order": 8,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=5"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 6,
+    "fields": {
+      "tn_ancestors_pks": "",
+      "tn_ancestors_count": 0,
+      "tn_children_pks": "7",
+      "tn_children_count": 1,
+      "tn_depth": 2,
+      "tn_descendants_pks": "7,8",
+      "tn_descendants_count": 2,
+      "tn_index": 4,
+      "tn_level": 1,
+      "tn_parent": null,
+      "tn_priority": 1,
+      "tn_order": 16,
+      "tn_siblings_pks": "9,1,28,31",
+      "tn_siblings_count": 4,
+      "name": "Category pk=6"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 7,
+    "fields": {
+      "tn_ancestors_pks": "6",
+      "tn_ancestors_count": 1,
+      "tn_children_pks": "8",
+      "tn_children_count": 1,
+      "tn_depth": 1,
+      "tn_descendants_pks": "8",
+      "tn_descendants_count": 1,
+      "tn_index": 0,
+      "tn_level": 2,
+      "tn_parent": 6,
+      "tn_priority": 2,
+      "tn_order": 17,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=7"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 8,
+    "fields": {
+      "tn_ancestors_pks": "6,7",
+      "tn_ancestors_count": 2,
+      "tn_children_pks": "",
+      "tn_children_count": 0,
+      "tn_depth": 0,
+      "tn_descendants_pks": "",
+      "tn_descendants_count": 0,
+      "tn_index": 0,
+      "tn_level": 3,
+      "tn_parent": 7,
+      "tn_priority": 3,
+      "tn_order": 18,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=8"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 9,
+    "fields": {
+      "tn_ancestors_pks": "",
+      "tn_ancestors_count": 0,
+      "tn_children_pks": "10",
+      "tn_children_count": 1,
+      "tn_depth": 3,
+      "tn_descendants_pks": "10,11,12",
+      "tn_descendants_count": 3,
+      "tn_index": 0,
+      "tn_level": 1,
+      "tn_parent": null,
+      "tn_priority": 1,
+      "tn_order": 0,
+      "tn_siblings_pks": "1,28,31,6",
+      "tn_siblings_count": 4,
+      "name": "Category pk=9"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 10,
+    "fields": {
+      "tn_ancestors_pks": "9",
+      "tn_ancestors_count": 1,
+      "tn_children_pks": "11",
+      "tn_children_count": 1,
+      "tn_depth": 2,
+      "tn_descendants_pks": "11,12",
+      "tn_descendants_count": 2,
+      "tn_index": 0,
+      "tn_level": 2,
+      "tn_parent": 9,
+      "tn_priority": 2,
+      "tn_order": 1,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=10"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 11,
+    "fields": {
+      "tn_ancestors_pks": "9,10",
+      "tn_ancestors_count": 2,
+      "tn_children_pks": "12",
+      "tn_children_count": 1,
+      "tn_depth": 1,
+      "tn_descendants_pks": "12",
+      "tn_descendants_count": 1,
+      "tn_index": 0,
+      "tn_level": 3,
+      "tn_parent": 10,
+      "tn_priority": 3,
+      "tn_order": 2,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=11"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 12,
+    "fields": {
+      "tn_ancestors_pks": "9,10,11",
+      "tn_ancestors_count": 3,
+      "tn_children_pks": "",
+      "tn_children_count": 0,
+      "tn_depth": 0,
+      "tn_descendants_pks": "",
+      "tn_descendants_count": 0,
+      "tn_index": 0,
+      "tn_level": 4,
+      "tn_parent": 11,
+      "tn_priority": 4,
+      "tn_order": 3,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=12"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 24,
+    "fields": {
+      "tn_ancestors_pks": "28,29,30",
+      "tn_ancestors_count": 3,
+      "tn_children_pks": "",
+      "tn_children_count": 0,
+      "tn_depth": 0,
+      "tn_descendants_pks": "",
+      "tn_descendants_count": 0,
+      "tn_index": 0,
+      "tn_level": 4,
+      "tn_parent": 30,
+      "tn_priority": 4,
+      "tn_order": 12,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=24"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 28,
+    "fields": {
+      "tn_ancestors_pks": "",
+      "tn_ancestors_count": 0,
+      "tn_children_pks": "29",
+      "tn_children_count": 1,
+      "tn_depth": 3,
+      "tn_descendants_pks": "29,30,24",
+      "tn_descendants_count": 3,
+      "tn_index": 2,
+      "tn_level": 1,
+      "tn_parent": null,
+      "tn_priority": 1,
+      "tn_order": 9,
+      "tn_siblings_pks": "9,1,31,6",
+      "tn_siblings_count": 4,
+      "name": "Category pk=28"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 29,
+    "fields": {
+      "tn_ancestors_pks": "28",
+      "tn_ancestors_count": 1,
+      "tn_children_pks": "30",
+      "tn_children_count": 1,
+      "tn_depth": 2,
+      "tn_descendants_pks": "30,24",
+      "tn_descendants_count": 2,
+      "tn_index": 0,
+      "tn_level": 2,
+      "tn_parent": 28,
+      "tn_priority": 2,
+      "tn_order": 10,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=29"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 30,
+    "fields": {
+      "tn_ancestors_pks": "28,29",
+      "tn_ancestors_count": 2,
+      "tn_children_pks": "24",
+      "tn_children_count": 1,
+      "tn_depth": 1,
+      "tn_descendants_pks": "24",
+      "tn_descendants_count": 1,
+      "tn_index": 0,
+      "tn_level": 3,
+      "tn_parent": 29,
+      "tn_priority": 3,
+      "tn_order": 11,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=30"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 31,
+    "fields": {
+      "tn_ancestors_pks": "",
+      "tn_ancestors_count": 0,
+      "tn_children_pks": "32",
+      "tn_children_count": 1,
+      "tn_depth": 2,
+      "tn_descendants_pks": "32,33",
+      "tn_descendants_count": 2,
+      "tn_index": 3,
+      "tn_level": 1,
+      "tn_parent": null,
+      "tn_priority": 1,
+      "tn_order": 13,
+      "tn_siblings_pks": "9,1,28,6",
+      "tn_siblings_count": 4,
+      "name": "Category pk=31"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 32,
+    "fields": {
+      "tn_ancestors_pks": "31",
+      "tn_ancestors_count": 1,
+      "tn_children_pks": "33",
+      "tn_children_count": 1,
+      "tn_depth": 1,
+      "tn_descendants_pks": "33",
+      "tn_descendants_count": 1,
+      "tn_index": 0,
+      "tn_level": 2,
+      "tn_parent": 31,
+      "tn_priority": 2,
+      "tn_order": 14,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=32"
+    }
+  },
+  {
+    "model": "tests.categoryfixtures",
+    "pk": 33,
+    "fields": {
+      "tn_ancestors_pks": "31,32",
+      "tn_ancestors_count": 2,
+      "tn_children_pks": "",
+      "tn_children_count": 0,
+      "tn_depth": 0,
+      "tn_descendants_pks": "",
+      "tn_descendants_count": 0,
+      "tn_index": 0,
+      "tn_level": 3,
+      "tn_parent": 32,
+      "tn_priority": 3,
+      "tn_order": 15,
+      "tn_siblings_pks": "",
+      "tn_siblings_count": 0,
+      "name": "Category pk=33"
+    }
+  }
+]

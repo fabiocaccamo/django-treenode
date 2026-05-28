@@ -1,0 +1,85 @@
+.treenode {
+    white-space: nowrap;
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+a > .treenode {
+    margin-left: 0px;
+}
+
+.treenode-row {
+    white-space: nowrap;
+}
+
+.treenode-indentation {
+    font-weight: normal;
+    color: #999999;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.treenode-accordion .treenode-indentation {
+    display: none;
+}
+
+.treenode-accordion .treenode-accordion-button {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    position: relative;
+    background-color: #999999;
+    color: #FFFFFF;
+    border-radius: 2px;
+    margin-right: 10px;
+    margin-bottom: -2px;
+}
+
+.treenode-accordion .treenode-accordion-button .vertical-line,
+.treenode-accordion .treenode-accordion-button .horizontal-line {
+    position: absolute;
+    background-color: #FFFFFF;
+    pointer-events: none;
+}
+
+.treenode-accordion .treenode-accordion-button .vertical-line {
+    top: 3px;
+    bottom: 3px;
+    width: 1px;
+    left: 5px;
+}
+
+.treenode-accordion .treenode-accordion-button .horizontal-line {
+    top: 5px;
+    left: 3px;
+    right: 3px;
+    height: 1px;
+}
+
+.treenode-accordion.treenode-no-depth .treenode-accordion-button {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.2;
+}
+
+.treenode-accordion.treenode-expanded .treenode-accordion-button .vertical-line {
+    display: none;
+}
+
+.treenode-accordion.treenode-hide {
+    display: none !important;
+}
+
+/*.treenode-accordion.treenode-hide:not(.treenode-root) {
+    display: none !important;
+}*/
+
+.treenode-breadcrumbs {
+    font-weight: normal;
+    color: #888888;
+}
+
+.treenode-breadcrumbs:after {
+    content: " / ";
+    color: #CCCCCC;
+}
