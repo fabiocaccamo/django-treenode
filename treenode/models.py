@@ -456,13 +456,13 @@ class TreeNodeModel(models.Model):
 
         with debug_performance(debug_message_prefix):
             # update db
-            objs_data, dirty_instances = cls.__get_nodes_data()
+            objs_data, dirty_instances, dirty_fields = cls.__get_nodes_data()
 
             with transaction.atomic(using=router.db_for_write(cls)):
                 if dirty_instances:
                     cls.objects.bulk_update(
                         dirty_instances,
-                        fields=TN_FIELDS,
+                        fields=sorted(dirty_fields),
                         batch_size=500,
                     )
 
@@ -635,6 +635,7 @@ class TreeNodeModel(models.Model):
                     obj_data["tn_depth"] = obj_depth
 
         dirty_instances = []
+        dirty_fields = set()
 
         for obj_data in objs_data_list:
             obj = obj_data["instance"]
@@ -662,6 +663,7 @@ class TreeNodeModel(models.Model):
                 for key in TN_FIELDS:
                     setattr(obj, key, obj_data[key])
                 dirty_instances.append(obj)
+                dirty_fields.update(changed_keys)
                 # only keep changed keys in obj_data (for update_refs)
                 for key in TN_FIELDS:
                     if key not in changed_keys:
@@ -669,7 +671,7 @@ class TreeNodeModel(models.Model):
             else:
                 objs_data_dict.pop(obj_key, None)
 
-        return objs_data_dict, dirty_instances
+        return objs_data_dict, dirty_instances, dirty_fields
 
     @classmethod
     def __get_nodes_tree(cls, instance=None, cache=True):
