@@ -1,5 +1,7 @@
 from django.conf import settings
+from django.db import connection
 from django.test import TransactionTestCase
+from django.test.utils import CaptureQueriesContext
 
 from tests.models import Category
 from treenode.debug import debug_performance
@@ -34,3 +36,17 @@ class TreeNodePerformanceTestCase(TransactionTestCase):
 
         Category.update_tree()
         settings.DEBUG = False
+
+    def test_update_tree_uses_bulk_updates(self):
+        with no_signals():
+            root = Category.objects.create(name="root")
+            for i in range(7):
+                child = Category.objects.create(name=f"child-{i}", tn_parent=root)
+                for j in range(6):
+                    Category.objects.create(name=f"child-{i}-{j}", tn_parent=child)
+
+        with CaptureQueriesContext(connection) as ctx:
+            Category.update_tree()
+
+        # updates must be batched, not issued per-row (50 nodes)
+        self.assertLessEqual(len(ctx.captured_queries), 10)
