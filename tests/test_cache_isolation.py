@@ -10,6 +10,10 @@ class TreeNodeCacheIsolationTestCase(TestCase):
         Category.delete_tree()
         CategoryFixtures.delete_tree()
 
+    def tearDown(self):
+        Category.delete_tree()
+        CategoryFixtures.delete_tree()
+
     def test_clearing_one_models_cache_does_not_touch_another_models(self):
         with no_signals():
             Category.objects.create(name="cat-a")
@@ -27,8 +31,12 @@ class TreeNodeCacheIsolationTestCase(TestCase):
         clear_cache(Category)
         c = _get_cache()
         self.assertIsNone(c.get(f"treenode_list:{Category._meta.label_lower}"))
+        self.assertIsNone(c.get(f"treenode_dict:{Category._meta.label_lower}"))
         self.assertIsNotNone(
             c.get(f"treenode_list:{CategoryFixtures._meta.label_lower}")
+        )
+        self.assertIsNotNone(
+            c.get(f"treenode_dict:{CategoryFixtures._meta.label_lower}")
         )
 
         # and CategoryFixtures' cached data is still correct
