@@ -10,6 +10,7 @@ from tests.models import (
     CategoryWithUUIDPk,
 )
 from treenode.cache import clear_cache
+from treenode.signals import no_signals
 from treenode.utils import join_pks
 
 
@@ -1371,13 +1372,16 @@ f
     def test_deep_cat_tree_ordering(self):
         cat_level_list = []
         cat_level_parent = None
-        for i in range(1, 120):
-            cat_level = self.__create_cat(
-                name=f"Cat Level {i}", parent=cat_level_parent
-            )
-            cat_level_list.append(cat_level)
-            cat_level_parent = cat_level
+        with no_signals():
+            for i in range(1, 120):
+                cat_level = self.__create_cat(
+                    name=f"Cat Level {i}", parent=cat_level_parent
+                )
+                cat_level_list.append(cat_level)
+                cat_level_parent = cat_level
+        self._category_model.update_tree()
         cat_level_1 = cat_level_list.pop(0)
+        cat_level_1.refresh_from_db()
         cat_level_1_descendants = cat_level_1.get_descendants()
         cat_level_1_expected_descendants = cat_level_list
         self.assertEqual(
