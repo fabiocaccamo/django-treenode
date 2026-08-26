@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.25.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.25.0) - 2026-08-26
+-   Add `Django 6.1` support.
+-   Drop `Django < 4.2` support. #220
+-   Refactor `update_tree` to use bulk updates. (by [stumpylog](https://github.com/stumpylog) in #221)
+-   Update only changed fields in `update_tree` bulk update.
+-   Replace `mark_safe(f-string)` with `format_html` to prevent XSS in admin. #219
+-   Pin actions to SHA, fix permissions, add "OpenSSF Scorecard" workflow. #218
+-   Bump test requirements.
+-   Bump `pre-commit` hooks.
+
 ## [0.24.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.24.0) - 2026-04-15
 -   Add `Python 3.14` support.
 -   Add `Django 6.0` support.
