@@ -47,7 +47,6 @@ from treenode.models import TreeNodeModel
 
 
 class Category(TreeNodeModel):
-
     # the field used to display the model instance
     # default value 'pk'
     treenode_display_field = "name"
@@ -78,7 +77,6 @@ from .models import Category
 
 
 class CategoryAdmin(TreeNodeModelAdmin):
-
     # set the changelist display mode: 'accordion', 'breadcrumbs' or 'indentation' (default)
     # when changelist results are filtered by a querystring,
     # 'breadcrumbs' mode will be used (to preserve data display integrity)
@@ -88,6 +86,7 @@ class CategoryAdmin(TreeNodeModelAdmin):
 
     # use TreeNodeForm to automatically exclude invalid parent choices
     form = TreeNodeForm
+
 
 admin.site.register(Category, CategoryAdmin)
 ```
