@@ -4,7 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, router, transaction
 from django.db.models import F, Q
 from django.utils.encoding import force_str
-from django.utils.html import conditional_escape
+from django.utils.html import conditional_escape, format_html
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
@@ -258,8 +258,10 @@ class TreeNodeModel(models.Model):
         indentation = (mark * self.tn_ancestors_count) if indent else ""
         indentation = force_str(indentation)
         text = self.get_display_text()
-        text = conditional_escape(force_str(text))
-        return indentation + text
+        text = force_str(text)
+        # format_html escapes both parts and returns a safe string, so whoever
+        # renders the result, __str__ included, will not escape it a second time.
+        return format_html("{}{}", indentation, text)
 
     def get_display_text(self):
         """
