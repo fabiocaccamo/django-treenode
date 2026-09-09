@@ -14,7 +14,12 @@ from treenode.debug import debug_performance
 from treenode.exceptions import CacheError, CircularReferenceError
 from treenode.memory import clear_refs, update_refs
 from treenode.signals import connect_signals, no_signals
-from treenode.utils import contains_pk, join_pks, split_pks
+from treenode.utils import (
+    ORDER_SEPARATOR,
+    contains_pk,
+    join_pks,
+    split_pks,
+)
 
 TN_FIELDS = (
     "tn_ancestors_count",
@@ -132,8 +137,9 @@ class TreeNodeModel(models.Model):
         verbose_name=_("Priority"),
     )
 
-    tn_order = models.PositiveIntegerField(
-        default=0,
+    tn_order = models.TextField(
+        blank=True,
+        default="",
         editable=False,
         verbose_name=_("Order"),
     )
@@ -521,7 +527,7 @@ class TreeNodeModel(models.Model):
 
         order_objs = list(ancestors_list) + [self]
         order_strs = [obj.__get_node_order_str() for obj in order_objs]
-        order_str = "".join(order_strs)
+        order_str = ORDER_SEPARATOR.join(order_strs)
 
         obj_dict = {
             "instance": self,
@@ -537,7 +543,7 @@ class TreeNodeModel(models.Model):
             "tn_siblings_count": 0,
             "tn_depth": 0,
             "tn_level": (ancestors_count + 1),
-            "tn_order": 0,
+            "tn_order": "",
             "tn_order_str": order_str,
         }
 
@@ -568,26 +574,27 @@ class TreeNodeModel(models.Model):
         objs_data_list = list(objs_data_dict.values())
         objs_data_list.sort(key=objs_data_sort)
         objs_pks_by_parent = {}
-        objs_order_cursor = 0
         objs_index_cursors = {}
-        objs_index_cursor = 0
 
-        # index objects by parent pk
+        # index objects by parent pk, and assign each node's position
+        # among its direct siblings (tn_index)
         for obj_data in objs_data_list:
             obj_parent_key = str(obj_data["tn_parent_pk"])
             objs_pks_by_parent.setdefault(obj_parent_key, [])
             objs_pks_by_parent[obj_parent_key].append(obj_data["pk"])
 
-            # update global order with normalized value
-            obj_data["tn_order"] = objs_order_cursor
-            objs_order_cursor += 1
-
-            # update child index
-            obj_parent_key = str(obj_data["tn_parent_pk"])
             objs_index_cursor = objs_index_cursors.get(obj_parent_key, 0)
             obj_data["tn_index"] = objs_index_cursor
             objs_index_cursor += 1
             objs_index_cursors[obj_parent_key] = objs_index_cursor
+
+        # tn_order is each node's own stable order key (priority + slug +
+        # pk), chained with its ancestors' -- not a position-derived rank.
+        # A node's segment never depends on its siblings, so adding,
+        # removing, or reordering any node (root or otherwise) never
+        # changes another node's tn_order.
+        for obj_data in objs_data_list:
+            obj_data["tn_order"] = obj_data["tn_order_str"]
 
         for obj_data in sorted(
             objs_data_list, key=lambda obj: obj["tn_level"], reverse=True

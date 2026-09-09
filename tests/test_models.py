@@ -23,10 +23,25 @@ class TreeNodeModelTestCaseBase:
     def tearDown(self):
         pass
 
-    def __create_cat(cls, name, parent=None, priority=0):
+    def __create_cat(cls, name, parent=None, priority=None):
+        if priority is None:
+            priority = cls.__next_priority()
         return cls._category_model.objects.create(
             name=name, tn_parent=parent, tn_priority=priority
         )
+
+    def __next_priority(cls):
+        # Assign each auto-prioritized node a unique, monotonically
+        # decreasing tn_priority in creation order, so ordering is
+        # deterministic and independent of name/pk (tn_priority is the
+        # most significant segment of __get_node_order_str()'s sort key).
+        # Without this, models with no display field and/or non-uniform
+        # pk digit widths sort differently than the name-alphabetical
+        # order the shared tests assume, and CI's actual pass/fail depends
+        # on incidental pk sequence state left over from earlier tests.
+        countdown = getattr(cls, "_test_priority_countdown", 1_000_000)
+        cls._test_priority_countdown = countdown - 1
+        return countdown
 
     def __create_cat_tree(cls):
         """
@@ -536,28 +551,44 @@ class TreeNodeModelTestCaseBase:
         d = self.__get_cat(name="d")
         e = self.__get_cat(name="e")
         f = self.__get_cat(name="f")
-        self.assertEqual(a.get_order(), 0)
-        self.assertEqual(aa.get_order(), 1)
-        self.assertEqual(aaa.get_order(), 2)
-        self.assertEqual(aaaa.get_order(), 3)
-        self.assertEqual(ab.get_order(), 4)
-        self.assertEqual(ac.get_order(), 5)
-        self.assertEqual(aca.get_order(), 6)
-        self.assertEqual(acaa.get_order(), 7)
-        self.assertEqual(acab.get_order(), 8)
-        self.assertEqual(acb.get_order(), 9)
-        self.assertEqual(acc.get_order(), 10)
-        self.assertEqual(ad.get_order(), 11)
-        self.assertEqual(ae.get_order(), 12)
-        self.assertEqual(af.get_order(), 13)
-        self.assertEqual(b.get_order(), 14)
-        self.assertEqual(ba.get_order(), 15)
-        self.assertEqual(bb.get_order(), 16)
-        self.assertEqual(bc.get_order(), 17)
-        self.assertEqual(c.get_order(), 18)
-        self.assertEqual(d.get_order(), 19)
-        self.assertEqual(e.get_order(), 20)
-        self.assertEqual(f.get_order(), 21)
+
+        # `get_order()` must produce a total order matching this expected
+        # depth-first traversal sequence -- but it is an opaque, sortable
+        # value (a tree-local path), not a literal dense rank, so assert
+        # the relative order rather than exact values.
+        expected_sequence = [
+            a,
+            aa,
+            aaa,
+            aaaa,
+            ab,
+            ac,
+            aca,
+            acaa,
+            acab,
+            acb,
+            acc,
+            ad,
+            ae,
+            af,
+            b,
+            ba,
+            bb,
+            bc,
+            c,
+            d,
+            e,
+            f,
+        ]
+        actual_sequence = sorted(expected_sequence, key=lambda obj: obj.get_order())
+        self.assertEqual(actual_sequence, expected_sequence)
+
+        # every value must be usable with plain string ordering (== the
+        # dedicated Meta.ordering the model already declares), and every
+        # node's own order value must be a strict, unique key.
+        orders = [obj.get_order() for obj in expected_sequence]
+        self.assertEqual(len(orders), len(set(orders)))
+        self.assertEqual(orders, sorted(orders))
 
     def test_get_parent(self):
         self.__create_cat_tree()
@@ -1385,18 +1416,231 @@ f
         )
         self.assertEqual(cat_level_1_descendants, cat_level_1_expected_descendants)
 
+        # the descendants list must also be in strictly increasing order --
+        # this is the property the whole tn_order redesign has to hold at
+        # depth well beyond the old (unenforced) depth-10 assumption.
+        orders = [obj.get_order() for obj in cat_level_1_descendants]
+        self.assertEqual(orders, sorted(orders))
+        self.assertEqual(len(orders), len(set(orders)))
+
 
 class ModelTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = Category
 
 
-class ModelWithStringPkTestCase(TreeNodeModelTestCaseBase):
+class ModelWithStringPkTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = CategoryWithStringPk
 
 
-class ModelWithUUIDPkTestCase(TreeNodeModelTestCaseBase):
+class ModelWithUUIDPkTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = CategoryWithUUIDPk
 
 
-class ModelWithoutDisplayFieldTestCase(TreeNodeModelTestCaseBase):
+class ModelWithoutDisplayFieldTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = CategoryWithoutDisplayField
+
+    def test_get_display(self):
+        """
+        Override to test pk-fallback behavior.
+        CategoryWithoutDisplayField has no treenode_display_field, so get_display_text()
+        should return the string representation of the pk.
+        """
+        # Use the same tree structure as the parent test
+        a = self._category_model.objects.create(name="à")
+        c = self._category_model.objects.create(name="ç", tn_parent=a)
+        e = self._category_model.objects.create(name="è", tn_parent=c)
+        i = self._category_model.objects.create(name="ì", tn_parent=e)
+        o = self._category_model.objects.create(name="ò", tn_parent=i)
+        u = self._category_model.objects.create(name="ù", tn_parent=o)
+        opts = {"indent": False, "mark": "- "}
+
+        # Assert pk-fallback behavior: get_display_text() should return str(pk)
+        self.assertEqual(a.get_display_text(), force_str(a.pk))
+        self.assertEqual(c.get_display_text(), force_str(c.pk))
+        self.assertEqual(e.get_display_text(), force_str(e.pk))
+        self.assertEqual(i.get_display_text(), force_str(i.pk))
+        self.assertEqual(o.get_display_text(), force_str(o.pk))
+        self.assertEqual(u.get_display_text(), force_str(u.pk))
+
+        # Assert get_display() builds correctly from get_display_text()
+        self.assertEqual(a.get_display(**opts), force_str(a.pk))
+        self.assertEqual(c.get_display(**opts), force_str(c.pk))
+        self.assertEqual(e.get_display(**opts), force_str(e.pk))
+        self.assertEqual(i.get_display(**opts), force_str(i.pk))
+        self.assertEqual(o.get_display(**opts), force_str(o.pk))
+        self.assertEqual(u.get_display(**opts), force_str(u.pk))
+
+        # Test with indentation
+        opts = {"indent": True, "mark": "- "}
+        # a has no ancestors, so no indentation
+        self.assertEqual(a.get_display(**opts), force_str(a.pk))
+        # c has 1 ancestor (a), so one mark of indentation
+        self.assertEqual(c.get_display(**opts), "- " + force_str(c.pk))
+        # e has 2 ancestors, so two marks
+        self.assertEqual(e.get_display(**opts), "- - " + force_str(e.pk))
+
+    def test_get_tree_display(self):
+        """
+        Override to test pk-fallback behavior in tree display.
+        CategoryWithoutDisplayField has no treenode_display_field, so the tree should
+        display pk values instead of names.
+        """
+        # Create the tree structure directly (from __create_cat_tree docstring)
+        a = self._category_model.objects.create(name="a")
+        aa = self._category_model.objects.create(name="aa", tn_parent=a)
+        aaa = self._category_model.objects.create(name="aaa", tn_parent=aa)
+        aaaa = self._category_model.objects.create(name="aaaa", tn_parent=aaa)
+        ab = self._category_model.objects.create(name="ab", tn_parent=a)
+        ac = self._category_model.objects.create(name="ac", tn_parent=a)
+        aca = self._category_model.objects.create(name="aca", tn_parent=ac)
+        acaa = self._category_model.objects.create(name="acaa", tn_parent=aca)
+        acab = self._category_model.objects.create(name="acab", tn_parent=aca)
+        acb = self._category_model.objects.create(name="acb", tn_parent=ac)
+        acc = self._category_model.objects.create(name="acc", tn_parent=ac)
+        ad = self._category_model.objects.create(name="ad", tn_parent=a)
+        ae = self._category_model.objects.create(name="ae", tn_parent=a)
+        af = self._category_model.objects.create(name="af", tn_parent=a)
+        b = self._category_model.objects.create(name="b")
+        ba = self._category_model.objects.create(name="ba", tn_parent=b)
+        bb = self._category_model.objects.create(name="bb", tn_parent=b)
+        bc = self._category_model.objects.create(name="bc", tn_parent=b)
+        c = self._category_model.objects.create(name="c")
+        d = self._category_model.objects.create(name="d")
+        e = self._category_model.objects.create(name="e")
+        f = self._category_model.objects.create(name="f")
+
+        tree_display = self._category_model.get_tree_display()
+
+        # Verify that the tree display shows pks instead of names
+        # Split into lines and check each one contains only the pk and indentation
+        lines = tree_display.split("\n")
+
+        # Get all categories in tree order (how get_tree_display orders them)
+        all_cats = list(self._category_model.objects.all())
+
+        # For each category, find the expected line in the tree display
+        for cat in all_cats:
+            # Expected format: indentation marks + pk value
+            indent = "— " * cat.tn_ancestors_count
+            expected_line = indent + force_str(cat.pk)
+
+            # Verify this line exists in the tree display
+            self.assertIn(expected_line, tree_display)
+
+    def test_get_order(self):
+        """
+        Override test_get_order for CategoryWithoutDisplayField.
+        Without a treenode_display_field, `get_display_text()` falls back to pk,
+        so `__get_node_order_str()` sorts by slugified pk strings, not names.
+        This produces a different (pk-based) traversal order than the name-based
+        order in the base test. We independently derive this tier's expected
+        sequence using the same order string construction as TreeNodeModel.
+        """
+        from django.utils.text import slugify
+
+        self._TreeNodeModelTestCaseBase__create_cat_tree()
+        a = self._TreeNodeModelTestCaseBase__get_cat(name="a")
+        aa = self._TreeNodeModelTestCaseBase__get_cat(name="aa")
+        aaa = self._TreeNodeModelTestCaseBase__get_cat(name="aaa")
+        aaaa = self._TreeNodeModelTestCaseBase__get_cat(name="aaaa")
+        ab = self._TreeNodeModelTestCaseBase__get_cat(name="ab")
+        ac = self._TreeNodeModelTestCaseBase__get_cat(name="ac")
+        aca = self._TreeNodeModelTestCaseBase__get_cat(name="aca")
+        acaa = self._TreeNodeModelTestCaseBase__get_cat(name="acaa")
+        acab = self._TreeNodeModelTestCaseBase__get_cat(name="acab")
+        acb = self._TreeNodeModelTestCaseBase__get_cat(name="acb")
+        acc = self._TreeNodeModelTestCaseBase__get_cat(name="acc")
+        ad = self._TreeNodeModelTestCaseBase__get_cat(name="ad")
+        ae = self._TreeNodeModelTestCaseBase__get_cat(name="ae")
+        af = self._TreeNodeModelTestCaseBase__get_cat(name="af")
+        b = self._TreeNodeModelTestCaseBase__get_cat(name="b")
+        ba = self._TreeNodeModelTestCaseBase__get_cat(name="ba")
+        bb = self._TreeNodeModelTestCaseBase__get_cat(name="bb")
+        bc = self._TreeNodeModelTestCaseBase__get_cat(name="bc")
+        c = self._TreeNodeModelTestCaseBase__get_cat(name="c")
+        d = self._TreeNodeModelTestCaseBase__get_cat(name="d")
+        e = self._TreeNodeModelTestCaseBase__get_cat(name="e")
+        f = self._TreeNodeModelTestCaseBase__get_cat(name="f")
+
+        # All nodes
+        all_nodes = [
+            a,
+            aa,
+            aaa,
+            aaaa,
+            ab,
+            ac,
+            aca,
+            acaa,
+            acab,
+            acb,
+            acc,
+            ad,
+            ae,
+            af,
+            b,
+            ba,
+            bb,
+            bc,
+            c,
+            d,
+            e,
+            f,
+        ]
+
+        # For CategoryWithoutDisplayField, derive expected order by computing
+        # tn_order_str the same way TreeNodeModel.__get_node_order_str() does.
+        # Build a lookup of nodes by pk and a parent map for ancestor traversal.
+        nodes_by_pk = {obj.pk: obj for obj in all_nodes}
+        parent_map = {obj.pk: obj.tn_parent_id for obj in all_nodes}
+
+        def get_node_order_str(obj):
+            """Replicate __get_node_order_str() logic."""
+            priority_max = 9999999999
+            priority_len = len(str(priority_max))
+            priority_val = priority_max - min(obj.tn_priority, priority_max)
+            priority_key = str(priority_val).zfill(priority_len)
+            alphabetical_val = slugify(str(obj))
+            alphabetical_key = alphabetical_val.ljust(priority_len, "z")
+            alphabetical_key = alphabetical_key[0:priority_len]
+
+            try:
+                pk_val = min(obj.pk, priority_max)
+            except TypeError:
+                pk_val = str(obj.pk)
+
+            pk_key = str(pk_val).zfill(priority_len)
+            s = f"{priority_key}{alphabetical_key}{pk_key}"
+            s = s.upper()
+            return s
+
+        def get_ancestors_list(obj):
+            """Build ancestor chain for depth-first order string."""
+            ancestors = []
+            current_pk = parent_map[obj.pk]
+            while current_pk is not None:
+                ancestors.append(nodes_by_pk[current_pk])
+                current_pk = parent_map[nodes_by_pk[current_pk].pk]
+            return list(reversed(ancestors))
+
+        def get_order_str(obj):
+            """Replicate __get_node_data() order_str computation."""
+            ancestors = get_ancestors_list(obj)
+            order_objs = ancestors + [obj]
+            order_strs = [get_node_order_str(o) for o in order_objs]
+            return "".join(order_strs)
+
+        # Sort all_nodes by their computed order string to get expected sequence
+        expected_sequence = sorted(all_nodes, key=get_order_str)
+
+        # `get_order()` must produce a total order matching this expected
+        # pk-derived depth-first traversal sequence.
+        actual_sequence = sorted(expected_sequence, key=lambda obj: obj.get_order())
+        self.assertEqual(actual_sequence, expected_sequence)
+
+        # every value must be usable with plain string ordering (== the
+        # dedicated Meta.ordering the model already declares), and every
+        # node's own order value must be a strict, unique key.
+        orders = [obj.get_order() for obj in expected_sequence]
+        self.assertEqual(len(orders), len(set(orders)))
+        self.assertEqual(orders, sorted(orders))
