@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+-   **Breaking:** `tn_order` is now a tree-local materialized path
+    (`TextField`) built from each node's own stable order key, instead of
+    a globally dense-ranked `PositiveIntegerField`; `get_order()`/`.order`
+    return an opaque sortable string, not a position count. Fixes
+    `tn_order` rewrites cascading to unrelated trees on any insert,
+    reorder, or delete, including new root nodes.
+
 ## [0.25.0](https://github.com/fabiocaccamo/django-treenode/releases/tag/0.25.0) - 2026-08-26
 -   Add `Django 6.1` support.
 -   Drop `Django < 4.2` support. #220

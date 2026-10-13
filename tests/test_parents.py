@@ -70,7 +70,7 @@ class TreeNodeParentValidationTestCase(TestCase):
         self.assertEqual(a.tn_ancestors_count, 0)
         self.assertEqual(a.tn_children_count, 0)
         self.assertEqual(a.tn_level, 1)
-        self.assertEqual(a.tn_order, 0)
+        self.assertTrue(a.tn_order)
         self.assertEqual(a.tn_siblings_count, 0)
         self.assertTrue(a.is_root())
         self.assertTrue(a.is_leaf())
