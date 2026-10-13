@@ -3,19 +3,19 @@
 repos:
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+    rev: v3.22.0
     hooks:
       - id: pyupgrade
         args: ["--py311-plus"]
 
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.32.0
+    rev: 1.33.0
     hooks:
       - id: django-upgrade
         args: ["--target-version", "4.0"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.4
+    rev: v0.17.0
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
