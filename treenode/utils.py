@@ -1,5 +1,7 @@
 PKS_SEPARATOR = ","
 
+ORDER_SEPARATOR = "."
+
 
 def contains_pk(ls, pk):
     return str(pk) in split_pks(ls)

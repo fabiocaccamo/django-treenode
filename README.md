@@ -332,7 +332,8 @@ obj.level
 ```
 
 #### `get_order`
-Get the **order value** used for ordering:
+Get the **order value** used for ordering: an opaque, sortable string
+(a tree-local materialized path), not a position count.
 ```python
 obj.get_order()
 # or

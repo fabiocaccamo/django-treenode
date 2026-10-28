@@ -36,7 +36,8 @@ class CategoryWithStringPk(TreeNodeModel):
 
     @staticmethod
     def get_random_string():
-        return "".join(random.choice(string.letters + string.digits) for n in range(64))
+        chars = string.ascii_letters + string.digits
+        return "".join(random.choice(chars) for n in range(64))
 
     id = models.CharField(
         primary_key=True, max_length=100, default=get_random_string, editable=False
