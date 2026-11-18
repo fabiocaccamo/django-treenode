@@ -1390,13 +1390,101 @@ class ModelTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = Category
 
 
-class ModelWithStringPkTestCase(TreeNodeModelTestCaseBase):
+class ModelWithStringPkTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = CategoryWithStringPk
 
 
-class ModelWithUUIDPkTestCase(TreeNodeModelTestCaseBase):
+class ModelWithUUIDPkTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = CategoryWithUUIDPk
 
 
-class ModelWithoutDisplayFieldTestCase(TreeNodeModelTestCaseBase):
+class ModelWithoutDisplayFieldTestCase(TreeNodeModelTestCaseBase, TransactionTestCase):
     _category_model = CategoryWithoutDisplayField
+
+    def test_get_display(self):
+        """
+        Override to test pk-fallback behavior.
+        CategoryWithoutDisplayField has no treenode_display_field, so get_display_text()
+        should return the string representation of the pk.
+        """
+        # Use the same tree structure as the parent test
+        a = self._category_model.objects.create(name="à")
+        c = self._category_model.objects.create(name="ç", tn_parent=a)
+        e = self._category_model.objects.create(name="è", tn_parent=c)
+        i = self._category_model.objects.create(name="ì", tn_parent=e)
+        o = self._category_model.objects.create(name="ò", tn_parent=i)
+        u = self._category_model.objects.create(name="ù", tn_parent=o)
+        opts = {"indent": False, "mark": "- "}
+
+        # Assert pk-fallback behavior: get_display_text() should return str(pk)
+        self.assertEqual(a.get_display_text(), force_str(a.pk))
+        self.assertEqual(c.get_display_text(), force_str(c.pk))
+        self.assertEqual(e.get_display_text(), force_str(e.pk))
+        self.assertEqual(i.get_display_text(), force_str(i.pk))
+        self.assertEqual(o.get_display_text(), force_str(o.pk))
+        self.assertEqual(u.get_display_text(), force_str(u.pk))
+
+        # Assert get_display() builds correctly from get_display_text()
+        self.assertEqual(a.get_display(**opts), force_str(a.pk))
+        self.assertEqual(c.get_display(**opts), force_str(c.pk))
+        self.assertEqual(e.get_display(**opts), force_str(e.pk))
+        self.assertEqual(i.get_display(**opts), force_str(i.pk))
+        self.assertEqual(o.get_display(**opts), force_str(o.pk))
+        self.assertEqual(u.get_display(**opts), force_str(u.pk))
+
+        # Test with indentation
+        opts = {"indent": True, "mark": "- "}
+        # a has no ancestors, so no indentation
+        self.assertEqual(a.get_display(**opts), force_str(a.pk))
+        # c has 1 ancestor (a), so one mark of indentation
+        self.assertEqual(c.get_display(**opts), "- " + force_str(c.pk))
+        # e has 2 ancestors, so two marks
+        self.assertEqual(e.get_display(**opts), "- - " + force_str(e.pk))
+
+    def test_get_tree_display(self):
+        """
+        Override to test pk-fallback behavior in tree display.
+        CategoryWithoutDisplayField has no treenode_display_field, so the tree should
+        display pk values instead of names.
+        """
+        # Create the tree structure directly (from __create_cat_tree docstring)
+        a = self._category_model.objects.create(name="a")
+        aa = self._category_model.objects.create(name="aa", tn_parent=a)
+        aaa = self._category_model.objects.create(name="aaa", tn_parent=aa)
+        aaaa = self._category_model.objects.create(name="aaaa", tn_parent=aaa)
+        ab = self._category_model.objects.create(name="ab", tn_parent=a)
+        ac = self._category_model.objects.create(name="ac", tn_parent=a)
+        aca = self._category_model.objects.create(name="aca", tn_parent=ac)
+        acaa = self._category_model.objects.create(name="acaa", tn_parent=aca)
+        acab = self._category_model.objects.create(name="acab", tn_parent=aca)
+        acb = self._category_model.objects.create(name="acb", tn_parent=ac)
+        acc = self._category_model.objects.create(name="acc", tn_parent=ac)
+        ad = self._category_model.objects.create(name="ad", tn_parent=a)
+        ae = self._category_model.objects.create(name="ae", tn_parent=a)
+        af = self._category_model.objects.create(name="af", tn_parent=a)
+        b = self._category_model.objects.create(name="b")
+        ba = self._category_model.objects.create(name="ba", tn_parent=b)
+        bb = self._category_model.objects.create(name="bb", tn_parent=b)
+        bc = self._category_model.objects.create(name="bc", tn_parent=b)
+        c = self._category_model.objects.create(name="c")
+        d = self._category_model.objects.create(name="d")
+        e = self._category_model.objects.create(name="e")
+        f = self._category_model.objects.create(name="f")
+
+        tree_display = self._category_model.get_tree_display()
+
+        # Verify that the tree display shows pks instead of names
+        # Split into lines and check each one contains only the pk and indentation
+        lines = tree_display.split("\n")
+
+        # Get all categories in tree order (how get_tree_display orders them)
+        all_cats = list(self._category_model.objects.all())
+
+        # For each category, find the expected line in the tree display
+        for cat in all_cats:
+            # Expected format: indentation marks + pk value
+            indent = "— " * cat.tn_ancestors_count
+            expected_line = indent + force_str(cat.pk)
+
+            # Verify this line exists in the tree display
+            self.assertIn(expected_line, tree_display)
