@@ -10,6 +10,7 @@ from tests.models import (
     CategoryWithUUIDPk,
 )
 from treenode.cache import clear_cache
+from treenode.signals import no_signals
 from treenode.utils import join_pks
 
 
@@ -53,28 +54,30 @@ class TreeNodeModelTestCaseBase:
         e
         f
         """
-        a = cls.__create_cat(name="a")
-        aa = cls.__create_cat(name="aa", parent=a)
-        aaa = cls.__create_cat(name="aaa", parent=aa)
-        aaaa = cls.__create_cat(name="aaaa", parent=aaa)
-        ab = cls.__create_cat(name="ab", parent=a)
-        ac = cls.__create_cat(name="ac", parent=a)
-        aca = cls.__create_cat(name="aca", parent=ac)
-        acaa = cls.__create_cat(name="acaa", parent=aca)
-        acab = cls.__create_cat(name="acab", parent=aca)
-        acb = cls.__create_cat(name="acb", parent=ac)
-        acc = cls.__create_cat(name="acc", parent=ac)
-        ad = cls.__create_cat(name="ad", parent=a)
-        ae = cls.__create_cat(name="ae", parent=a)
-        af = cls.__create_cat(name="af", parent=a)
-        b = cls.__create_cat(name="b")
-        ba = cls.__create_cat(name="ba", parent=b)
-        bb = cls.__create_cat(name="bb", parent=b)
-        bc = cls.__create_cat(name="bc", parent=b)
-        c = cls.__create_cat(name="c")
-        d = cls.__create_cat(name="d")
-        e = cls.__create_cat(name="e")
-        f = cls.__create_cat(name="f")
+        with no_signals():
+            a = cls.__create_cat(name="a")
+            aa = cls.__create_cat(name="aa", parent=a)
+            aaa = cls.__create_cat(name="aaa", parent=aa)
+            aaaa = cls.__create_cat(name="aaaa", parent=aaa)
+            ab = cls.__create_cat(name="ab", parent=a)
+            ac = cls.__create_cat(name="ac", parent=a)
+            aca = cls.__create_cat(name="aca", parent=ac)
+            acaa = cls.__create_cat(name="acaa", parent=aca)
+            acab = cls.__create_cat(name="acab", parent=aca)
+            acb = cls.__create_cat(name="acb", parent=ac)
+            acc = cls.__create_cat(name="acc", parent=ac)
+            ad = cls.__create_cat(name="ad", parent=a)
+            ae = cls.__create_cat(name="ae", parent=a)
+            af = cls.__create_cat(name="af", parent=a)
+            b = cls.__create_cat(name="b")
+            ba = cls.__create_cat(name="ba", parent=b)
+            bb = cls.__create_cat(name="bb", parent=b)
+            bc = cls.__create_cat(name="bc", parent=b)
+            c = cls.__create_cat(name="c")
+            d = cls.__create_cat(name="d")
+            e = cls.__create_cat(name="e")
+            f = cls.__create_cat(name="f")
+        cls._category_model.update_tree()
 
     def __get_cat(self, name):
         return self._category_model.objects.get(name=name)
@@ -1371,13 +1374,16 @@ f
     def test_deep_cat_tree_ordering(self):
         cat_level_list = []
         cat_level_parent = None
-        for i in range(1, 120):
-            cat_level = self.__create_cat(
-                name=f"Cat Level {i}", parent=cat_level_parent
-            )
-            cat_level_list.append(cat_level)
-            cat_level_parent = cat_level
+        with no_signals():
+            for i in range(1, 120):
+                cat_level = self.__create_cat(
+                    name=f"Cat Level {i}", parent=cat_level_parent
+                )
+                cat_level_list.append(cat_level)
+                cat_level_parent = cat_level
+        self._category_model.update_tree()
         cat_level_1 = cat_level_list.pop(0)
+        cat_level_1.refresh_from_db()
         cat_level_1_descendants = cat_level_1.get_descendants()
         cat_level_1_expected_descendants = cat_level_list
         self.assertEqual(
